@@ -9,6 +9,15 @@ const api = axios.create({
   }
 });
 
+// Adicione isso ANTES de definir apiClientes
+api.interceptors.response.use(
+  (response) => response.data, // Retorna apenas os dados da resposta
+  (error) => {
+    const errorMessage = error.response?.data?.error || error.message;
+    return Promise.reject(new Error(errorMessage)); // Padroniza erros
+  }
+);
+
 // Objeto com todos os métodos da API
 const apiClientes = {
   criarCliente: (cliente) => api.post('/clientes', cliente),

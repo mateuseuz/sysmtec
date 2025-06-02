@@ -16,8 +16,8 @@ function ListaClientes() {
   const carregarClientes = async () => {
     setIsLoading(true);
     try {
-      const response = await api.listarClientes();
-      setClientes(response.data);
+      const data = await api.listarClientes();
+      setClientes(data);
     } catch (error) {
       toast.error('Erro ao carregar clientes: ' + error.message);
     } finally {

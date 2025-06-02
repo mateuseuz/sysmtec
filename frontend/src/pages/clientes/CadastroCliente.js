@@ -60,27 +60,36 @@ function CadastroCliente() {
 };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  console.log('1 - Iniciando submit...'); // Debug 1
+  
+  if (!validateForm()) {
+    console.log('2 - Validação falhou'); // Debug 2
+    return;
+  }
+
+  setIsLoading(true);
+  try {
+    const payload = {
+      ...formData,
+      cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
+      celular: formData.celular.replace(/\D/g, '') || null
+    };
     
-    if (!validateForm()) return;
-
-    setIsLoading(true);
-    try {
-      const payload = {
-        ...formData,
-        cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
-        celular: formData.celular.replace(/\D/g, '') || null
-      };
-
-      await api.criarCliente(payload);
-      toast.success('Cliente cadastrado com sucesso!');
-      navigate('/clientes');
-    } catch (error) {
-      toast.error(error.response?.data?.error || 'Erro ao cadastrar cliente');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    console.log('3 - Payload preparado:', payload); // Debug 3
+    
+    const response = await api.criarCliente(payload);
+    console.log('4 - Resposta da API:', response); // Debug 4
+    
+    toast.success('Cliente cadastrado com sucesso!');
+    navigate('/clientes');
+  } catch (error) {
+    console.error('5 - Erro na requisição:', error); // Debug 5
+    toast.error(error.message || 'Erro ao cadastrar cliente');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="sysmtec-container">

@@ -59,6 +59,7 @@ function validarCNPJ(cnpj) {
 // Controller original com apenas a validação real adicionada
 exports.createCliente = async (req, res) => {
   try {
+    console.log('Dados recebidos no backend:', req.body); // Log crucial
     const { nome, cpf_cnpj, endereco, email, celular, observacoes } = req.body;
     
     const cpfCnpjLimpo = cpf_cnpj.replace(/\D/g, '');
@@ -86,6 +87,7 @@ exports.createCliente = async (req, res) => {
     
     res.status(201).json(novoCliente);
   } catch (error) {
+    console.error('Erro detalhado:', error);
     res.status(400).json({ error: error.message });
   }
 };
