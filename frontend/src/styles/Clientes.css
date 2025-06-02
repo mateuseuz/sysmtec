@@ -1,0 +1,280 @@
+/* Variáveis de cores */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --accent-color: #3498db;
+  --danger-color: #e74c3c;
+  --light-bg: #ecf0f1;
+  --text-dark: #2c3e50;
+  --text-light: #7f8c8d;
+  --white: #ffffff;
+}
+
+/* Reset e estilos gerais */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+/* Layout principal */
+.sysmtec-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.sysmtec-header {
+  grid-column: 1 / -1;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.sysmtec-header h1 {
+  font-size: 1.5rem;
+}
+
+.sysmtec-header h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin-top: 0.5rem;
+  color: rgba(255,255,255,0.9);
+}
+
+/* Sidebar */
+.sysmtec-sidebar {
+  background-color: var(--secondary-color);
+  color: var(--white);
+  padding: 1rem 0;
+}
+
+.sysmtec-sidebar nav ul {
+  list-style: none;
+}
+
+.sysmtec-sidebar nav li {
+  transition: all 0.3s ease;
+}
+
+.sysmtec-sidebar nav a {
+  color: var(--white);
+  text-decoration: none;
+  display: block;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.sysmtec-sidebar nav li.active,
+.sysmtec-sidebar nav a:hover {
+  background-color: var(--accent-color);
+}
+
+/* Área principal */
+.sysmtec-main {
+  padding: 2rem;
+  background-color: var(--light-bg);
+  min-height: calc(100vh - 60px);
+}
+
+/* Links e botões */
+.add-client-link {
+  display: inline-block;
+  background-color: var(--accent-color);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.add-client-link:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.back-button {
+  display: inline-block;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* Cards de clientes */
+.clientes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.cliente-card {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.cliente-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.cliente-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-dark);
+  font-size: 1.2rem;
+}
+
+.cliente-card p {
+  margin: 0.25rem 0;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Ações */
+.cliente-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.edit-button {
+  background-color: var(--accent-color);
+  color: var(--white);
+  text-decoration: none;
+}
+
+.delete-button {
+  background-color: var(--danger-color);
+  color: var(--white);
+}
+
+.edit-button:hover {
+  background-color: #2980b9;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Formulários */
+.cliente-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: var(--white);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.submit-button {
+  background-color: var(--accent-color);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #2980b9;
+}
+
+.submit-button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Estado de loading */
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: var(--white);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .sysmtec-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .sysmtec-sidebar {
+    grid-row: 2;
+  }
+  
+  .clientes-list {
+    grid-template-columns: 1fr;
+  }
+}

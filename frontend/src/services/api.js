@@ -1,0 +1,22 @@
+import axios from 'axios';
+
+// Configuração base do axios
+const api = axios.create({
+  baseURL: 'http://localhost:5000/api',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
+
+// Objeto com todos os métodos da API
+const apiClientes = {
+  criarCliente: (cliente) => api.post('/clientes', cliente),
+  listarClientes: () => api.get('/clientes'),
+  buscarCliente: (id) => api.get(`/clientes/${id}`),
+  atualizarCliente: (id, cliente) => api.put(`/clientes/${id}`, cliente),
+  deletarCliente: (id) => api.delete(`/clientes/${id}`),
+  buscarClientesPorNome: (nome) => api.get(`/clientes/?nome=${encodeURIComponent(nome)}`)
+};
+
+export default apiClientes;
