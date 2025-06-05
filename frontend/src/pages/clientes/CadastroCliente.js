@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import { validarCPFCNPJ, validarCelular } from '../../utils/validations';
 import '../../styles/Clientes.css';
 
 function CadastroCliente() {
@@ -20,71 +21,94 @@ function CadastroCliente() {
   const handleChange = (e) => {
   const { name, value } = e.target;
   
-  // Remove todos os caracteres não numéricos para CPF/CNPJ e celular
-  const cleanedValue = (name === 'cpf_cnpj' || name === 'celular') 
-    ? value.replace(/\D/g, '')
-    : value;
-
-  setFormData(prev => ({ ...prev, [name]: cleanedValue }));
+  let formattedValue = value;
   
-  if (errors[name]) {
-    setErrors(prev => ({ ...prev, [name]: '' }));
+  if (name === 'cpf_cnpj') {
+    // Formatação para CPF/CNPJ (mantém a original que já funciona bem)
+    formattedValue = value
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+      .substring(0, 18);
+  } else if (name === 'celular') {
+    // Nova formatação para celular que permite edição completa
+    const nums = value.replace(/\D/g, '');
+    
+    if (nums.length === 0) {
+      formattedValue = '';
+    } else if (nums.length <= 2) {
+      formattedValue = `(${nums}`;
+    } else if (nums.length <= 7) {
+      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2)}`;
+    } else {
+      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2, 7)}-${nums.substring(7, 11)}`;
+    }
+
+  } else {
+    formattedValue = value;
   }
+
+  setFormData(prev => ({ ...prev, [name]: formattedValue }));
+  if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
 };
 
   const validateForm = () => {
-  const newErrors = {};
-  let isValid = true;
+    const newErrors = {};
+    let isValid = true;
 
-  if (!formData.nome.trim()) {
-    newErrors.nome = 'Nome é obrigatório';
-    isValid = false;
-  }
+    if (!formData.nome.trim()) {
+      newErrors.nome = 'Nome é obrigatório';
+      isValid = false;
+    }
 
-  if (!formData.cpf_cnpj || !/^\d+$/.test(formData.cpf_cnpj)) {
-    newErrors.cpf_cnpj = 'Digite apenas números';
-    isValid = false;
-  } else if (!(formData.cpf_cnpj.length === 11 || formData.cpf_cnpj.length === 14)) {
-    newErrors.cpf_cnpj = 'CPF (11 dígitos) ou CNPJ (14 dígitos)';
-    isValid = false;
-  }
+    try {
+      validarCPFCNPJ(formData.cpf_cnpj);
+    } catch (error) {
+      newErrors.cpf_cnpj = error.message;
+      isValid = false;
+    }
 
-  // Validação opcional para celular
-  if (formData.celular && !/^\d{11}$/.test(formData.celular)) {
-    newErrors.celular = 'Celular deve ter 11 dígitos';
-    isValid = false;
-  }
+    try {
+      validarCelular(formData.celular);
+    } catch (error) {
+      newErrors.celular = error.message;
+      isValid = false;
+    }
 
-  setErrors(newErrors);
-  return isValid;
-};
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'E-mail inválido';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log('1 - Iniciando submit...'); // Debug 1
   
-  if (!validateForm()) {
-    console.log('2 - Validação falhou'); // Debug 2
-    return;
-  }
+  if (!validateForm()) return;
 
   setIsLoading(true);
   try {
+    // Prepara os dados garantindo que nenhum campo seja null/undefined
     const payload = {
-      ...formData,
-      cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
-      celular: formData.celular.replace(/\D/g, '') || null
+      nome: formData.nome,
+      cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''), // Obrigatório (já validado)
+      celular: formData.celular ? formData.celular.replace(/\D/g, '') : null,
+      endereco: formData.endereco || null,
+      email: formData.email || null,
+      observacoes: formData.observacoes || null
     };
-    
-    console.log('3 - Payload preparado:', payload); // Debug 3
-    
-    const response = await api.criarCliente(payload);
-    console.log('4 - Resposta da API:', response); // Debug 4
-    
+
+    console.log('Payload enviado:', payload); // Para debug
+
+    await api.criarCliente(payload);
     toast.success('Cliente cadastrado com sucesso!');
     navigate('/clientes');
   } catch (error) {
-    console.error('5 - Erro na requisição:', error); // Debug 5
+    console.error('Erro detalhado:', error);
     toast.error(error.message || 'Erro ao cadastrar cliente');
   } finally {
     setIsLoading(false);
@@ -122,6 +146,7 @@ function CadastroCliente() {
               value={formData.nome}
               onChange={handleChange}
               className={errors.nome ? 'error' : ''}
+              required
             />
             {errors.nome && <span className="error-message">{errors.nome}</span>}
           </div>
@@ -134,6 +159,8 @@ function CadastroCliente() {
               value={formData.cpf_cnpj}
               onChange={handleChange}
               className={errors.cpf_cnpj ? 'error' : ''}
+              placeholder="000.000.000-00 ou 00.000.000/0000-00"
+              required
             />
             {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>}
           </div>
@@ -146,6 +173,7 @@ function CadastroCliente() {
               value={formData.celular}
               onChange={handleChange}
               className={errors.celular ? 'error' : ''}
+              placeholder="(00) 00000-0000"
             />
             {errors.celular && <span className="error-message">{errors.celular}</span>}
           </div>

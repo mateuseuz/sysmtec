@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import { validarCPFCNPJ, validarCelular } from '../utils/validations'; // Importe as validações
 
 function ClienteForm({ cliente, onSubmit, isLoading }) {
   const [formData, setFormData] = React.useState({
@@ -12,103 +13,100 @@ function ClienteForm({ cliente, onSubmit, isLoading }) {
   });
 
   const [errors, setErrors] = React.useState({
+    nome: '',
     cpf_cnpj: '',
-    celular: ''
+    celular: '',
+    email: ''
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
-    // Apenas números para CPF/CNPJ e celular
-    const cleanedValue = (name === 'cpf_cnpj' || name === 'celular')
-      ? value.replace(/\D/g, '')
-      : value;
-
-    setFormData(prev => ({ ...prev, [name]: cleanedValue }));
-
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+    
+    // Formatação em tempo real para CPF/CNPJ e celular
+    let formattedValue = value;
+    if (name === 'cpf_cnpj') {
+      formattedValue = value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+        .substring(0, 18);
+    } else if (name === 'celular') {
+      formattedValue = value
+        .replace(/\D/g, '')
+        .replace(/(\d{0,2})(\d{0,5})(\d{0,4})/, '($1) $2-$3')
+        .trim()
+        .substring(0, 15);
     }
+
+    setFormData(prev => ({ ...prev, [name]: formattedValue }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    // Validações básicas
+    if (!formData.nome.trim()) newErrors.nome = 'Nome é obrigatório';
     
-    let hasErrors = false;
-    const newErrors = { ...errors };
-  
-    if (!/^\d+$/.test(formData.cpf_cnpj)) {
-      newErrors.cpf_cnpj = 'CPF/CNPJ deve conter apenas números';
-      hasErrors = true;
+    try {
+      validarCPFCNPJ(formData.cpf_cnpj);
+    } catch (error) {
+      newErrors.cpf_cnpj = error.message;
     }
-  
-    if (formData.celular && !/^\d+$/.test(formData.celular)) {
-      newErrors.celular = 'Celular deve conter apenas números';
-      hasErrors = true;
+
+    try {
+      validarCelular(formData.celular);
+    } catch (error) {
+      newErrors.celular = error.message;
     }
-  
+
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'E-mail inválido';
+    }
+
     setErrors(newErrors);
-    if (hasErrors) return;
-    if (!formData.cpf_cnpj || (formData.cpf_cnpj.length !== 11 && formData.cpf_cnpj.length !== 14)) {
-      alert('CPF/CNPJ deve ter 11 (CPF) ou 14 (CNPJ) dígitos');
-      return;
-    }
-    
-    if (formData.celular && (formData.celular.length !== 10 && formData.celular.length !== 11)) {
-      alert('Celular deve ter 10 ou 11 dígitos (com DDD)');
-      return;
-    }
-    
-    onSubmit(formData);
+    if (Object.keys(newErrors).length > 0) return;
+
+    // Prepara os dados para envio (remove formatação)
+    const payload = {
+      ...formData,
+      cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
+      celular: formData.celular.replace(/\D/g, '') || null
+    };
+
+    onSubmit(payload);
   };
 
   return (
     <form onSubmit={handleSubmit} className="cliente-form">
       <div className="form-group">
-        <label>Nome</label>
+        <label>Nome *</label>
         <input
           type="text"
           name="nome"
           value={formData.nome}
           onChange={handleChange}
+          className={errors.nome ? 'error' : ''}
           required
           maxLength="50"
         />
+        {errors.nome && <div className="error-message">{errors.nome}</div>}
       </div>
 
       <div className="form-group">
-        <label>CPF/CNPJ</label>
+        <label>CPF/CNPJ *</label>
         <input
           type="text"
           name="cpf_cnpj"
           value={formData.cpf_cnpj}
           onChange={handleChange}
+          className={errors.cpf_cnpj ? 'error' : ''}
+          placeholder="000.000.000-00 ou 00.000.000/0000-00"
           required
-          maxLength={14}
         />
         {errors.cpf_cnpj && <div className="error-message">{errors.cpf_cnpj}</div>}
-      </div>
-
-      <div className="form-group">
-        <label>Endereço</label>
-        <input
-          type="text"
-          name="endereco"
-          value={formData.endereco}
-          onChange={handleChange}
-          maxLength="70"
-        />
-      </div>
-
-      <div className="form-group">
-        <label>E-mail</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          maxLength="50"
-        />
       </div>
 
       <div className="form-group">
@@ -118,8 +116,8 @@ function ClienteForm({ cliente, onSubmit, isLoading }) {
           name="celular"
           value={formData.celular}
           onChange={handleChange}
-          onKeyPress={handleKeyPress}
-          maxLength="11"
+          className={errors.celular ? 'error' : ''}
+          placeholder="(00) 00000-0000"
         />
         {errors.celular && <div className="error-message">{errors.celular}</div>}
       </div>

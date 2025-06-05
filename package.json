@@ -1,0 +1,14 @@
+{
+  "name": "sysmtec",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && node index.js",
+    "frontend": "cd frontend && npm start",
+    "dev": "concurrently \"npm run backend-dev\" \"npm run frontend\"",
+    "backend-dev": "cd backend && nodemon index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

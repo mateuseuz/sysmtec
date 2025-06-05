@@ -1,0 +1,2 @@
+proibir salvar alterações com cpf/cnpj inválido
+conseguir apagar numeros celular 1 por 1 incluindo antes do hifen

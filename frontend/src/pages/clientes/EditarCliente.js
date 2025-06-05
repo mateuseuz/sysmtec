@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import { validarCPFCNPJ, validarCelular, formatCPForCNPJ, formatCelular } from '../../utils/validations';
 import '../../styles/Clientes.css';
 
 function EditarCliente() {
@@ -18,15 +19,14 @@ function EditarCliente() {
   });
   const [errors, setErrors] = useState({});
 
-  // Carrega os dados do cliente ao montar o componente
   useEffect(() => {
     const carregarCliente = async () => {
       try {
         const cliente = await api.buscarCliente(id);
         setFormData({
           nome: cliente.nome || '',
-          cpf_cnpj: formatarDocumento(cliente.cpf_cnpj) || '',
-          celular: formatarTelefone(cliente.celular) || '',
+          cpf_cnpj: formatCPForCNPJ(cliente.cpf_cnpj) || '',
+          celular: formatCelular(cliente.celular) || '',
           endereco: cliente.endereco || '',
           email: cliente.email || '',
           observacoes: cliente.observacoes || ''
@@ -42,69 +42,59 @@ function EditarCliente() {
     carregarCliente();
   }, [id, navigate]);
 
-  // Funções auxiliares para formatação
-  const formatarDocumento = (doc) => {
-    if (!doc) return '';
-    const nums = doc.replace(/\D/g, '');
-    return nums.length === 11 ? 
-      nums.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') :
-      nums.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
-  };
-
-  const formatarTelefone = (tel) => {
-    if (!tel) return '';
-    const nums = tel.replace(/\D/g, '');
-    return nums.length === 11 ? 
-      nums.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') :
-      nums.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-  };
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
+  
+  let formattedValue = value;
+  
+  if (name === 'cpf_cnpj') {
+    formattedValue = value
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+      .substring(0, 18);
+  } else if (name === 'celular') {
+    const nums = value.replace(/\D/g, '');
     
-    // Formatação específica para CPF/CNPJ e celular
-    let formattedValue = value;
-    if (name === 'cpf_cnpj') {
-      formattedValue = value
-        .replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-        .substring(0, 18);
-    } else if (name === 'celular') {
-      formattedValue = value
-        .replace(/\D/g, '')
-        .replace(/(\d{0,2})(\d{0,5})(\d{0,4})/, '($1) $2-$3')
-        .trim()
-        .substring(0, 15);
+    if (nums.length === 0) {
+      formattedValue = '';
+    } else if (nums.length <= 2) {
+      formattedValue = `(${nums}`;
+    } else if (nums.length <= 7) {
+      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2)}`;
+    } else {
+      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2, 7)}-${nums.substring(7, 11)}`;
     }
+  }
 
-    setFormData(prev => ({ ...prev, [name]: formattedValue }));
-    
-    // Limpa erro do campo quando modificado
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
+  setFormData(prev => ({ ...prev, [name]: formattedValue }));
+  if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+};
 
   const validateForm = () => {
     const newErrors = {};
     let isValid = true;
 
-    // Validação do nome
     if (!formData.nome.trim()) {
       newErrors.nome = 'Nome é obrigatório';
       isValid = false;
     }
 
-    // Validação do CPF/CNPJ
-    const cpfCnpjLimpo = formData.cpf_cnpj.replace(/\D/g, '');
-    if (!(cpfCnpjLimpo.length === 11 || cpfCnpjLimpo.length === 14)) {
-      newErrors.cpf_cnpj = 'CPF deve ter 11 dígitos ou CNPJ 14 dígitos';
+    try {
+      validarCPFCNPJ(formData.cpf_cnpj);
+    } catch (error) {
+      newErrors.cpf_cnpj = error.message;
       isValid = false;
     }
 
-    // Validação do e-mail
+    try {
+      validarCelular(formData.celular);
+    } catch (error) {
+      newErrors.celular = error.message;
+      isValid = false;
+    }
+
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'E-mail inválido';
       isValid = false;
@@ -124,7 +114,7 @@ function EditarCliente() {
       const payload = {
         ...formData,
         cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
-        celular: formData.celular ? formData.celular.replace(/\D/g, '') : null
+        celular: formData.celular.replace(/\D/g, '') || null
       };
 
       await api.atualizarCliente(id, payload);

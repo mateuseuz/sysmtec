@@ -36,24 +36,6 @@ function ListaClientes() {
     }
   };
 
-  /* const formatarTelefone = (telefone) => {
-    if (!telefone) return '-';
-    const nums = telefone.replace(/\D/g, '');
-    return nums.length === 11 ? 
-      nums.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') :
-      nums.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-  }; */
-
-  /* const formatarDocumento = (doc) => {
-    if (!doc) return '-';
-    const nums = doc.replace(/\D/g, '');
-    return nums.length === 11 ? 
-      nums.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') :
-      nums.length === 14 ? 
-      nums.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5') :
-      doc;
-  }; */
-
   return (
     <div className="sysmtec-container">
       <header className="sysmtec-header">

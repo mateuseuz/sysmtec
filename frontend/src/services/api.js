@@ -9,7 +9,15 @@ const api = axios.create({
   }
 });
 
-// Adicione isso ANTES de definir apiClientes
+api.interceptors.request.use(config => {
+  if (config.data) {
+    config.data = Object.fromEntries(
+      Object.entries(config.data).filter(([_, v]) => v !== null && v !== undefined)
+  );
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response.data, // Retorna apenas os dados da resposta
   (error) => {
