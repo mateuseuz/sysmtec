@@ -1,16 +1,20 @@
 /* Variáveis de cores */
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #34495e;
-  --accent-color: #3498db;
+  --primary-color: #032f7e;
+  --secondary-color: #032f7e;
+  --accent-color: #92969d;
   --danger-color: #e74c3c;
-  --light-bg: #ecf0f1;
+  --light-bg: #82abf7;
   --text-dark: #2c3e50;
   --text-light: #7f8c8d;
   --white: #ffffff;
+  --border-color: #ddd;
+  --hover-bg: #f8f9fa;
+  --success-color: #2ecc71;
+  --active-bg: #c5cdd9; /* Nova variável para o fundo do item ativo */
 }
 
-/* Reset e estilos gerais */
+/* ========== RESET E ESTILOS GERAIS ========== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,9 +24,11 @@
 body {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
+  color: var(--text-dark);
+  background-color: var(--light-bg);
 }
 
-/* Layout principal */
+/* ========== LAYOUT PRINCIPAL ========== */
 .sysmtec-container {
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -49,142 +55,185 @@ body {
   color: rgba(255,255,255,0.9);
 }
 
-/* Sidebar */
+/* ========== SIDEBAR ========== */
 .sysmtec-sidebar {
-  background-color: var(--secondary-color);
-  color: var(--white);
-  padding: 1rem 0;
+  background-color: var(--secondary-color); /* Restaurar o azul original */
+  padding: 1.5rem 1rem;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
 .sysmtec-sidebar nav ul {
-  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Espaçamento entre os itens */
 }
 
 .sysmtec-sidebar nav li {
-  transition: all 0.3s ease;
+  list-style: none;
 }
 
 .sysmtec-sidebar nav a {
-  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
+  font-weight: bold;
   text-decoration: none;
-  display: block;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--white);
+  border-radius: 50px;
+  border: 2px solid var(--primary-color);
   transition: all 0.3s ease;
 }
 
-.sysmtec-sidebar nav li.active,
-.sysmtec-sidebar nav a:hover {
-  background-color: var(--accent-color);
+/* Item ativo - fundo cinza */
+.sysmtec-sidebar nav li.active a {
+  background-color: var(--active-bg); /* Cinza solicitado */
+  color: var(--text-dark);
+  border-color: var(--active-bg);
 }
 
-/* Área principal */
+/* Efeito hover */
+.sysmtec-sidebar nav a:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* ========== ÁREA PRINCIPAL ========== */
 .sysmtec-main {
   padding: 2rem;
-  background-color: var(--light-bg);
   min-height: calc(100vh - 60px);
 }
 
-/* Links e botões */
+/* ========== ESTILOS DA LISTAGEM ========== */
+.clientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
 .add-client-link {
   display: inline-block;
-  background-color: var(--accent-color);
-  color: var(--white);
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
+  color: #1d4ba1;
   text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
   transition: all 0.3s ease;
+  padding: 0;
+  background: none;
+  border: none;
 }
 
 .add-client-link:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.back-button {
-  display: inline-block;
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
-  text-decoration: none;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.back-button:hover {
-  color: var(--accent-color);
+  color: #1a3a7e;
   text-decoration: underline;
 }
 
-/* Cards de clientes */
-.clientes-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.cliente-card {
+.clientes-table-container {
+  width: 100%;
+  overflow-x: auto;
   background-color: var(--white);
-  padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  padding: 1rem;
 }
 
-.cliente-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+.clientes-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.cliente-card h4 {
-  margin: 0 0 0.5rem 0;
-  color: var(--text-dark);
-  font-size: 1.2rem;
+.clientes-table th,
+.clientes-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: none;
 }
 
-.cliente-card p {
-  margin: 0.25rem 0;
-  color: var(--text-light);
-  font-size: 0.9rem;
+.clientes-table th {
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-weight: 500;
 }
 
-/* Ações */
-.cliente-actions {
+.clientes-table tr:last-child td {
+  border-bottom: none;
+}
+
+.clientes-table tr:hover {
+  background-color: var(--hover-bg);
+}
+
+.clientes-table tr {
+  vertical-align: middle;
+}
+
+.cliente-nome-box {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  vertical-align: middle;
+  padding: 0.75rem 1rem;
+  justify-content: space-between;
+  min-width: 250px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.actions-cell {
   display: flex;
+  align-items: center;
+  height: 100%;
   gap: 0.75rem;
-  margin-top: 1.5rem;
 }
 
-.button {
-  padding: 0.5rem 1rem;
+.action-button {
+  background: none;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  text-align: center;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
 .edit-button {
-  background-color: var(--accent-color);
-  color: var(--white);
-  text-decoration: none;
+  color: var(--accent-color);
+  background-color: rgba(52, 152, 219, 0.1);
 }
 
 .delete-button {
-  background-color: var(--danger-color);
-  color: var(--white);
+  color: var(--danger-color);
+  background-color: rgba(231, 76, 60, 0.1);
 }
 
 .edit-button:hover {
-  background-color: #2980b9;
+  background-color: rgba(52, 152, 219, 0.2);
 }
 
 .delete-button:hover {
-  background-color: #c0392b;
+  background-color: rgba(231, 76, 60, 0.2);
 }
 
-/* Formulários */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-light);
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ========== ESTILOS DO CADASTRO ========== */
 .cliente-form {
   max-width: 600px;
   margin: 0 auto;
@@ -210,14 +259,29 @@ body {
 .form-group select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 .form-group textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
 .submit-button {
@@ -229,42 +293,65 @@ body {
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .submit-button:hover {
-  background-color: #2980b9;
+  background-color: #82abf7;
 }
 
 .submit-button:disabled {
-  background-color: #95a5a6;
+  background-color: #82abf7;
   cursor: not-allowed;
 }
 
-/* Estado de loading */
-.loading {
-  position: relative;
-  pointer-events: none;
+.back-button {
+  display: inline-block;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.loading::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255,255,255,0.3);
+.back-button:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* ========== LOADING ========== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--accent-color);
   border-radius: 50%;
-  border-top-color: var(--white);
-  animation: spin 1s ease-in-out infinite;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* Responsividade */
+/* ========== MENSAGENS TOAST ========== */
+.toast-success {
+  background-color: var(--success-color) !important;
+}
+
+.toast-error {
+  background-color: var(--danger-color) !important;
+}
+
+/* ========== RESPONSIVIDADE ========== */
 @media (max-width: 768px) {
   .sysmtec-container {
     grid-template-columns: 1fr;
@@ -274,7 +361,12 @@ body {
     grid-row: 2;
   }
   
-  .clientes-list {
-    grid-template-columns: 1fr;
+  .clientes-table {
+    display: block;
+    overflow-x: auto;
+  }s
+  
+  .cliente-form {
+    padding: 1.5rem;
   }
 }

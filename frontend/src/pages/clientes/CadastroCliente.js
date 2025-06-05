@@ -103,7 +103,7 @@ function CadastroCliente() {
           <ul>
             <li><Link to="/agenda">Agenda</Link></li>
             <li className="active"><Link to="/clientes">Clientes</Link></li>
-            <li><Link to="/projetos">Projetos e Serviços</Link></li>
+            <li><Link to="/projetos">Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos">Orçamentos</Link></li>
             <li><Link to="/log">Log de alterações</Link></li>
           </ul>

@@ -7,7 +7,7 @@ import '../../styles/Clientes.css';
 function EditarCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     nome: '',
     cpf_cnpj: '',
@@ -18,18 +18,18 @@ function EditarCliente() {
   });
   const [errors, setErrors] = useState({});
 
+  // Carrega os dados do cliente ao montar o componente
   useEffect(() => {
     const carregarCliente = async () => {
-      setIsLoading(true);
       try {
-        const response = await api.buscarCliente(id);
+        const cliente = await api.buscarCliente(id);
         setFormData({
-          nome: response.data.nome,
-          cpf_cnpj: response.data.cpf_cnpj,
-          celular: response.data.celular,
-          endereco: response.data.endereco,
-          email: response.data.email,
-          observacoes: response.data.observacoes
+          nome: cliente.nome || '',
+          cpf_cnpj: formatarDocumento(cliente.cpf_cnpj) || '',
+          celular: formatarTelefone(cliente.celular) || '',
+          endereco: cliente.endereco || '',
+          email: cliente.email || '',
+          observacoes: cliente.observacoes || ''
         });
       } catch (error) {
         toast.error('Erro ao carregar cliente: ' + error.message);
@@ -38,31 +38,50 @@ function EditarCliente() {
         setIsLoading(false);
       }
     };
+    
     carregarCliente();
   }, [id, navigate]);
 
+  // Funções auxiliares para formatação
+  const formatarDocumento = (doc) => {
+    if (!doc) return '';
+    const nums = doc.replace(/\D/g, '');
+    return nums.length === 11 ? 
+      nums.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') :
+      nums.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+  };
+
+  const formatarTelefone = (tel) => {
+    if (!tel) return '';
+    const nums = tel.replace(/\D/g, '');
+    return nums.length === 11 ? 
+      nums.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') :
+      nums.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Formatação específica para CPF/CNPJ e celular
     let formattedValue = value;
-
     if (name === 'cpf_cnpj') {
       formattedValue = value
         .replace(/\D/g, '')
         .replace(/(\d{3})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-        .substring(0, 14);
-    }
-
-    if (name === 'celular') {
+        .substring(0, 18);
+    } else if (name === 'celular') {
       formattedValue = value
         .replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '($1) $2')
-        .replace(/(\d{5})(\d)/, '$1-$2')
+        .replace(/(\d{0,2})(\d{0,5})(\d{0,4})/, '($1) $2-$3')
+        .trim()
         .substring(0, 15);
     }
 
     setFormData(prev => ({ ...prev, [name]: formattedValue }));
+    
+    // Limpa erro do campo quando modificado
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -72,17 +91,20 @@ function EditarCliente() {
     const newErrors = {};
     let isValid = true;
 
+    // Validação do nome
     if (!formData.nome.trim()) {
       newErrors.nome = 'Nome é obrigatório';
       isValid = false;
     }
 
-    const cpfCnpj = formData.cpf_cnpj.replace(/\D/g, '');
-    if (!(cpfCnpj.length === 11 || cpfCnpj.length === 14)) {
-      newErrors.cpf_cnpj = 'CPF/CNPJ inválido (11 ou 14 dígitos)';
+    // Validação do CPF/CNPJ
+    const cpfCnpjLimpo = formData.cpf_cnpj.replace(/\D/g, '');
+    if (!(cpfCnpjLimpo.length === 11 || cpfCnpjLimpo.length === 14)) {
+      newErrors.cpf_cnpj = 'CPF deve ter 11 dígitos ou CNPJ 14 dígitos';
       isValid = false;
     }
 
+    // Validação do e-mail
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'E-mail inválido';
       isValid = false;
@@ -102,18 +124,30 @@ function EditarCliente() {
       const payload = {
         ...formData,
         cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
-        celular: formData.celular.replace(/\D/g, '') || null
+        celular: formData.celular ? formData.celular.replace(/\D/g, '') : null
       };
 
       await api.atualizarCliente(id, payload);
       toast.success('Cliente atualizado com sucesso!');
       navigate('/clientes');
     } catch (error) {
+      console.error('Erro ao atualizar:', error);
       toast.error(error.response?.data?.error || 'Erro ao atualizar cliente');
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="sysmtec-container">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Carregando cliente...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="sysmtec-container">
@@ -127,7 +161,7 @@ function EditarCliente() {
           <ul>
             <li><Link to="/agenda">Agenda</Link></li>
             <li className="active"><Link to="/clientes">Clientes</Link></li>
-            <li><Link to="/projetos">Projetos e Serviços</Link></li>
+            <li><Link to="/projetos">Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos">Orçamentos</Link></li>
             <li><Link to="/log">Log de alterações</Link></li>
           </ul>
@@ -168,7 +202,7 @@ function EditarCliente() {
           <div className="form-group">
             <label>Celular</label>
             <input
-              type="text"
+              type="tel"
               name="celular"
               value={formData.celular}
               onChange={handleChange}
@@ -220,7 +254,7 @@ function EditarCliente() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar Alterações'}
+            ) : 'SALVAR ALTERAÇÕES'}
           </button>
         </form>
       </main>
