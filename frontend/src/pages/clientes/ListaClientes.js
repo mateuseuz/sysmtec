@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import { formatCPForCNPJ, formatCelular } from '../../utils/validations'; // Verifique o caminho correto
 import '../../styles/Clientes.css';
 
 function ListaClientes() {
@@ -40,17 +41,16 @@ function ListaClientes() {
     <div className="sysmtec-container">
       <header className="sysmtec-header">
         <h1>SYSMTEC</h1>
-        <h2>TELA DE LISTAGEM DE CLIENTES</h2>
       </header>
 
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li><Link to="/agenda">Agenda</Link></li>
-            <li className="active"><Link to="/clientes">Clientes</Link></li>
-            <li><Link to="/projetos">Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos">Orçamentos</Link></li>
-            <li><Link to="/log">Log de alterações</Link></li>
+            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
+            <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
+            <li><Link to="/projetos"><span>🛠️</span>Ordens de Serviço</Link></li>
+            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
+            <li><Link to="/log"><span>📋</span>Log de alterações</Link></li>
           </ul>
         </nav>
       </div>
@@ -77,6 +77,8 @@ function ListaClientes() {
               <thead>
                 <tr>
                   <th>Nome</th>
+                  <th>CPF/CNPJ</th>
+                  <th>Celular</th>
                   <th>Ações</th>
                 </tr>
               </thead>
@@ -84,11 +86,18 @@ function ListaClientes() {
                 {clientes.map(cliente => (
                   <tr key={cliente.id_cliente}>
                     <td>
-                      <div className="cliente-nome-box">
-                        {cliente.nome}
-                      </div>
+                      {cliente.nome}
                     </td>
+                    <td>{formatCPForCNPJ(cliente.cpf_cnpj) || '-'}</td>
+                    <td>{formatCelular(cliente.celular) || '-'}</td>
                     <td className="actions-cell">
+                      <Link
+                        to={`/clientes/visualizar/${cliente.id_cliente}`} // Defina a rota correta se for diferente
+                        className="view-button" // Nova classe para o botão de visualização
+                        title="Visualizar cliente"
+                      >
+                        🔎
+                      </Link>
                       <Link 
                         to={`/clientes/editar/${cliente.id_cliente}`} 
                         className="edit-button"

@@ -119,23 +119,22 @@ function CadastroCliente() {
     <div className="sysmtec-container">
       <header className="sysmtec-header">
         <h1>SYSMTEC</h1>
-        <h2>TELA DE CADASTRO DE CLIENTE</h2>
       </header>
 
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li><Link to="/agenda">Agenda</Link></li>
-            <li className="active"><Link to="/clientes">Clientes</Link></li>
-            <li><Link to="/projetos">Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos">Orçamentos</Link></li>
-            <li><Link to="/log">Log de alterações</Link></li>
+            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
+            <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
+            <li><Link to="/projetos"><span>🛠️</span>Ordens de Serviço</Link></li>
+            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
+            <li><Link to="/log"><span>📋</span>Log de alterações</Link></li>
           </ul>
         </nav>
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/clientes" className="back-button">VOLTAR</Link>
+        <Link to="/clientes" className="back-button">&lt; VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">

@@ -22,7 +22,7 @@
 }
 
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
   background-color: var(--light-bg);
@@ -65,7 +65,7 @@ body {
 .sysmtec-sidebar nav ul {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* Espaçamento entre os itens */
+  gap: 1rem; /* Espaçamento entre os itens */
 }
 
 .sysmtec-sidebar nav li {
@@ -75,27 +75,30 @@ body {
 .sysmtec-sidebar nav a {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: var(--text-dark);
+  /* justify-content: center; */ /* Removido para alinhar texto à esquerda com ícone */
+  color: var(--white);
   font-weight: bold;
   text-decoration: none;
-  padding: 0.8rem 1.2rem;
-  background-color: var(--white);
-  border-radius: 50px;
-  border: 2px solid var(--primary-color);
+  padding: 0.8rem 1rem;
+  border-radius: 6px; /* Ajustado para cantos levemente arredondados */
   transition: all 0.3s ease;
+  gap: 0.75rem; /* Espaçamento entre o futuro ícone e o texto */
+}
+
+.sysmtec-sidebar nav a span {
+  font-size: 1.1em; /* Ajuste o tamanho do ícone se necessário */
 }
 
 /* Item ativo - fundo cinza */
 .sysmtec-sidebar nav li.active a {
-  background-color: var(--active-bg); /* Cinza solicitado */
-  color: var(--text-dark);
-  border-color: var(--active-bg);
+  background-color: #0056b3; /* Novo azul para item ativo */
+  color: var(--white);
+  border-color: #0056b3; /* Borda correspondente ou pode ser removida */
 }
 
 /* Efeito hover */
 .sysmtec-sidebar nav a:hover {
-  background-color: var(--primary-color);
+  background-color: #024a99; /* Novo azul para hover */
   color: var(--white);
 }
 
@@ -103,6 +106,14 @@ body {
 .sysmtec-main {
   padding: 2rem;
   min-height: calc(100vh - 60px);
+}
+
+.sysmtec-main > h2 {
+  font-size: 1.3rem; /* Ajuste o tamanho conforme necessário */
+  color: #333; /* Ajuste a cor conforme necessário */
+  margin-bottom: 1.5rem;
+  font-weight: bold; /* Ou normal, dependendo da imagem */
+  text-align: left; /* Ou center, se aplicável */
 }
 
 /* ========== ESTILOS DA LISTAGEM ========== */
@@ -113,21 +124,28 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.add-client-link {
+/* Unificando estilos base para .add-client-link e .back-button */
+.add-client-link,
+.back-button {
   display: inline-block;
-  color: #1d4ba1;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 0.6rem 1.2rem; /* Padronizado */
+  border-radius: 5px;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: bold; /* Padronizado */
   font-size: 1rem;
-  transition: all 0.3s ease;
-  padding: 0;
-  background: none;
   border: none;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-.add-client-link:hover {
-  color: #1a3a7e;
-  text-decoration: underline;
+/* Unificando estilos hover para .add-client-link e .back-button */
+.add-client-link:hover,
+.back-button:hover {
+  background-color: #0056b3; 
+  color: var(--white); /* Garantido */
+  text-decoration: none;
 }
 
 .clientes-table-container {
@@ -141,26 +159,25 @@ body {
 
 .clientes-table {
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse; /* Alterado */
   border-spacing: 0;
 }
 
 .clientes-table th,
 .clientes-table td {
-  padding: 1rem;
+  padding: 0.8rem; /* Ajuste de padding */
   text-align: left;
-  border-bottom: none;
+  border-bottom: 1px solid var(--border-color); /* Adicionado para td */
 }
 
 .clientes-table th {
   background-color: var(--primary-color);
   color: var(--white);
-  font-weight: 500;
+  font-weight: bold; /* Adicionado */
+  border-bottom: 1px solid #00225c; /* Adicionado para th */
 }
 
-.clientes-table tr:last-child td {
-  border-bottom: none;
-}
+/* Removido .clientes-table tr:last-child td { border-bottom: none; } pois o collapse cuida disso ou a borda geral já é aplicada */
 
 .clientes-table tr:hover {
   background-color: var(--hover-bg);
@@ -170,58 +187,61 @@ body {
   vertical-align: middle;
 }
 
-.cliente-nome-box {
-  background-color: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
-  vertical-align: middle;
-  padding: 0.75rem 1rem;
-  justify-content: space-between;
-  min-width: 250px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+/* Definições de largura e quebra de linha para colunas específicas */
+.clientes-table th:nth-child(1), /* Coluna Nome */
+.clientes-table td:nth-child(1) {
+  min-width: 200px; 
+  /* white-space: nowrap; */ /* Opcional: se não quiser quebra de linha no nome */
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
 }
+
+.clientes-table th:nth-child(2), /* Coluna CPF/CNPJ */
+.clientes-table td:nth-child(2),
+.clientes-table th:nth-child(3), /* Coluna Celular */
+.clientes-table td:nth-child(3) {
+  min-width: 150px; 
+  white-space: nowrap; 
+}
+
+.clientes-table th:nth-child(4), /* Coluna Ações */
+.clientes-table td:nth-child(4) {
+  min-width: 120px; 
+  text-align: center;
+}
+
+/* .cliente-nome-box foi removido */
 
 .actions-cell {
   display: flex;
   align-items: center;
-  height: 100%;
-  gap: 0.75rem;
+  justify-content: center; /* Centraliza os ícones */
+  /* height: 100%; */ /* Removido se não for necessário para alinhar apenas os ícones */
+  gap: 0.75rem; /* Ajuste fino do espaçamento entre ícones */
 }
 
-.action-button {
-  background: none;
+/* .action-button foi removido pois os estilos serão aplicados diretamente a .edit-button e .delete-button */
+
+.edit-button, 
+.delete-button,
+.view-button {
+  background-color: transparent;
+  color: var(--text-dark); /* Ou #555 */
+  padding: 0.4rem; /* Ajuste de padding */
   border: none;
   cursor: pointer;
-  font-size: 1rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  font-size: 1rem; /* Ou tamanho do ícone */
+  transition: all 0.2s ease; /* Mantido de .action-button */
+  /* width e height removidos para depender do conteúdo (ícone) */
+  text-decoration: none; /* Para o Link do view-button */
+  display: inline-flex; /* Para alinhar o ícone se necessário */
+  align-items: center; /* Para alinhar o ícone se necessário */
 }
 
-.edit-button {
-  color: var(--accent-color);
-  background-color: rgba(52, 152, 219, 0.1);
-}
-
-.delete-button {
-  color: var(--danger-color);
-  background-color: rgba(231, 76, 60, 0.1);
-}
-
-.edit-button:hover {
-  background-color: rgba(52, 152, 219, 0.2);
-}
-
-.delete-button:hover {
-  background-color: rgba(231, 76, 60, 0.2);
+.edit-button:hover, 
+.delete-button:hover,
+.view-button:hover {
+  background-color: rgba(0,0,0,0.05);
 }
 
 .no-results {
@@ -269,8 +289,8 @@ body {
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  border-color: var(--primary-color); /* Azul escuro principal */
+  box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25); /* Sombra sutil do azul escuro principal */
 }
 
 .form-group textarea {
@@ -285,39 +305,56 @@ body {
 }
 
 .submit-button {
-  background-color: var(--accent-color);
+  background-color: var(--primary-color); /* Azul escuro principal */
   color: var(--white);
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.2rem; /* Padronizado para corresponder aos outros botões */
   border: none;
-  border-radius: 4px;
+  border-radius: 5px; /* Padronizado */
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.3s ease;
   width: 100%;
+  /* text-transform: uppercase; */ /* Removido */
+  font-weight: bold; /* Padronizado */
 }
 
 .submit-button:hover {
-  background-color: #82abf7;
+  background-color: #0056b3; /* Azul médio */
+  color: var(--white); /* Garantido */
 }
 
 .submit-button:disabled {
-  background-color: #82abf7;
+  background-color: #cccccc; /* Cinza claro para desabilitado */
+  color: #666666;
   cursor: not-allowed;
 }
 
 .back-button {
   display: inline-block;
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
+  font-size: 1rem; /* Consistente com .add-client-link */
+  border: none;
+  text-align: center;
   transition: all 0.3s ease;
+  /* margin-bottom é específico para .back-button em seu contexto, 
+     se .add-client-link precisar, deve ser adicionado especificamente.
+     Atualmente, .back-button já tem margin-bottom: 1.5rem; em sua regra mais específica abaixo,
+     então esta linha é redundante aqui ou precisa ser gerenciada com cuidado.
+     Para evitar conflito, a margin-bottom do .back-button será mantida em sua regra própria.
+  */
 }
 
-.back-button:hover {
-  color: var(--accent-color);
-  text-decoration: underline;
+/* .back-button específico para margin-bottom, se necessário manter separado */
+.back-button {
+  margin-bottom: 1.5rem; /* Mantido para espaçamento antes do formulário */
 }
+
+/* .add-client-link não precisa de margin-bottom específica aqui */
 
 /* ========== LOADING ========== */
 .loading-container {
