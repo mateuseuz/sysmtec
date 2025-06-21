@@ -48,23 +48,57 @@ function EditarCliente() {
   let formattedValue = value;
   
   if (name === 'cpf_cnpj') {
-    formattedValue = value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-      .substring(0, 18);
-  } else if (name === 'celular') {
+    // const originalValue = value; // Para controle de cursor avançado (não implementado aqui)
     const nums = value.replace(/\D/g, '');
-    
+    // formattedValue = nums; // Inicialização removida
+
     if (nums.length === 0) {
       formattedValue = '';
-    } else if (nums.length <= 2) {
+    } else if (nums.length <= 3) { // XXX
+      formattedValue = nums;
+    } else if (nums.length <= 6) { // XXX.XXX
+      formattedValue = `${nums.substring(0, 3)}.${nums.substring(3)}`;
+    } else if (nums.length <= 9) { // XXX.XXX.XXX
+      formattedValue = `${nums.substring(0, 3)}.${nums.substring(3, 6)}.${nums.substring(6, 9)}`;
+    } else if (nums.length <= 11) { // XXX.XXX.XXX-XX (CPF)
+      formattedValue = `${nums.substring(0, 3)}.${nums.substring(3, 6)}.${nums.substring(6, 9)}-${nums.substring(9, 11)}`;
+    } else if (nums.length <= 14) { // XX.XXX.XXX/XXXX-XX (CNPJ)
+      const cnpjNums = nums.substring(0, 14); // Pega no máximo 14 dígitos
+      if (cnpjNums.length <= 2) {
+        formattedValue = cnpjNums;
+      } else if (cnpjNums.length <= 5) {
+        formattedValue = `${cnpjNums.substring(0, 2)}.${cnpjNums.substring(2)}`;
+      } else if (cnpjNums.length <= 8) {
+        formattedValue = `${cnpjNums.substring(0, 2)}.${cnpjNums.substring(2, 5)}.${cnpjNums.substring(5)}`;
+      } else if (cnpjNums.length <= 12) {
+        formattedValue = `${cnpjNums.substring(0, 2)}.${cnpjNums.substring(2, 5)}.${cnpjNums.substring(5, 8)}/${cnpjNums.substring(8)}`;
+      } else {
+        formattedValue = `${cnpjNums.substring(0, 2)}.${cnpjNums.substring(2, 5)}.${cnpjNums.substring(5, 8)}/${cnpjNums.substring(8, 12)}-${cnpjNums.substring(12)}`;
+      }
+    } else { // Mais de 14 dígitos, truncar para o formato CNPJ formatado
+      const cnpjNums = nums.substring(0, 14);
+      formattedValue = `${cnpjNums.substring(0, 2)}.${cnpjNums.substring(2, 5)}.${cnpjNums.substring(5, 8)}/${cnpjNums.substring(8, 12)}-${cnpjNums.substring(12, 14)}`;
+    }
+  } else if (name === 'celular') {
+    const nums = value.replace(/\D/g, '');
+    formattedValue = ''; // Inicializa formattedValue
+
+    if (nums.length === 0) {
+      formattedValue = '';
+    } else if (nums.length <= 2) { // (XX
       formattedValue = `(${nums}`;
-    } else if (nums.length <= 7) {
-      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2)}`;
-    } else {
+    } else if (nums.length <= 6) { // (XX) XXXX
+      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2, 6)}`;
+    } else if (nums.length <= 10) { // (XX) XXXX-ZZZZ (10 dígitos no total)
+      formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2, 6)}-${nums.substring(6, 10)}`;
+    } else { // (XX) XXXXX-ZZZZ (11 dígitos no total, ou mais, será truncado)
       formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2, 7)}-${nums.substring(7, 11)}`;
+    }
+
+    // Limitar o tamanho máximo da string formatada para evitar overflow no input se algo muito grande for colado.
+    // (XX) XXXXX-XXXX tem 15 caracteres.
+    if (formattedValue.length > 15) {
+        formattedValue = formattedValue.substring(0, 15);
     }
   }
 

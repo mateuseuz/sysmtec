@@ -293,15 +293,38 @@ body {
   box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25); /* Sombra sutil do azul escuro principal */
 }
 
+/* Estilos para campos readOnly e disabled na tela de visualização */
+.cliente-form input[readOnly][disabled],
+.cliente-form textarea[readOnly][disabled] {
+  background-color: transparent; 
+  border: 1px solid transparent; 
+  color: var(--text-dark); 
+  cursor: default; 
+  outline: none; 
+  box-shadow: none; 
+  /* O padding: 0.75rem; já é herdado da regra .form-group input, .form-group textarea */
+}
+
+.cliente-form input[readOnly][disabled]::placeholder,
+.cliente-form textarea[readOnly][disabled]::placeholder {
+  color: transparent; /* Esconde placeholders se houver */
+}
+
 .form-group textarea {
   min-height: 100px;
   resize: vertical;
 }
 
 .error-message {
-  color: var(--danger-color);
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
+  color: var(--danger-color); /* Mantém a cor do texto original */
+  background-color: #fdeded; /* Um fundo rosa/vermelho muito claro */
+  border: 1px solid rgba(231, 76, 60, 0.3); /* Borda sutil com cor de perigo transparente */
+  padding: 0.5rem 0.75rem; /* Padding interno */
+  border-radius: 4px; /* Cantos arredondados */
+  font-size: 0.85rem; /* Mantém o tamanho da fonte */
+  margin-top: 0.5rem; /* Aumenta um pouco a margem superior para separar do campo */
+  display: block; /* Faz a mensagem ocupar a largura e respeitar margens/paddings verticais corretamente */
+  line-height: 1.4; /* Melhora a legibilidade se a mensagem tiver múltiplas linhas */
 }
 
 .submit-button {
@@ -380,12 +403,29 @@ body {
 }
 
 /* ========== MENSAGENS TOAST ========== */
-.toast-success {
+/* .toast-success {
   background-color: var(--success-color) !important;
+  color: var(--white) !important; 
+  border-radius: 5px !important; 
 }
 
 .toast-error {
   background-color: var(--danger-color) !important;
+  color: var(--white) !important; 
+  border-radius: 5px !important; 
+} */
+
+/* Estilização para toasts do react-toastify */
+.Toastify__toast--success {
+  background-color: var(--success-color) !important;
+  color: var(--white) !important;
+  border-radius: 5px !important;
+}
+
+.Toastify__toast--error {
+  background-color: var(--danger-color) !important;
+  color: var(--white) !important;
+  border-radius: 5px !important;
 }
 
 /* ========== RESPONSIVIDADE ========== */

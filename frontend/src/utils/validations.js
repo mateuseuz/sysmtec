@@ -70,11 +70,13 @@ export const validarCPFCNPJ = (doc) => {
 };
 
 export const validarCelular = (celular) => {
-  if (!celular || celular.trim() === '') return true;
-  
+  if (!celular || celular.trim() === '') {
+    throw new Error('Celular é obrigatório');
+  }
+
   const nums = celular.replace(/\D/g, '');
   if (nums.length < 10 || nums.length > 11) {
-    throw new Error('Celular deve ter 10 ou 11 dígitos');
+    throw new Error('Celular deve ter 10 ou 11 dígitos (após DDD)');
   }
   return true;
 };
