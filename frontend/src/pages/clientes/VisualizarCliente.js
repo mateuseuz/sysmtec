@@ -73,9 +73,9 @@ function VisualizarCliente() {
       <main className="sysmtec-main">
         <Link to="/clientes" className="back-button">&lt; VOLTAR</Link>
 
-        <div className="cliente-form"> {/* Alterado de form para div, ou remover onSubmit */}
+        <div className="cliente-form"> {}
           <div className="form-group">
-            <label>Nome</label> {/* Removido * de campos não obrigatórios na visualização */}
+            <label>Nome</label> {}
             <input
               type="text"
               name="nome"
@@ -136,15 +136,15 @@ function VisualizarCliente() {
               value={formData.observacoes}
               readOnly
               disabled
-              maxLength="500" // Pode ser mantido ou removido
+              maxLength="500"
             />
           </div>
 
-          {/* Botão de submit removido */}
+          {}
         </div>
       </main>
     </div>
   );
 }
 
-export default VisualizarCliente; // Renomeado
+export default VisualizarCliente;

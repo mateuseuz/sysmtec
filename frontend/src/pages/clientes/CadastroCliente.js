@@ -24,9 +24,7 @@ function CadastroCliente() {
   let formattedValue = value;
   
   if (name === 'cpf_cnpj') {
-    // const originalValue = value; // Para controle de cursor avançado (não implementado aqui)
     const nums = value.replace(/\D/g, '');
-    // formattedValue = nums; // Inicialização removida para evitar atribuição desnecessária
 
     if (nums.length === 0) {
       formattedValue = '';
@@ -57,7 +55,7 @@ function CadastroCliente() {
     }
   } else if (name === 'celular') {
     const nums = value.replace(/\D/g, '');
-    formattedValue = ''; // Inicializa formattedValue
+    formattedValue = '';
 
     if (nums.length === 0) {
       formattedValue = '';
@@ -89,6 +87,7 @@ function CadastroCliente() {
     let isValid = true;
 
     if (!formData.nome.trim()) {
+      toast.warn('Nome é obrigatório');
       newErrors.nome = 'Nome é obrigatório';
       isValid = false;
     }
@@ -96,6 +95,7 @@ function CadastroCliente() {
     try {
       validarCPFCNPJ(formData.cpf_cnpj);
     } catch (error) {
+      toast.warn(error.message);
       newErrors.cpf_cnpj = error.message;
       isValid = false;
     }
@@ -103,11 +103,13 @@ function CadastroCliente() {
     try {
       validarCelular(formData.celular);
     } catch (error) {
+      toast.warn(error.message);
       newErrors.celular = error.message;
       isValid = false;
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.warn('E-mail inválido');
       newErrors.email = 'E-mail inválido';
       isValid = false;
     }
@@ -123,17 +125,16 @@ function CadastroCliente() {
 
   setIsLoading(true);
   try {
-    // Prepara os dados garantindo que nenhum campo seja null/undefined
     const payload = {
       nome: formData.nome,
-      cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''), // Obrigatório (já validado)
+      cpf_cnpj: formData.cpf_cnpj.replace(/\D/g, ''),
       celular: formData.celular ? formData.celular.replace(/\D/g, '') : null,
       endereco: formData.endereco || null,
       email: formData.email || null,
       observacoes: formData.observacoes || null
     };
 
-    console.log('Payload enviado:', payload); // Para debug
+    console.log('Payload enviado:', payload);
 
     await api.criarCliente(payload);
     toast.success('Cliente cadastrado com sucesso!');
@@ -176,9 +177,8 @@ function CadastroCliente() {
               value={formData.nome}
               onChange={handleChange}
               className={errors.nome ? 'error' : ''}
-              required
             />
-            {errors.nome && <span className="error-message">{errors.nome}</span>}
+            {}
           </div>
 
           <div className="form-group">
@@ -190,9 +190,8 @@ function CadastroCliente() {
               onChange={handleChange}
               className={errors.cpf_cnpj ? 'error' : ''}
               placeholder="000.000.000-00 ou 00.000.000/0000-00"
-              required
             />
-            {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>}
+            {}
           </div>
 
           <div className="form-group">
@@ -205,7 +204,7 @@ function CadastroCliente() {
               className={errors.celular ? 'error' : ''}
               placeholder="(00) 00000-0000"
             />
-            {errors.celular && <span className="error-message">{errors.celular}</span>}
+            {}
           </div>
 
           <div className="form-group">
@@ -227,7 +226,7 @@ function CadastroCliente() {
               onChange={handleChange}
               className={errors.email ? 'error' : ''}
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
+            {}
           </div>
 
           <div className="form-group">

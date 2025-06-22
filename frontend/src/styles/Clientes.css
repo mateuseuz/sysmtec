@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Source+Sans+3:wght@400;600&display=swap');
+
 /* Variáveis de cores */
 :root {
   --primary-color: #032f7e;
   --secondary-color: #032f7e;
   --accent-color: #92969d;
   --danger-color: #e74c3c;
+  --warning-color: #ffc107; /* Nova cor de aviso */
   --light-bg: #82abf7;
   --text-dark: #2c3e50;
   --text-light: #7f8c8d;
@@ -37,7 +40,8 @@ body {
 
 .sysmtec-header {
   grid-column: 1 / -1;
-  background-color: var(--primary-color);
+  background-image: linear-gradient(135deg, var(--primary-color) 0%, #022664 100%); /* Gradiente diagonal sutil */
+  background-color: var(--primary-color); /* Fallback para navegadores que não suportam gradientes */
   color: var(--white);
   padding: 1rem;
   text-align: center;
@@ -45,7 +49,15 @@ body {
 }
 
 .sysmtec-header h1 {
-  font-size: 1.5rem;
+  font-size: 2.2rem; /* Aumentado de 1.5rem */
+  color: var(--white); 
+  font-family: 'Montserrat', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; 
+  font-weight: 300; 
+  text-transform: uppercase; 
+  letter-spacing: 4px; /* Aumentado de 3px */
+  text-shadow: 
+    0px 2px 4px rgba(0, 0, 0, 0.4),  /* Sombra escura para profundidade */
+    0 0 8px rgba(200, 220, 255, 0.3); /* Brilho azulado claro suave */
 }
 
 .sysmtec-header h2 {
@@ -57,9 +69,48 @@ body {
 
 /* ========== SIDEBAR ========== */
 .sysmtec-sidebar {
-  background-color: var(--secondary-color); /* Restaurar o azul original */
+  background-image: linear-gradient(to bottom, var(--secondary-color), #02225a);
   padding: 1.5rem 1rem;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
+  background-color: var(--secondary-color); /* Fallback */
+  position: relative; /* Para o pseudo-elemento */
+  overflow: hidden; /* Para conter a animação de escala */
+  z-index: 0; /* Para garantir que o pseudo-elemento não cubra outros elementos fora da sidebar */
+}
+
+.sysmtec-sidebar nav {
+  position: relative;
+  z-index: 1;
+}
+
+.sysmtec-sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, 
+                                rgba(255, 255, 255, 0.08) 0%, 
+                                rgba(255, 255, 255, 0.0) 70%);
+  opacity: 0.7; /* Opacidade inicial */
+  animation: breathEffect 8s infinite ease-in-out;
+  z-index: 0; 
+}
+
+@keyframes breathEffect {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2; 
+    transform: scale(1.3); 
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
 }
 
 .sysmtec-sidebar nav ul {
@@ -77,9 +128,11 @@ body {
   align-items: center;
   /* justify-content: center; */ /* Removido para alinhar texto à esquerda com ícone */
   color: var(--white);
-  font-weight: bold;
+  font-family: 'Source Sans 3', sans-serif; /* Nova fonte */
+  font-weight: 600; /* Semibold para boa legibilidade */
   text-decoration: none;
   padding: 0.8rem 1rem;
+  letter-spacing: 0.5px; /* Um leve aumento para clareza, ajuste conforme necessário */
   border-radius: 6px; /* Ajustado para cantos levemente arredondados */
   transition: all 0.3s ease;
   gap: 0.75rem; /* Espaçamento entre o futuro ícone e o texto */
@@ -91,14 +144,19 @@ body {
 
 /* Item ativo - fundo cinza */
 .sysmtec-sidebar nav li.active a {
-  background-color: #0056b3; /* Novo azul para item ativo */
-  color: var(--white);
-  border-color: #0056b3; /* Borda correspondente ou pode ser removida */
+  background-color: rgba(255, 255, 255, 0.08); /* Leve brilho branco sobre o gradiente */
+  color: var(--white); 
+  border-left: 3px solid var(--success-color); /* Borda lateral verde para destaque vibrante */
+  padding-left: calc(1rem - 3px); /* Ajusta o padding esquerdo. O padding original é 0.8rem (top/bottom) e 1rem (left/right) */
+  /* Assegurar que outras bordas sejam removidas se aplicadas por padrão ou herdadas de forma indesejada */
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
 }
 
 /* Efeito hover */
 .sysmtec-sidebar nav a:hover {
-  background-color: #024a99; /* Novo azul para hover */
+  background-color: #005bc0; /* Azul um pouco mais claro e vibrante */
   color: var(--white);
 }
 
@@ -293,6 +351,20 @@ body {
   box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25); /* Sombra sutil do azul escuro principal */
 }
 
+/* Estilo para campos de formulário com erro */
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--danger-color) !important; /* Borda vermelha para indicar erro */
+  /* box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important; */ /* Opcional */
+}
+
+/* Ajuste para o estado de foco de um campo com erro */
+.form-group input.error:focus,
+.form-group textarea.error:focus {
+  border-color: var(--danger-color) !important; /* Mantém a borda vermelha no foco */
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25) !important; /* Sombra sutil vermelha no foco */
+}
+
 /* Estilos para campos readOnly e disabled na tela de visualização */
 .cliente-form input[readOnly][disabled],
 .cliente-form textarea[readOnly][disabled] {
@@ -419,6 +491,12 @@ body {
 .Toastify__toast--success {
   background-color: var(--success-color) !important;
   color: var(--white) !important;
+  border-radius: 5px !important;
+}
+
+.Toastify__toast--warning { /* Nova regra para toasts de aviso */
+  background-color: var(--warning-color) !important;
+  color: var(--text-dark) !important; /* Texto escuro para contraste com fundo amarelo */
   border-radius: 5px !important;
 }
 
