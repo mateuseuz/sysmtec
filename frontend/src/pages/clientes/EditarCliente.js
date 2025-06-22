@@ -223,7 +223,7 @@ function EditarCliente() {
           </div>
 
           <div className="form-group">
-            <label>Celular</label>
+            <label>Celular *</label>
             <input
               type="tel"
               name="celular"
