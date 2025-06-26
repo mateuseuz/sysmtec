@@ -24,9 +24,7 @@ export const validarCPF = (cpf) => {
 };
 
 export const validarCNPJ = (cnpj) => { 
-  if (typeof cnpj !== 'string') {
-    cnpj = String(cnpj); 
-  }
+  if (typeof cnpj !== 'string') cnpj = String(cnpj); 
   
   cnpj = cnpj.replace(/\D/g, ''); 
 
@@ -34,13 +32,10 @@ export const validarCNPJ = (cnpj) => {
     return false;
   }
 
-  // Cálculo do primeiro dígito verificador (DV1)
   let numerosParaDV1 = cnpj.substring(0, 12);
   let somaDV1 = 0;
   let pesoDV1 = 5;
-  let pesosAplicadosDV1 = []; // Para logar os pesos
   for (let i = 0; i < 12; i++) {
-    pesosAplicadosDV1.push(pesoDV1);
     somaDV1 += parseInt(numerosParaDV1.charAt(i)) * pesoDV1;
     pesoDV1--;
     if (pesoDV1 < 2) {
@@ -48,18 +43,15 @@ export const validarCNPJ = (cnpj) => {
     }
   }
   let dv1Calculado = somaDV1 % 11 < 2 ? 0 : 11 - (somaDV1 % 11);
-  
+
   if (dv1Calculado !== parseInt(cnpj.charAt(12))) {
     return false;
   }
 
-  // Cálculo do segundo dígito verificador (DV2)
   let numerosParaDV2 = cnpj.substring(0, 13); 
   let somaDV2 = 0;
   let pesoDV2 = 6; 
-  let pesosAplicadosDV2 = []; // Para logar os pesos
   for (let i = 0; i < 13; i++) {
-    pesosAplicadosDV2.push(pesoDV2);
     somaDV2 += parseInt(numerosParaDV2.charAt(i)) * pesoDV2;
     pesoDV2--;
     if (pesoDV2 < 2) {
@@ -67,7 +59,7 @@ export const validarCNPJ = (cnpj) => {
     }
   }
   let dv2Calculado = somaDV2 % 11 < 2 ? 0 : 11 - (somaDV2 % 11);
-  
+
   if (dv2Calculado !== parseInt(cnpj.charAt(13))) {
     return false;
   }
@@ -79,9 +71,13 @@ export const validarCPFCNPJ = (doc) => {
   const docLimpo = doc.replace(/\D/g, '');
 
   if (docLimpo.length === 11) {
-    if (!validarCPF(docLimpo)) throw new Error('CPF inválido');
+    if (!validarCPF(docLimpo)) {
+      throw new Error('CPF inválido');
+    }
   } else if (docLimpo.length === 14) {
-    if (!validarCNPJ(docLimpo)) throw new Error('CNPJ inválido');
+    if (!validarCNPJ(docLimpo)) { 
+      throw new Error('CNPJ inválido');
+    }
   } else {
     throw new Error('Documento deve ter 11 (CPF) ou 14 (CNPJ) dígitos');
   }

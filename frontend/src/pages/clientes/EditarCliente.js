@@ -48,7 +48,9 @@ function EditarCliente() {
   let formattedValue = value;
   
   if (name === 'cpf_cnpj') {
+    // const originalValue = value; // Para controle de cursor avançado (não implementado aqui)
     const nums = value.replace(/\D/g, '');
+    // formattedValue = nums; // Inicialização removida
 
     if (nums.length === 0) {
       formattedValue = '';
@@ -79,7 +81,7 @@ function EditarCliente() {
     }
   } else if (name === 'celular') {
     const nums = value.replace(/\D/g, '');
-    formattedValue = '';
+    formattedValue = ''; // Inicializa formattedValue
 
     if (nums.length === 0) {
       formattedValue = '';
@@ -206,7 +208,7 @@ function EditarCliente() {
               onChange={handleChange}
               className={errors.nome ? 'error' : ''}
             />
-            {}
+            {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
           </div>
 
           <div className="form-group">
@@ -219,11 +221,11 @@ function EditarCliente() {
               placeholder="000.000.000-00 ou 00.000.000/0000-00"
               className={errors.cpf_cnpj ? 'error' : ''}
             />
-            {}
+            {/* {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>} */}
           </div>
 
           <div className="form-group">
-            <label>Celular *</label>
+            <label>Celular</label>
             <input
               type="tel"
               name="celular"
@@ -232,7 +234,7 @@ function EditarCliente() {
               placeholder="(00) 00000-0000"
               className={errors.celular ? 'error' : ''}
             />
-            {}
+            {/* {errors.celular && <span className="error-message">{errors.celular}</span>} */}
           </div>
 
           <div className="form-group">
@@ -248,13 +250,13 @@ function EditarCliente() {
           <div className="form-group">
             <label>E-mail</label>
             <input
-              type="email"
+              type="text" // Alterado de "email" para "text"
               name="email"
               value={formData.email}
               onChange={handleChange}
               className={errors.email ? 'error' : ''}
             />
-            {}
+            {/* {errors.email && <span className="error-message">{errors.email}</span>} */}
           </div>
 
           <div className="form-group">
