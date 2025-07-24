@@ -33,7 +33,21 @@ const apiClientes = {
   buscarCliente: (id) => api.get(`/clientes/${id}`),
   atualizarCliente: (id, cliente) => api.put(`/clientes/${id}`, cliente),
   deletarCliente: (id) => api.delete(`/clientes/${id}`),
-  buscarClientesPorNome: (nome) => api.get(`/clientes/?nome=${encodeURIComponent(nome)}`)
+  buscarClientesPorNome: (nome) => api.get(`/clientes/?nome=${encodeURIComponent(nome)}`),
+
+  // Ordens de Serviço
+  criarOrdemServico: (ordemServico) => api.post('/ordens-servico', ordemServico),
+  listarOrdensServico: () => api.get('/ordens-servico'),
+  buscarOrdemServico: (id) => api.get(`/ordens-servico/${id}`),
+  atualizarOrdemServico: (id, ordemServico) => api.put(`/ordens-servico/${id}`, ordemServico),
+  deletarOrdemServico: (id) => api.delete(`/ordens-servico/${id}`),
+
+  // Orçamentos
+  listarOrcamentos: () => api.get('/orcamentos'),
+  criarOrcamento: (orcamento) => api.post('/orcamentos', orcamento),
+  buscarOrcamento: (id) => api.get(`/orcamentos/${id}`),
+  atualizarOrcamento: (id, orcamento) => api.put(`/orcamentos/${id}`, orcamento),
+  deletarOrcamento: (id) => api.delete(`/orcamentos/${id}`),
 };
 
 export default apiClientes;

@@ -24,9 +24,7 @@ function CadastroCliente() {
   let formattedValue = value;
   
   if (name === 'cpf_cnpj') {
-    // const originalValue = value; // Para controle de cursor avançado (não implementado aqui)
     const nums = value.replace(/\D/g, '');
-    // formattedValue = nums; // Inicialização removida para evitar atribuição desnecessária
 
     if (nums.length === 0) {
       formattedValue = '';
@@ -57,7 +55,7 @@ function CadastroCliente() {
     }
   } else if (name === 'celular') {
     const nums = value.replace(/\D/g, '');
-    formattedValue = ''; // Inicializa formattedValue
+    formattedValue = '';
 
     if (nums.length === 0) {
       formattedValue = '';
@@ -71,8 +69,6 @@ function CadastroCliente() {
       formattedValue = `(${nums.substring(0, 2)}) ${nums.substring(2, 7)}-${nums.substring(7, 11)}`;
     }
 
-    // Limitar o tamanho máximo da string formatada para evitar overflow no input se algo muito grande for colado.
-    // (XX) XXXXX-XXXX tem 15 caracteres.
     if (formattedValue.length > 15) {
         formattedValue = formattedValue.substring(0, 15);
     }
@@ -161,7 +157,7 @@ function CadastroCliente() {
           <ul>
             <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
             <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/projetos"><span>🛠️</span>Ordens de Serviço</Link></li>
+            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
             <li><Link to="/log"><span>📋</span>Log de alterações</Link></li>
           </ul>
@@ -198,7 +194,7 @@ function CadastroCliente() {
           </div>
 
           <div className="form-group">
-            <label>Celular</label>
+            <label>Celular *</label>
             <input
               type="tel"
               name="celular"
@@ -223,7 +219,7 @@ function CadastroCliente() {
           <div className="form-group">
             <label>E-mail</label>
             <input
-              type="text" // Alterado de "email" para "text"
+              type="text"
               name="email"
               value={formData.email}
               onChange={handleChange}

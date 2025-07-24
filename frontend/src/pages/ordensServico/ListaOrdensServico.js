@@ -2,37 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
-import { formatCPForCNPJ, formatCelular } from '../../utils/validations';
 import '../../styles/Clientes.css';
 
-function ListaClientes() {
-  const [clientes, setClientes] = useState([]);
+function ListaOrdensServico() {
+  const [ordensServico, setOrdensServico] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    carregarClientes();
+    carregarOrdensServico();
   }, []);
 
-  const carregarClientes = async () => {
+  const carregarOrdensServico = async () => {
     setIsLoading(true);
     try {
-      const data = await api.listarClientes();
-      setClientes(data);
+      const data = await api.listarOrdensServico();
+      setOrdensServico(data);
     } catch (error) {
-      toast.error('Erro ao carregar clientes: ' + error.message);
+      toast.error('Erro ao carregar ordens de serviço: ' + error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleExcluir = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este cliente e todos os dados associados?')) {
+    if (window.confirm('Tem certeza que deseja excluir esta ordem de serviço?')) {
       try {
-        await api.deletarCliente(id);
-        toast.success('Cliente excluído com sucesso!');
-        carregarClientes();
+        await api.deletarOrdemServico(id);
+        toast.success('Ordem de serviço excluída com sucesso!');
+        carregarOrdensServico();
       } catch (error) {
-        toast.error(error.response?.data?.error || 'Erro ao excluir cliente');
+        toast.error(error.response?.data?.error || 'Erro ao excluir ordem de serviço');
       }
     }
   };
@@ -47,8 +46,8 @@ function ListaClientes() {
         <nav>
           <ul>
             <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
+            <li><Link to="/clientes"><span>👥</span>Clientes</Link></li>
+            <li className="active"><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
             <li><Link to="/log"><span>📋</span>Log de alterações</Link></li>
           </ul>
@@ -57,58 +56,56 @@ function ListaClientes() {
 
       <main className="sysmtec-main">
         <div className="clientes-header">
-          <Link to="/clientes/novo" className="add-client-link">
-            + ADICIONAR NOVO CLIENTE
+          <Link to="/ordens-servico/novo" className="add-client-link">
+            + ADICIONAR NOVA ORDEM DE SERVIÇO
           </Link>
         </div>
 
         {isLoading ? (
           <div className="loading-container">
             <div className="spinner"></div>
-            <p>Carregando clientes...</p>
+            <p>Carregando ordens de serviço...</p>
           </div>
-        ) : clientes.length === 0 ? (
+        ) : ordensServico.length === 0 ? (
           <div className="no-results">
-            <p>Nenhum cliente cadastrado ainda</p>
+            <p>Nenhuma ordem de serviço cadastrada ainda</p>
           </div>
         ) : (
           <div className="clientes-table-container">
             <table className="clientes-table">
               <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>CPF/CNPJ</th>
-                  <th>Celular</th>
+                  <th>Nome do Projeto</th>
+                  <th>Cliente</th>
+                  <th>Situação</th>
                   <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
-                {clientes.map(cliente => (
-                  <tr key={cliente.id_cliente}>
-                    <td>
-                      {cliente.nome}
-                    </td>
-                    <td>{formatCPForCNPJ(cliente.cpf_cnpj) || '-'}</td>
-                    <td>{formatCelular(cliente.celular) || '-'}</td>
+                {ordensServico.map(os => (
+                  <tr key={os.id_ordem_servico}>
+                    <td>{os.nome_projeto}</td>
+                    <td>{os.nome_cliente}</td>
+                    <td>{os.situacao}</td>
                     <td className="actions-cell">
                       <Link
-                        to={`/clientes/visualizar/${cliente.id_cliente}`}
+                        to={`/ordens-servico/visualizar/${os.id_ordem_servico}`}
                         className="view-button"
-                        title="Visualizar cliente"
+                        title="Visualizar ordem de serviço"
                       >
                         🔎
                       </Link>
                       <Link 
-                        to={`/clientes/editar/${cliente.id_cliente}`} 
+                        to={`/ordens-servico/editar/${os.id_ordem_servico}`} 
                         className="edit-button"
-                        title="Editar cliente"
+                        title="Editar ordem de serviço"
                       >
                         ✏️
                       </Link>
                       <button 
-                        onClick={() => handleExcluir(cliente.id_cliente)}
+                        onClick={() => handleExcluir(os.id_ordem_servico)}
                         className="delete-button"
-                        title="Excluir cliente"
+                        title="Excluir ordem de serviço"
                       >
                         🗑️
                       </button>
@@ -124,4 +121,4 @@ function ListaClientes() {
   );
 }
 
-export default ListaClientes;
+export default ListaOrdensServico;

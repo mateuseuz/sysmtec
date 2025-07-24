@@ -1,16 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const clienteRoutes = require('./routes/clienteRoutes');
+const ordemServicoRoutes = require('./routes/ordemServicoRoutes');
+const orcamentoRoutes = require('./routes/orcamentoRoutes');
 require('dotenv').config();
 
 const app = express();
 
 // Configurações básicas
-app.use(cors()); // Permite todas as origens (apenas para desenvolvimento)
+app.use(cors());
 app.use(express.json());
 
 // Rotas
 app.use('/api/clientes', clienteRoutes);
+app.use('/api/ordens-servico', ordemServicoRoutes);
+app.use('/api/orcamentos', orcamentoRoutes);
 
 // Rota simples de teste
 app.get('/', (req, res) => {
