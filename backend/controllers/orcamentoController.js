@@ -2,11 +2,7 @@ const Orcamento = require('../models/orcamentoModel');
 
 exports.createOrcamento = async (req, res) => {
   try {
-    const { descricao, valor } = req.body;
-    const novoOrcamento = await Orcamento.create(
-      descricao,
-      valor
-    );
+    const novoOrcamento = await Orcamento.create(req.body);
     res.status(201).json(novoOrcamento);
   } catch (error) {
     res.status(400).json({ error: error.message });

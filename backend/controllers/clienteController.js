@@ -24,6 +24,16 @@ exports.createCliente = async (req, res) => {
   }
 };
 
+exports.searchClientes = async (req, res) => {
+  try {
+    const { nome } = req.query;
+    const clientes = await Cliente.search(nome);
+    res.status(200).json(clientes);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 exports.updateCliente = async (req, res) => {
   try {
     const { nome, cpf_cnpj, endereco, email, celular, observacoes } = req.body;

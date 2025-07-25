@@ -4,6 +4,7 @@ const clienteController = require('../controllers/clienteController');
 
 router.post('/', clienteController.createCliente);
 router.get('/', clienteController.getClientes);
+router.get('/search', clienteController.searchClientes);
 router.get('/:id', clienteController.getClienteById);
 router.put('/:id', clienteController.updateCliente);
 router.delete('/:id', clienteController.deleteCliente);

@@ -33,7 +33,7 @@ const apiClientes = {
   buscarCliente: (id) => api.get(`/clientes/${id}`),
   atualizarCliente: (id, cliente) => api.put(`/clientes/${id}`, cliente),
   deletarCliente: (id) => api.delete(`/clientes/${id}`),
-  buscarClientesPorNome: (nome) => api.get(`/clientes/?nome=${encodeURIComponent(nome)}`),
+  buscarClientesPorNome: (nome) => api.get(`/clientes/search?nome=${encodeURIComponent(nome)}`),
 
   // Ordens de Serviço
   criarOrdemServico: (ordemServico) => api.post('/ordens-servico', ordemServico),

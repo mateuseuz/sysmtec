@@ -115,6 +115,17 @@ const Cliente = {
       throw new Error('Cliente não encontrado');
     }
     return true;
+  },
+
+  async search(nome) {
+    const query = `
+      SELECT id_cliente, nome 
+      FROM clientes 
+      WHERE nome ILIKE $1 
+      LIMIT 10`;
+    const values = [`%${nome}%`];
+    const { rows } = await pool.query(query, values);
+    return rows;
   }
 };
 

@@ -1,0 +1,104 @@
+/* Estilos para a página de Orçamentos */
+.autocomplete-container {
+  position: relative;
+}
+
+.sugestoes-lista {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 10;
+}
+
+.sugestoes-lista li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.sugestoes-lista li:hover {
+  background-color: #f0f0f0;
+}
+
+.itens-orcamento-container {
+  margin-top: 20px;
+}
+
+.itens-orcamento-container h3 {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.item-orcamento-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.item-descricao,
+.item-quantidade,
+.item-valor {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.item-descricao:focus,
+.item-quantidade:focus,
+.item-valor:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25);
+}
+
+.item-descricao {
+  flex: 5;
+}
+
+.item-quantidade {
+  flex: 1;
+  max-width: 80px;
+}
+
+.item-valor {
+  flex: 2;
+  max-width: 120px;
+}
+
+.remove-item-btn,
+.add-item-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.add-item-btn {
+  background-color: #4CAF50;
+  margin-top: 10px;
+}
+
+.remove-item-btn:hover {
+  background-color: #d32f2f;
+}
+
+.add-item-btn:hover {
+  background-color: #45a049;
+}
+
+.cliente-form label {
+  font-weight: bold;
+  font-size: 1em;
+}

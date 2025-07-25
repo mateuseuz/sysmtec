@@ -1,24 +1,39 @@
 const pool = require('../config/database');
 
 const Orcamento = {
-  async create(descricao, valor) {
-    if (!descricao || !valor) {
-      throw new Error('Descrição and valor are required');
-    }
+  async create(orcamento) {
+    const { nome_orcamento, id_cliente, observacoes, itens } = orcamento;
 
-    const query = `
-      INSERT INTO orcamentos 
-      (descricao, valor) 
-      VALUES ($1, $2) 
-      RETURNING *`;
-    
-    const values = [
-      descricao,
-      valor
-    ];
-    
-    const { rows } = await pool.query(query, values);
-    return rows[0];
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      const orcamentoQuery = `
+        INSERT INTO orcamentos (nome_orcamento, id_cliente, observacoes)
+        VALUES ($1, $2, $3)
+        RETURNING id_orcamento`;
+      const orcamentoValues = [nome_orcamento, id_cliente, observacoes];
+      const res = await client.query(orcamentoQuery, orcamentoValues);
+      const id_orcamento = res.rows[0].id_orcamento;
+
+      if (itens && itens.length > 0) {
+        for (const item of itens) {
+          const itemQuery = `
+            INSERT INTO itens_orcamento (id_orcamento, nome, quantidade, valor)
+            VALUES ($1, $2, $3, $4)`;
+          const itemValues = [id_orcamento, item.nome, item.quantidade, item.valor];
+          await client.query(itemQuery, itemValues);
+        }
+      }
+
+      await client.query('COMMIT');
+      return { id_orcamento, ...orcamento };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   },
 
   async getAll() {
@@ -27,18 +42,36 @@ const Orcamento = {
   },
 
   async getById(id_orcamento) {
-    const { rows } = await pool.query('SELECT * FROM orcamentos WHERE id_orcamento = $1', [id_orcamento]);
-    if (rows.length === 0) return null;
-    
-    return rows[0];
-  },
-  
-  async delete(id_orcamento) {
-    const { rowCount } = await pool.query('DELETE FROM orcamentos WHERE id_orcamento = $1', [id_orcamento]);
-    if (rowCount === 0) {
-      throw new Error('Orçamento não encontrado');
+    const orcamentoRes = await pool.query('SELECT * FROM orcamentos WHERE id_orcamento = $1', [id_orcamento]);
+    if (orcamentoRes.rows.length === 0) {
+      return null;
     }
-    return true;
+    const orcamento = orcamentoRes.rows[0];
+
+    const itensRes = await pool.query('SELECT * FROM itens_orcamento WHERE id_orcamento = $1', [id_orcamento]);
+    orcamento.itens = itensRes.rows;
+
+    return orcamento;
+  },
+
+  async delete(id_orcamento) {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('DELETE FROM itens_orcamento WHERE id_orcamento = $1', [id_orcamento]);
+      const res = await client.query('DELETE FROM orcamentos WHERE id_orcamento = $1', [id_orcamento]);
+      await client.query('COMMIT');
+
+      if (res.rowCount === 0) {
+        throw new Error('Orçamento não encontrado');
+      }
+      return true;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 };
 
