@@ -2,17 +2,17 @@ const pool = require('../config/database');
 
 const Orcamento = {
   async create(orcamento) {
-    const { nome_orcamento, id_cliente, observacoes, itens } = orcamento;
+    const { nome, id_cliente, observacoes, itens } = orcamento;
 
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
 
       const orcamentoQuery = `
-        INSERT INTO orcamentos (nome_orcamento, id_cliente, observacoes)
+        INSERT INTO orcamentos (nome, id_cliente, observacoes)
         VALUES ($1, $2, $3)
         RETURNING id_orcamento`;
-      const orcamentoValues = [nome_orcamento, id_cliente, observacoes];
+      const orcamentoValues = [nome, id_cliente, observacoes];
       const res = await client.query(orcamentoQuery, orcamentoValues);
       const id_orcamento = res.rows[0].id_orcamento;
 

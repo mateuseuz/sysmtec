@@ -44,14 +44,21 @@ const CadastroOrcamento = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+
+    const itensNumericos = itens.map(item => ({
+      ...item,
+      quantidade: parseInt(item.quantidade, 10) || 1, // Garante que a quantidade seja no mínimo 1
+      valor: parseFloat(item.valor) || 0
+    }));
+
     const orcamento = {
-      nome_orcamento: nomeOrcamento,
+      nome: nomeOrcamento,
       id_cliente: clienteSelecionado ? clienteSelecionado.id_cliente : null,
       observacoes,
-      itens
+      itens: itensNumericos
     };
     try {
-        console.log(orcamento);
+      console.log('Enviando orçamento:', orcamento);
       await api.criarOrcamento(orcamento);
       toast.success('Orçamento criado com sucesso!');
       navigate('/orcamentos');
