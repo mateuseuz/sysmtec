@@ -34,7 +34,7 @@ function CadastroOrdemServico() {
   }, []);
 
   useEffect(() => {
-    if (clientSearch.length > 1) {
+    if (clientSearch.length > 1 && !selectedClient) {
       const fetchClients = async () => {
         try {
           const data = await api.buscarClientesPorNome(clientSearch);
@@ -47,7 +47,7 @@ function CadastroOrdemServico() {
     } else {
       setClientSuggestions([]);
     }
-  }, [clientSearch]);
+  }, [clientSearch, selectedClient]);
 
   const handleClientChange = (e) => {
     setClientSearch(e.target.value);
@@ -158,7 +158,7 @@ function CadastroOrdemServico() {
             {clientSuggestions.length > 0 && (
               <ul className="suggestions-list">
                 {clientSuggestions.map(client => (
-                  <li key={client.id_cliente} onClick={() => handleClientSuggestionClick(client)}>
+                  <li key={client.id_cliente} onMouseDown={() => handleClientSuggestionClick(client)}>
                     {client.nome}
                   </li>
                 ))}

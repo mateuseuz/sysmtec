@@ -30,6 +30,16 @@ exports.getOrcamentoById = async (req, res) => {
   }
 };
 
+exports.updateOrcamento = async (req, res) => {
+  try {
+    const id_orcamento = req.params.id;
+    const orcamentoAtualizado = await Orcamento.update(id_orcamento, req.body);
+    res.status(200).json(orcamentoAtualizado);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 exports.deleteOrcamento = async (req, res) => {
   try {
     const id_orcamento = req.params.id;

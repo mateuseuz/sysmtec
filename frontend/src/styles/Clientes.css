@@ -359,6 +359,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
+  font-family: inherit; /* Garante que todos os campos do formulário usem a mesma fonte do corpo */
   transition: border-color 0.3s ease;
 }
 

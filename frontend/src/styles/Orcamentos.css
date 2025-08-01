@@ -86,8 +86,9 @@
 }
 
 .add-item-btn {
-  background-color: #4CAF50;
+  background-color: var(--primary-color);
   margin-top: 10px;
+  margin-bottom: 1.5rem; /* Espaço antes das Observações */
 }
 
 .remove-item-btn:hover {
@@ -95,10 +96,47 @@
 }
 
 .add-item-btn:hover {
-  background-color: #45a049;
+  background-color: #0056b3; /* Cor de hover dos outros botões azuis */
 }
 
 .cliente-form label {
   font-weight: bold;
   font-size: 1em;
+}
+
+.item-orcamento-header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+  align-items: center;
+}
+
+.item-orcamento-header label {
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 0; /* Reseta o padding genérico */
+}
+
+.item-descricao-label {
+  flex: 5;
+  padding-left: 0.75rem; /* Alinha com o padding do input */
+}
+
+.item-quantidade-label {
+  flex: 1;
+  max-width: 80px;
+  padding-left: 0.75rem; /* Alinha com o padding do input */
+}
+
+.item-valor-label {
+  flex: 2;
+  max-width: 120px;
+  padding-left: 0.75rem; /* Alinha com o padding do input */
+}
+
+/* Espaçador para alinhar com o botão 'Remover' */
+.item-orcamento-header::after {
+  content: '';
+  display: block;
+  min-width: 116px; /* Largura do botão (106px) + gap (10px) */
 }

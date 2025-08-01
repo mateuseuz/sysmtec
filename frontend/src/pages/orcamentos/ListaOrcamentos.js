@@ -75,18 +75,23 @@ function ListaOrcamentos() {
             <table className="clientes-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Descrição</th>
-                  <th>Valor</th>
+                  <th>Nome do Orçamento</th>
+                  <th>Cliente</th>
+                  <th>Valor Total</th>
                   <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {orcamentos.map(orcamento => (
                   <tr key={orcamento.id_orcamento}>
-                    <td>{orcamento.id_orcamento}</td>
-                    <td>{orcamento.descricao}</td>
-                    <td>{orcamento.valor}</td>
+                    <td>{orcamento.nome}</td>
+                    <td>{orcamento.nome_cliente || 'N/A'}</td>
+                    <td>
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      }).format(orcamento.valor_total)}
+                    </td>
                     <td className="actions-cell">
                       <Link
                         to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
@@ -95,14 +100,14 @@ function ListaOrcamentos() {
                       >
                         🔎
                       </Link>
-                      <Link 
-                        to={`/orcamentos/editar/${orcamento.id_orcamento}`} 
+                      <Link
+                        to={`/orcamentos/editar/${orcamento.id_orcamento}`}
                         className="edit-button"
                         title="Editar orçamento"
                       >
                         ✏️
                       </Link>
-                      <button 
+                      <button
                         onClick={() => handleExcluir(orcamento.id_orcamento)}
                         className="delete-button"
                         title="Excluir orçamento"

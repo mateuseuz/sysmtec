@@ -16,14 +16,14 @@ const CadastroOrcamento = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (termoBusca.length > 2) {
+    if (termoBusca.length > 2 && !clienteSelecionado) {
       api.buscarClientesPorNome(termoBusca).then(response => {
         setSugestoes(response);
       });
     } else {
       setSugestoes([]);
     }
-  }, [termoBusca]);
+  }, [termoBusca, clienteSelecionado]);
 
   const handleItemChange = (index, event) => {
     const values = [...itens];
@@ -92,15 +92,16 @@ const CadastroOrcamento = () => {
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
-            <label>Nome do Orçamento:</label>
+            <label>Nome do orçamento *</label>
             <input
               type="text"
               value={nomeOrcamento}
               onChange={e => setNomeOrcamento(e.target.value)}
+              placeholder="Digite o nome do orçamento"
             />
           </div>
           <div className="form-group">
-            <label>Vincular orçamento ao cliente (opcional):</label>
+            <label>Vincular orçamento ao cliente</label>
             <div className="autocomplete-container">
               <input
                 type="text"
@@ -113,7 +114,7 @@ const CadastroOrcamento = () => {
                   {sugestoes.map(cliente => (
                     <li
                       key={cliente.id_cliente}
-                      onClick={() => {
+                      onMouseDown={() => { // Usar onMouseDown para evitar problemas de foco
                         setClienteSelecionado(cliente);
                         setTermoBusca(cliente.nome);
                         setSugestoes([]);
@@ -128,7 +129,11 @@ const CadastroOrcamento = () => {
           </div>
 
           <div className="itens-orcamento-container">
-            <h3>Itens do Orçamento</h3>
+            <div className="item-orcamento-header">
+              <label className="item-descricao-label">Item *</label>
+              <label className="item-quantidade-label">Qtd. *</label>
+              <label className="item-valor-label">Valor (un.) *</label>
+            </div>
             {itens.map((item, index) => (
               <div key={index} className="item-orcamento-row">
                 <input
@@ -158,7 +163,7 @@ const CadastroOrcamento = () => {
                 <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
               </div>
             ))}
-            <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar Item</button>
+            <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
           </div>
 
           <div className="form-group">
@@ -166,6 +171,7 @@ const CadastroOrcamento = () => {
             <textarea
               value={observacoes}
               onChange={e => setObservacoes(e.target.value)}
+              placeholder="Observações sobre o orçamento"
             />
           </div>
 

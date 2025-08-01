@@ -186,7 +186,7 @@ function EditarOrdemServico() {
             {clientSuggestions.length > 0 && (
               <ul className="suggestions-list">
                 {clientSuggestions.map(client => (
-                  <li key={client.id_cliente} onClick={() => handleClientSuggestionClick(client)}>
+                  <li key={client.id_cliente} onMouseDown={() => handleClientSuggestionClick(client)}>
                     {client.nome}
                   </li>
                 ))}

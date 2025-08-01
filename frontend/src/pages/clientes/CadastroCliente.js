@@ -175,6 +175,7 @@ function CadastroCliente() {
               name="nome"
               value={formData.nome}
               onChange={handleChange}
+              placeholder="Nome do cliente"
               className={errors.nome ? 'error' : ''}
             />
             {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
@@ -213,6 +214,7 @@ function CadastroCliente() {
               name="endereco"
               value={formData.endereco}
               onChange={handleChange}
+              placeholder="Endereço do cliente"
             />
           </div>
 
@@ -223,6 +225,7 @@ function CadastroCliente() {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Endereço de e-mail do cliente"
               className={errors.email ? 'error' : ''}
             />
             {/* {errors.email && <span className="error-message">{errors.email}</span>} */}
@@ -234,6 +237,7 @@ function CadastroCliente() {
               name="observacoes"
               value={formData.observacoes}
               onChange={handleChange}
+              placeholder="Observações sobre o cliente"
               maxLength="500"
             />
           </div>

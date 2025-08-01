@@ -3,76 +3,97 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
+import '../../styles/Orcamentos.css';
 
-function EditarOrcamento() {
+const EditarOrcamento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    descricao: '',
-    valor: ''
-  });
-  const [errors, setErrors] = useState({});
+  
+  const [nomeOrcamento, setNomeOrcamento] = useState('');
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [termoBusca, setTermoBusca] = useState('');
+  const [sugestoes, setSugestoes] = useState([]);
+  const [observacoes, setObservacoes] = useState('');
+  const [itens, setItens] = useState([{ nome: '', quantidade: 1, valor: '' }]);
+  const [isLoading, setIsLoading] = useState(true); // Começa true para carregar dados
+  const [isSaving, setIsSaving] = useState(false);
 
+  // Efeito para carregar os dados do orçamento ao montar o componente
   useEffect(() => {
     const carregarOrcamento = async () => {
       try {
         const orcamento = await api.buscarOrcamento(id);
-        setFormData({
-          descricao: orcamento.descricao || '',
-          valor: orcamento.valor || ''
-        });
+        setNomeOrcamento(orcamento.nome);
+        setObservacoes(orcamento.observacoes || '');
+        setItens(orcamento.itens.length > 0 ? orcamento.itens : [{ nome: '', quantidade: 1, valor: '' }]);
+
+        if (orcamento.id_cliente) {
+          const cliente = await api.buscarCliente(orcamento.id_cliente);
+          setClienteSelecionado(cliente);
+          setTermoBusca(cliente.nome);
+        }
       } catch (error) {
-        toast.error('Erro ao carregar orçamento: ' + error.message);
+        toast.error('Erro ao carregar dados do orçamento.');
         navigate('/orcamentos');
       } finally {
         setIsLoading(false);
       }
     };
-    
     carregarOrcamento();
   }, [id, navigate]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+  // Efeito para buscar clientes na autocomplete
+  useEffect(() => {
+    if (termoBusca.length > 2 && !clienteSelecionado) {
+      api.buscarClientesPorNome(termoBusca).then(response => {
+        setSugestoes(response);
+      });
+    } else {
+      setSugestoes([]);
+    }
+  }, [termoBusca, clienteSelecionado]);
+
+  const handleItemChange = (index, event) => {
+    const values = [...itens];
+    values[index][event.target.name] = event.target.value;
+    setItens(values);
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    let isValid = true;
-
-    if (!formData.descricao.trim()) {
-      toast.warn('Descrição é obrigatória');
-      newErrors.descricao = 'Descrição é obrigatória';
-      isValid = false;
-    }
-
-    if (!formData.valor) {
-      toast.warn('Valor é obrigatório');
-      newErrors.valor = 'Valor é obrigatório';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
+  const handleAddItem = () => {
+    setItens([...itens, { nome: '', quantidade: 1, valor: '' }]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
+  const handleRemoveItem = index => {
+    const values = [...itens];
+    values.splice(index, 1);
+    setItens(values);
+  };
 
-    setIsLoading(true);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSaving(true);
+
+    const itensNumericos = itens.map(item => ({
+      ...item,
+      quantidade: parseInt(item.quantidade, 10) || 1,
+      valor: parseFloat(item.valor) || 0
+    }));
+
+    const orcamento = {
+      nome: nomeOrcamento,
+      id_cliente: clienteSelecionado ? clienteSelecionado.id_cliente : null,
+      observacoes,
+      itens: itensNumericos
+    };
+
     try {
-      await api.atualizarOrcamento(id, formData);
+      await api.atualizarOrcamento(id, orcamento);
       toast.success('Orçamento atualizado com sucesso!');
       navigate('/orcamentos');
     } catch (error) {
-      toast.error(error.message || 'Erro ao atualizar orçamento');
+      toast.error('Erro ao atualizar orçamento.');
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -108,45 +129,110 @@ function EditarOrcamento() {
       <main className="sysmtec-main">
         <Link to="/orcamentos" className="back-button">&lt; VOLTAR</Link>
 
+        <h2>Editar Orçamento</h2>
+
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
-            <label>Descrição *</label>
+            <label>Nome do Orçamento:</label>
             <input
               type="text"
-              name="descricao"
-              value={formData.descricao}
-              onChange={handleChange}
-              className={errors.descricao ? 'error' : ''}
+              value={nomeOrcamento}
+              onChange={e => setNomeOrcamento(e.target.value)}
             />
+          </div>
+          <div className="form-group">
+            <label>Vincular orçamento ao cliente (opcional):</label>
+            <div className="autocomplete-container">
+              <input
+                type="text"
+                value={termoBusca}
+                onChange={e => {
+                  setTermoBusca(e.target.value);
+                  setClienteSelecionado(null); // Desvincula o cliente se o usuário editar o campo
+                }}
+                placeholder="Digite o nome do cliente"
+              />
+              {sugestoes.length > 0 && (
+                <ul className="sugestoes-lista">
+                  {sugestoes.map(cliente => (
+                    <li
+                      key={cliente.id_cliente}
+                      onMouseDown={() => { // Usar onMouseDown para evitar problemas de foco
+                        setClienteSelecionado(cliente);
+                        setTermoBusca(cliente.nome);
+                        setSugestoes([]);
+                      }}
+                    >
+                      {cliente.nome}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <div className="itens-orcamento-container">
+            <div className="item-orcamento-header">
+              <label className="item-descricao-label">Item</label>
+              <label className="item-quantidade-label">Quantidade</label>
+              <label className="item-valor-label">Valor (un.)</label>
+            </div>
+            {itens.map((item, index) => (
+              <div key={index} className="item-orcamento-row">
+                <input
+                  type="text"
+                  name="nome"
+                  placeholder="Insira um produto/serviço"
+                  value={item.nome}
+                  onChange={e => handleItemChange(index, e)}
+                  className="item-descricao"
+                />
+                <input
+                  type="number"
+                  name="quantidade"
+                  placeholder="Qtd."
+                  value={item.quantidade}
+                  onChange={e => handleItemChange(index, e)}
+                  className="item-quantidade"
+                />
+                <input
+                  type="number"
+                  name="valor"
+                  placeholder="Valor (un.)"
+                  value={item.valor}
+                  onChange={e => handleItemChange(index, e)}
+                  className="item-valor"
+                />
+                <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
+              </div>
+            ))}
+            <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar Item</button>
           </div>
 
           <div className="form-group">
-            <label>Valor *</label>
-            <input
-              type="number"
-              name="valor"
-              value={formData.valor}
-              onChange={handleChange}
-              className={errors.valor ? 'error' : ''}
+            <label>Observações:</label>
+            <textarea
+              value={observacoes}
+              onChange={e => setObservacoes(e.target.value)}
             />
           </div>
 
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className={`submit-button ${isLoading ? 'loading' : ''}`}
+          <button
+            type="submit"
+            disabled={isSaving}
+            className={`submit-button ${isSaving ? 'loading' : ''}`}
           >
-            {isLoading ? (
+            {isSaving ? (
               <>
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'SALVAR ALTERAÇÕES'}
+            ) : 'Atualizar Orçamento'}
           </button>
         </form>
       </main>
     </div>
   );
-}
+};
 
 export default EditarOrcamento;
