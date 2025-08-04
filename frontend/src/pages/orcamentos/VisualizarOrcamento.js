@@ -8,28 +8,34 @@ import '../../styles/Orcamentos.css';
 const VisualizarOrcamento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-  const [orcamento, setOrcamento] = useState(null);
-  const [cliente, setCliente] = useState(null);
+
+  const [nomeOrcamento, setNomeOrcamento] = useState('');
+  const [clienteNome, setClienteNome] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+  const [itens, setItens] = useState([]);
   const [valorTotal, setValorTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const carregarDados = async () => {
       try {
         const orcamentoData = await api.buscarOrcamento(id);
-        setOrcamento(orcamentoData);
+        setNomeOrcamento(orcamentoData.nome);
+        setObservacoes(orcamentoData.observacoes || '');
+        setItens(orcamentoData.itens || []);
 
         if (orcamentoData.id_cliente) {
           const clienteData = await api.buscarCliente(orcamentoData.id_cliente);
-          setCliente(clienteData);
+          setClienteNome(clienteData.nome);
+        } else {
+          setClienteNome('Nenhum cliente vinculado');
         }
 
-        // Calcula o valor total
         const total = orcamentoData.itens.reduce((acc, item) => acc + (item.quantidade * item.valor), 0);
         setValorTotal(total);
 
       } catch (error) {
-        toast.error('Erro ao carregar dados do orçamento: ' + error.message);
+        toast.error('Erro ao carregar dados do orçamento.');
         navigate('/orcamentos');
       } finally {
         setIsLoading(false);
@@ -38,13 +44,6 @@ const VisualizarOrcamento = () => {
     
     carregarDados();
   }, [id, navigate]);
-  
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
-  };
 
   if (isLoading) {
     return (
@@ -55,10 +54,6 @@ const VisualizarOrcamento = () => {
         </div>
       </div>
     );
-  }
-
-  if (!orcamento) {
-    return <p>Orçamento não encontrado.</p>;
   }
 
   return (
@@ -82,63 +77,78 @@ const VisualizarOrcamento = () => {
       <main className="sysmtec-main">
         <Link to="/orcamentos" className="back-button">&lt; VOLTAR</Link>
 
-        <h2>Visualizar Orçamento</h2>
-
         <div className="cliente-form">
           <div className="form-group">
-            <label>Nome do Orçamento</label>
+            <label>Nome do orçamento</label>
             <input
               type="text"
-              value={orcamento.nome || ''}
+              value={nomeOrcamento}
               readOnly
               disabled
             />
           </div>
-
           <div className="form-group">
             <label>Cliente</label>
             <input
               type="text"
-              value={cliente ? cliente.nome : 'N/A'}
+              value={clienteNome}
               readOnly
               disabled
             />
           </div>
 
-          <div className="itens-orcamento-container">
-            <h3>Itens do Orçamento</h3>
-            <table className="itens-table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Qtd.</th>
-                  <th>Valor Un.</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orcamento.itens.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.nome}</td>
-                    <td>{item.quantidade}</td>
-                    <td>{formatCurrency(item.valor)}</td>
-                    <td>{formatCurrency(item.quantidade * item.valor)}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Valor Total:</td>
-                  <td style={{ fontWeight: 'bold' }}>{formatCurrency(valorTotal)}</td>
-                </tr>
-              </tfoot>
-            </table>
+          <div className="form-group">
+            <div className="itens-orcamento-grid-container">
+              {/* Cabeçalho do Grid */}
+              <label className="grid-header">Item</label>
+            <label className="grid-header">Qtd.</label>
+            <label className="grid-header">Valor (un.)</label>
+            <div /> {/* Célula vazia para alinhamento */}
+
+            {/* Linhas de Itens */}
+            {itens.map((item, index) => (
+              <React.Fragment key={index}>
+                <input
+                  type="text"
+                  name="nome"
+                  value={item.nome}
+                  readOnly
+                  disabled
+                />
+                <input
+                  type="number"
+                  name="quantidade"
+                  value={item.quantidade}
+                  readOnly
+                  disabled
+                />
+                <input
+                  type="text"
+                  name="valor"
+                  value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.valor)}
+                  readOnly
+                  disabled
+                />
+                <div /> {/* Célula vazia para alinhamento */}
+              </React.Fragment>
+            ))}
+            </div>
+          </div>
+          
+          <div className="form-group">
+            <label>Valor total</label>
+            <input
+              type="text"
+              value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
+              readOnly
+              disabled
+            />
           </div>
 
           <div className="form-group">
             <label>Observações</label>
             <textarea
-              value={orcamento.observacoes || ''}
+              value={observacoes}
               readOnly
               disabled
             />

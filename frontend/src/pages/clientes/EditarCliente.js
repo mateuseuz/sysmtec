@@ -275,7 +275,7 @@ function EditarCliente() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'SALVAR ALTERAÇÕES'}
+            ) : 'Salvar alterações'}
           </button>
         </form>
       </main>

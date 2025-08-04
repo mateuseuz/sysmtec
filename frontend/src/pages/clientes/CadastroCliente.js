@@ -252,7 +252,7 @@ function CadastroCliente() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Cadastrar Cliente'}
+            ) : 'Salvar ciente'}
           </button>
         </form>
       </main>

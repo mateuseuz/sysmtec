@@ -216,7 +216,7 @@ function CadastroOrdemServico() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Cadastrar Ordem de Serviço'}
+            ) : 'Salvar ordem'}
           </button>
         </form>
       </main>

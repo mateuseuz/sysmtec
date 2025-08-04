@@ -15,6 +15,7 @@ const EditarOrcamento = () => {
   const [sugestoes, setSugestoes] = useState([]);
   const [observacoes, setObservacoes] = useState('');
   const [itens, setItens] = useState([{ nome: '', quantidade: 1, valor: '' }]);
+  const [valorTotal, setValorTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true); // Começa true para carregar dados
   const [isSaving, setIsSaving] = useState(false);
 
@@ -52,6 +53,15 @@ const EditarOrcamento = () => {
       setSugestoes([]);
     }
   }, [termoBusca, clienteSelecionado]);
+
+  useEffect(() => {
+    const total = itens.reduce((acc, item) => {
+      const quantidade = Number(item.quantidade) || 0;
+      const valor = Number(item.valor) || 0;
+      return acc + (quantidade * valor);
+    }, 0);
+    setValorTotal(total);
+  }, [itens]);
 
   const handleItemChange = (index, event) => {
     const values = [...itens];
@@ -164,7 +174,7 @@ const EditarOrcamento = () => {
                 value={termoBusca}
                 onChange={e => {
                   setTermoBusca(e.target.value);
-                  setClienteSelecionado(null); // Desvincula o cliente se o usuário editar o campo
+                  setClienteSelecionado(null);
                 }}
                 placeholder="Nome do cliente"
               />
@@ -225,6 +235,15 @@ const EditarOrcamento = () => {
           <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
 
           <div className="form-group">
+            <label>Valor total</label>
+            <input
+              type="text"
+              value={valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              disabled
+            />
+          </div>
+
+          <div className="form-group">
             <label>Observações</label>
             <textarea
               value={observacoes}
@@ -243,7 +262,7 @@ const EditarOrcamento = () => {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Atualizar Orçamento'}
+            ) : 'Salvar alterações'}
           </button>
         </form>
       </main>
