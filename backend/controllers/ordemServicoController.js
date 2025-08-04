@@ -2,14 +2,7 @@ const OrdemServico = require('../models/ordemServicoModel');
 
 exports.createOrdemServico = async (req, res) => {
   try {
-    const { nome_projeto, id_cliente, situacao, observacoes, fk_id_orcamento } = req.body;
-    const novaOrdemServico = await OrdemServico.create(
-      nome_projeto,
-      id_cliente,
-      situacao,
-      observacoes,
-      fk_id_orcamento
-    );
+    const novaOrdemServico = await OrdemServico.create(req.body);
     res.status(201).json(novaOrdemServico);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -18,15 +11,7 @@ exports.createOrdemServico = async (req, res) => {
 
 exports.updateOrdemServico = async (req, res) => {
   try {
-    const { nome_projeto, id_cliente, situacao, observacoes, fk_id_orcamento } = req.body;
-    const ordemServicoAtualizada = await OrdemServico.update(
-      req.params.id,
-      nome_projeto,
-      id_cliente,
-      situacao,
-      observacoes,
-      fk_id_orcamento
-    );
+    const ordemServicoAtualizada = await OrdemServico.update(req.params.id, req.body);
     res.status(200).json(ordemServicoAtualizada);
   } catch (error) {
     res.status(400).json({ error: error.message });

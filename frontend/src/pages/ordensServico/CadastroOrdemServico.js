@@ -8,7 +8,7 @@ function CadastroOrdemServico() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    nome_projeto: '',
+    nome: '',
     id_cliente: '',
     situacao: 'Em andamento',
     observacoes: ''
@@ -72,9 +72,9 @@ function CadastroOrdemServico() {
     const newErrors = {};
     let isValid = true;
 
-    if (!formData.nome_projeto.trim()) {
+    if (!formData.nome.trim()) {
       toast.warn('Nome do projeto é obrigatório');
-      newErrors.nome_projeto = 'Nome do projeto é obrigatório';
+      newErrors.nome = 'Nome do projeto é obrigatório';
       isValid = false;
     }
 
@@ -84,9 +84,9 @@ function CadastroOrdemServico() {
       isValid = false;
     }
 
-    if (!formData.fk_id_orcamento) {
+    if (!formData.id_orcamento) {
       toast.warn('Orçamento é obrigatório');
-      newErrors.fk_id_orcamento = 'Orçamento é obrigatório';
+      newErrors.id_orcamento = 'Orçamento é obrigatório';
       isValid = false;
     }
 
@@ -137,10 +137,10 @@ function CadastroOrdemServico() {
             <label>Nome do projeto/serviço *</label>
             <input
               type="text"
-              name="nome_projeto"
-              value={formData.nome_projeto}
+              name="nome"
+              value={formData.nome}
               onChange={handleChange}
-              className={errors.nome_projeto ? 'error' : ''}
+              className={errors.nome ? 'error' : ''}
             />
           </div>
 
@@ -169,15 +169,15 @@ function CadastroOrdemServico() {
           <div className="form-group">
             <label>Orçamento *</label>
             <select
-              name="fk_id_orcamento"
-              value={formData.fk_id_orcamento}
+              name="id_orcamento"
+              value={formData.id_orcamento}
               onChange={handleChange}
-              className={errors.fk_id_orcamento ? 'error' : ''}
+              className={errors.id_orcamento ? 'error' : ''}
             >
               <option value="">Selecione um orçamento</option>
               {orcamentos.map(orcamento => (
                 <option key={orcamento.id_orcamento} value={orcamento.id_orcamento}>
-                  {orcamento.id_orcamento} - {orcamento.descricao}
+                  {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
                 </option>
               ))}
             </select>
@@ -216,7 +216,7 @@ function CadastroOrdemServico() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar ordem'}
+            ) : 'Cadastrar Ordem de Serviço'}
           </button>
         </form>
       </main>

@@ -1,8 +1,9 @@
 const pool = require('../config/database');
 
 const OrdemServico = {
-  async create(nome_projeto, id_cliente, situacao, observacoes = null, fk_id_orcamento = null) {
-    if (!nome_projeto || nome_projeto.length > 100) {
+  async create(ordemData) {
+    const { nome, id_cliente, situacao, observacoes = null, id_orcamento = null } = ordemData;
+    if (!nome || nome.length > 100) {
       throw new Error('Nome do projeto é obrigatório e deve ter até 100 caracteres');
     }
     if (!id_cliente) {
@@ -14,23 +15,25 @@ const OrdemServico = {
 
     const query = `
       INSERT INTO ordens_servico 
-      (nome_projeto, id_cliente, situacao, observacoes, fk_id_orcamento) 
+      (nome, id_cliente, situacao, observacoes, id_orcamento) 
       VALUES ($1, $2, $3, $4, $5) 
       RETURNING *`;
     
     const values = [
-      nome_projeto,
+      nome,
       id_cliente,
       situacao,
       observacoes,
-      fk_id_orcamento
+      id_orcamento
     ];
     
     const { rows } = await pool.query(query, values);
     return rows[0];
   },
 
-  async update(id_ordem_servico, nome_projeto, id_cliente, situacao, observacoes, fk_id_orcamento) {
+  async update(id_ordem_servico, ordemData) {
+    const { nome, id_cliente, situacao, observacoes, id_orcamento } = ordemData;
+    
     const fields = [];
     const values = [];
     let paramIndex = 1;
@@ -43,11 +46,16 @@ const OrdemServico = {
       }
     };
 
-    addField('nome_projeto', nome_projeto);
+    addField('nome', nome);
     addField('id_cliente', id_cliente);
     addField('situacao', situacao);
     addField('observacoes', observacoes);
-    addField('fk_id_orcamento', fk_id_orcamento);
+    addField('id_orcamento', id_orcamento);
+
+    if (fields.length === 0) {
+      // Retorna os dados atuais se nenhum campo for alterado
+      return this.getById(id_ordem_servico);
+    }
 
     values.push(id_ordem_servico);
 

@@ -9,7 +9,7 @@ function EditarOrdemServico() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
-    nome_projeto: '',
+    nome: '',
     id_cliente: '',
     situacao: '',
     observacoes: ''
@@ -30,11 +30,11 @@ function EditarOrdemServico() {
           api.listarOrcamentos()
         ]);
         setFormData({
-          nome_projeto: ordemServico.nome_projeto || '',
+          nome: ordemServico.nome || '',
           id_cliente: ordemServico.id_cliente || '',
           situacao: ordemServico.situacao || '',
           observacoes: ordemServico.observacoes || '',
-          fk_id_orcamento: ordemServico.fk_id_orcamento || ''
+          id_orcamento: ordemServico.id_orcamento || ''
         });
         setClientSearch(ordemServico.nome_cliente);
         setSelectedClient({ id_cliente: ordemServico.id_cliente, nome: ordemServico.nome_cliente });
@@ -89,9 +89,9 @@ function EditarOrdemServico() {
     const newErrors = {};
     let isValid = true;
 
-    if (!formData.nome_projeto.trim()) {
+    if (!formData.nome.trim()) {
       toast.warn('Nome do projeto é obrigatório');
-      newErrors.nome_projeto = 'Nome do projeto é obrigatório';
+      newErrors.nome = 'Nome do projeto é obrigatório';
       isValid = false;
     }
 
@@ -101,9 +101,9 @@ function EditarOrdemServico() {
       isValid = false;
     }
 
-    if (!formData.fk_id_orcamento) {
+    if (!formData.id_orcamento) {
       toast.warn('Orçamento é obrigatório');
-      newErrors.fk_id_orcamento = 'Orçamento é obrigatório';
+      newErrors.id_orcamento = 'Orçamento é obrigatório';
       isValid = false;
     }
 
@@ -165,10 +165,10 @@ function EditarOrdemServico() {
             <label>Nome do projeto/serviço *</label>
             <input
               type="text"
-              name="nome_projeto"
-              value={formData.nome_projeto}
+              name="nome"
+              value={formData.nome}
               onChange={handleChange}
-              className={errors.nome_projeto ? 'error' : ''}
+              className={errors.nome ? 'error' : ''}
             />
           </div>
 
@@ -197,15 +197,15 @@ function EditarOrdemServico() {
           <div className="form-group">
             <label>Orçamento *</label>
             <select
-              name="fk_id_orcamento"
-              value={formData.fk_id_orcamento}
+              name="id_orcamento"
+              value={formData.id_orcamento}
               onChange={handleChange}
-              className={errors.fk_id_orcamento ? 'error' : ''}
+              className={errors.id_orcamento ? 'error' : ''}
             >
               <option value="">Selecione um orçamento</option>
               {orcamentos.map(orcamento => (
                 <option key={orcamento.id_orcamento} value={orcamento.id_orcamento}>
-                  {orcamento.id_orcamento} - {orcamento.descricao}
+                  {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
                 </option>
               ))}
             </select>
@@ -244,7 +244,7 @@ function EditarOrdemServico() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar alterações'}
+            ) : 'SALVAR ALTERAÇÕES'}
           </button>
         </form>
       </main>
