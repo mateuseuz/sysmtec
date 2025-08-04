@@ -109,21 +109,22 @@ const CadastroOrcamento = () => {
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
-            <label>Nome do Orçamento:</label>
+            <label>Nome *</label>
             <input
               type="text"
               value={nomeOrcamento}
               onChange={e => setNomeOrcamento(e.target.value)}
+              placeholder="Nome do orçamento"
             />
           </div>
           <div className="form-group">
-            <label>Vincular orçamento ao cliente (opcional):</label>
+            <label>Vincular orçamento ao cliente</label>
             <div className="autocomplete-container">
               <input
                 type="text"
                 value={termoBusca}
                 onChange={e => setTermoBusca(e.target.value)}
-                placeholder="Digite o nome do cliente"
+                placeholder="Nome do cliente"
               />
               {sugestoes.length > 0 && (
                 <ul className="sugestoes-lista">
@@ -157,7 +158,7 @@ const CadastroOrcamento = () => {
                 <input
                   type="text"
                   name="nome"
-                  placeholder="Insira um produto/serviço"
+                  placeholder="Produto/serviço"
                   value={item.nome}
                   onChange={e => handleItemChange(index, e)}
                 />
@@ -171,7 +172,7 @@ const CadastroOrcamento = () => {
                 <input
                   type="number"
                   name="valor"
-                  placeholder="Valor (un.)"
+                  placeholder="0,00"
                   value={item.valor}
                   onChange={e => handleItemChange(index, e)}
                 />
@@ -182,10 +183,11 @@ const CadastroOrcamento = () => {
           <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
 
           <div className="form-group">
-            <label>Observações:</label>
+            <label>Observações</label>
             <textarea
               value={observacoes}
               onChange={e => setObservacoes(e.target.value)}
+              placeholder="Observações sobre o orçamento"
             />
           </div>
 
