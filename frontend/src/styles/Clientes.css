@@ -6,7 +6,7 @@
   --secondary-color: #032f7e;
   --accent-color: #92969d;
   --danger-color: #e74c3c;
-  --warning-color: #ffc107; /* Nova cor de aviso */
+  --warning-color: #ffc107;
   --light-bg: #82abf7;
   --text-dark: #2c3e50;
   --text-light: #7f8c8d;
@@ -14,7 +14,7 @@
   --border-color: #ddd;
   --hover-bg: #f8f9fa;
   --success-color: #2ecc71;
-  --active-bg: #c5cdd9; /* Nova variável para o fundo do item ativo */
+  --active-bg: #c5cdd9;
 }
 
 /* ========== RESET E ESTILOS GERAIS ========== */
@@ -40,8 +40,8 @@ body {
 
 .sysmtec-header {
   grid-column: 1 / -1;
-  background-image: linear-gradient(135deg, var(--primary-color) 0%, #022664 100%); /* Gradiente diagonal sutil */
-  background-color: var(--primary-color); /* Fallback para navegadores que não suportam gradientes */
+  background-image: linear-gradient(135deg, var(--primary-color) 0%, #022664 100%);
+  background-color: var(--primary-color);
   color: var(--white);
   padding: 1rem;
   text-align: center;
@@ -49,15 +49,15 @@ body {
 }
 
 .sysmtec-header h1 {
-  font-size: 2.2rem; /* Aumentado de 1.5rem */
+  font-size: 2.2rem;
   color: var(--white); 
   font-family: 'Montserrat', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; 
   font-weight: 300; 
   text-transform: uppercase; 
-  letter-spacing: 4px; /* Aumentado de 3px */
+  letter-spacing: 4px;
   text-shadow: 
-    0px 2px 4px rgba(0, 0, 0, 0.4),  /* Sombra escura para profundidade */
-    0 0 8px rgba(200, 220, 255, 0.3); /* Brilho azulado claro suave */
+    0px 2px 4px rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(200, 220, 255, 0.3);
 }
 
 .sysmtec-header h2 {
@@ -72,10 +72,10 @@ body {
   background-image: linear-gradient(to bottom, var(--secondary-color), #02225a);
   padding: 1.5rem 1rem;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
-  background-color: var(--secondary-color); /* Fallback */
-  position: relative; /* Para o pseudo-elemento */
-  overflow: hidden; /* Para conter a animação de escala */
-  z-index: 0; /* Para garantir que o pseudo-elemento não cubra outros elementos fora da sidebar */
+  background-color: var(--secondary-color);
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .sysmtec-sidebar nav {
@@ -93,7 +93,7 @@ body {
   background: radial-gradient(ellipse at center, 
                                 rgba(255, 255, 255, 0.08) 0%, 
                                 rgba(255, 255, 255, 0.0) 70%);
-  opacity: 0.7; /* Opacidade inicial */
+  opacity: 0.7;
   animation: breathEffect 8s infinite ease-in-out;
   z-index: 0; 
 }
@@ -126,29 +126,26 @@ body {
 .sysmtec-sidebar nav a {
   display: flex;
   align-items: center;
-  /* justify-content: center; */ /* Removido para alinhar texto à esquerda com ícone */
   color: var(--white);
-  font-family: 'Source Sans 3', sans-serif; /* Nova fonte */
-  font-weight: 600; /* Semibold para boa legibilidade */
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
   text-decoration: none;
   padding: 0.8rem 1rem;
-  letter-spacing: 0.5px; /* Um leve aumento para clareza, ajuste conforme necessário */
-  border-radius: 6px; /* Ajustado para cantos levemente arredondados */
+  letter-spacing: 0.5px;
+  border-radius: 6px;
   transition: all 0.3s ease;
-  gap: 0.75rem; /* Espaçamento entre o futuro ícone e o texto */
+  gap: 0.75rem;
 }
 
 .sysmtec-sidebar nav a span {
-  font-size: 1.1em; /* Ajuste o tamanho do ícone se necessário */
+  font-size: 1.1em;
 }
 
-/* Item ativo - fundo cinza */
 .sysmtec-sidebar nav li.active a {
-  background-color: rgba(255, 255, 255, 0.08); /* Leve brilho branco sobre o gradiente */
+  background-color: rgba(255, 255, 255, 0.08);
   color: var(--white); 
-  border-left: 3px solid var(--success-color); /* Borda lateral verde para destaque vibrante */
-  padding-left: calc(1rem - 3px); /* Ajusta o padding esquerdo. O padding original é 0.8rem (top/bottom) e 1rem (left/right) */
-  /* Assegurar que outras bordas sejam removidas se aplicadas por padrão ou herdadas de forma indesejada */
+  border-left: 3px solid var(--success-color);
+  padding-left: calc(1rem - 3px);
   border-top: none;
   border-right: none;
   border-bottom: none;
@@ -156,7 +153,7 @@ body {
 
 /* Efeito hover */
 .sysmtec-sidebar nav a:hover {
-  background-color: #005bc0; /* Azul um pouco mais claro e vibrante */
+  background-color: #005bc0;
   color: var(--white);
 }
 
@@ -167,11 +164,11 @@ body {
 }
 
 .sysmtec-main > h2 {
-  font-size: 1.3rem; /* Ajuste o tamanho conforme necessário */
-  color: #333; /* Ajuste a cor conforme necessário */
+  font-size: 1.3rem;
+  color: #333;
   margin-bottom: 1.5rem;
-  font-weight: bold; /* Ou normal, dependendo da imagem */
-  text-align: left; /* Ou center, se aplicável */
+  font-weight: bold;
+  text-align: left;
 }
 
 /* ========== ESTILOS DA LISTAGEM ========== */
@@ -182,27 +179,25 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* Unificando estilos base para .add-client-link e .back-button */
 .add-client-link,
 .back-button {
   display: inline-block;
   background-color: var(--primary-color);
   color: var(--white);
-  padding: 0.6rem 1.2rem; /* Padronizado */
+  padding: 0.6rem 1.2rem;
   border-radius: 5px;
   text-decoration: none;
-  font-weight: bold; /* Padronizado */
+  font-weight: bold;
   font-size: 1rem;
   border: none;
   text-align: center;
   transition: all 0.3s ease;
 }
 
-/* Unificando estilos hover para .add-client-link e .back-button */
 .add-client-link:hover,
 .back-button:hover {
   background-color: #0056b3; 
-  color: var(--white); /* Garantido */
+  color: var(--white);
   text-decoration: none;
 }
 
@@ -217,25 +212,23 @@ body {
 
 .clientes-table {
   width: 100%;
-  border-collapse: collapse; /* Alterado */
+  border-collapse: collapse;
   border-spacing: 0;
 }
 
 .clientes-table th,
 .clientes-table td {
-  padding: 0.8rem; /* Ajuste de padding */
+  padding: 0.8rem;
   text-align: left;
-  border-bottom: 1px solid var(--border-color); /* Adicionado para td */
+  border-bottom: 1px solid var(--border-color);
 }
 
 .clientes-table th {
   background-color: var(--primary-color);
   color: var(--white);
-  font-weight: bold; /* Adicionado */
-  border-bottom: 1px solid #00225c; /* Adicionado para th */
+  font-weight: bold;
+  border-bottom: 1px solid #00225c;
 }
-
-/* Removido .clientes-table tr:last-child td { border-bottom: none; } pois o collapse cuida disso ou a borda geral já é aplicada */
 
 .clientes-table tr:hover {
   background-color: var(--hover-bg);
@@ -249,9 +242,6 @@ body {
 .clientes-table th:nth-child(1), /* Coluna Nome */
 .clientes-table td:nth-child(1) {
   min-width: 200px; 
-  /* white-space: nowrap; */ /* Opcional: se não quiser quebra de linha no nome */
-  /* overflow: hidden; */
-  /* text-overflow: ellipsis; */
 }
 
 .clientes-table th:nth-child(2), /* Coluna CPF/CNPJ */
@@ -268,32 +258,26 @@ body {
   text-align: center;
 }
 
-/* .cliente-nome-box foi removido */
-
 .actions-cell {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centraliza os ícones */
-  /* height: 100%; */ /* Removido se não for necessário para alinhar apenas os ícones */
-  gap: 0.75rem; /* Ajuste fino do espaçamento entre ícones */
+  justify-content: center;
+  gap: 0.75rem;
 }
-
-/* .action-button foi removido pois os estilos serão aplicados diretamente a .edit-button e .delete-button */
 
 .edit-button, 
 .delete-button,
 .view-button {
   background-color: transparent;
-  color: var(--text-dark); /* Ou #555 */
-  padding: 0.4rem; /* Ajuste de padding */
+  color: var(--text-dark);
+  padding: 0.4rem;
   border: none;
   cursor: pointer;
-  font-size: 1rem; /* Ou tamanho do ícone */
-  transition: all 0.2s ease; /* Mantido de .action-button */
-  /* width e height removidos para depender do conteúdo (ícone) */
-  text-decoration: none; /* Para o Link do view-button */
-  display: inline-flex; /* Para alinhar o ícone se necessário */
-  align-items: center; /* Para alinhar o ícone se necessário */
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .edit-button:hover, 
@@ -359,7 +343,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
-  font-family: inherit; /* Garante que todos os campos do formulário usem a mesma fonte do corpo */
+  font-family: inherit;
   transition: border-color 0.3s ease;
 }
 
@@ -367,25 +351,37 @@ body {
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--primary-color); /* Azul escuro principal */
-  box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25); /* Sombra sutil do azul escuro principal */
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25);
 }
 
-/* Estilo para campos de formulário com erro */
+.itens-orcamento-grid-container > input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.itens-orcamento-grid-container > input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(3, 47, 126, 0.25);
+}
+
 .form-group input.error,
 .form-group textarea.error {
-  border-color: var(--danger-color) !important; /* Borda vermelha para indicar erro */
-  /* box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important; */ /* Opcional */
+  border-color: var(--danger-color) !important;
 }
 
-/* Ajuste para o estado de foco de um campo com erro */
 .form-group input.error:focus,
 .form-group textarea.error:focus {
-  border-color: var(--danger-color) !important; /* Mantém a borda vermelha no foco */
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25) !important; /* Sombra sutil vermelha no foco */
+  border-color: var(--danger-color) !important;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25) !important;
 }
 
-/* Estilos para campos readOnly e disabled na tela de visualização */
 .cliente-form input[readOnly][disabled],
 .cliente-form textarea[readOnly][disabled] {
   background-color: transparent; 
@@ -394,12 +390,11 @@ body {
   cursor: default; 
   outline: none; 
   box-shadow: none; 
-  /* O padding: 0.75rem; já é herdado da regra .form-group input, .form-group textarea */
 }
 
 .cliente-form input[readOnly][disabled]::placeholder,
 .cliente-form textarea[readOnly][disabled]::placeholder {
-  color: transparent; /* Esconde placeholders se houver */
+  color: transparent;
 }
 
 .form-group textarea {
@@ -408,38 +403,37 @@ body {
 }
 
 .error-message {
-  color: var(--danger-color); /* Mantém a cor do texto original */
-  background-color: #fdeded; /* Um fundo rosa/vermelho muito claro */
-  border: 1px solid rgba(231, 76, 60, 0.3); /* Borda sutil com cor de perigo transparente */
-  padding: 0.5rem 0.75rem; /* Padding interno */
-  border-radius: 4px; /* Cantos arredondados */
-  font-size: 0.85rem; /* Mantém o tamanho da fonte */
-  margin-top: 0.5rem; /* Aumenta um pouco a margem superior para separar do campo */
-  display: block; /* Faz a mensagem ocupar a largura e respeitar margens/paddings verticais corretamente */
-  line-height: 1.4; /* Melhora a legibilidade se a mensagem tiver múltiplas linhas */
+  color: var(--danger-color);
+  background-color: #fdeded;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: block;
+  line-height: 1.4;
 }
 
 .submit-button {
-  background-color: var(--primary-color); /* Azul escuro principal */
+  background-color: var(--primary-color);
   color: var(--white);
-  padding: 0.6rem 1.2rem; /* Padronizado para corresponder aos outros botões */
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 5px; /* Padronizado */
+  border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.3s ease;
   width: 100%;
-  /* text-transform: uppercase; */ /* Removido */
-  font-weight: bold; /* Padronizado */
+  font-weight: bold;
 }
 
 .submit-button:hover {
-  background-color: #0056b3; /* Azul médio */
-  color: var(--white); /* Garantido */
+  background-color: #0056b3;
+  color: var(--white);
 }
 
 .submit-button:disabled {
-  background-color: #cccccc; /* Cinza claro para desabilitado */
+  background-color: #cccccc;
   color: #666666;
   cursor: not-allowed;
 }
@@ -452,24 +446,15 @@ body {
   border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
-  font-size: 1rem; /* Consistente com .add-client-link */
+  font-size: 1rem;
   border: none;
   text-align: center;
   transition: all 0.3s ease;
-  /* margin-bottom é específico para .back-button em seu contexto, 
-     se .add-client-link precisar, deve ser adicionado especificamente.
-     Atualmente, .back-button já tem margin-bottom: 1.5rem; em sua regra mais específica abaixo,
-     então esta linha é redundante aqui ou precisa ser gerenciada com cuidado.
-     Para evitar conflito, a margin-bottom do .back-button será mantida em sua regra própria.
-  */
 }
 
-/* .back-button específico para margin-bottom, se necessário manter separado */
 .back-button {
-  margin-bottom: 1.5rem; /* Mantido para espaçamento antes do formulário */
+  margin-bottom: 1.5rem;
 }
-
-/* .add-client-link não precisa de margin-bottom específica aqui */
 
 /* ========== LOADING ========== */
 .loading-container {
@@ -495,28 +480,15 @@ body {
 }
 
 /* ========== MENSAGENS TOAST ========== */
-/* .toast-success {
-  background-color: var(--success-color) !important;
-  color: var(--white) !important; 
-  border-radius: 5px !important; 
-}
-
-.toast-error {
-  background-color: var(--danger-color) !important;
-  color: var(--white) !important; 
-  border-radius: 5px !important; 
-} */
-
-/* Estilização para toasts do react-toastify */
 .Toastify__toast--success {
   background-color: var(--success-color) !important;
   color: var(--white) !important;
   border-radius: 5px !important;
 }
 
-.Toastify__toast--warning { /* Nova regra para toasts de aviso */
+.Toastify__toast--warning {
   background-color: var(--warning-color) !important;
-  color: var(--text-dark) !important; /* Texto escuro para contraste com fundo amarelo */
+  color: var(--text-dark) !important;
   border-radius: 5px !important;
 }
 

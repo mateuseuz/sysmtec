@@ -43,6 +43,23 @@ const CadastroOrcamento = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Validação
+    if (!nomeOrcamento.trim()) {
+      toast.error('Nome do orçamento é obrigatório.');
+      return;
+    }
+    if (termoBusca.trim() && !clienteSelecionado) {
+      toast.error('Cliente inexistente. Selecione um cliente da lista ou deixe o campo em branco.');
+      return;
+    }
+
+    const itensInvalidos = itens.some(item => !item.nome.trim() || !String(item.valor).trim());
+    if (itens.length === 0 || (itens.length === 1 && !itens[0].nome.trim()) || itensInvalidos) {
+      toast.error('É obrigatório preencher o nome e o valor de todos os itens.');
+      return;
+    }
+
     setIsLoading(true);
 
     const itensNumericos = itens.map(item => ({
@@ -92,16 +109,15 @@ const CadastroOrcamento = () => {
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
-            <label>Nome do orçamento *</label>
+            <label>Nome do Orçamento:</label>
             <input
               type="text"
               value={nomeOrcamento}
               onChange={e => setNomeOrcamento(e.target.value)}
-              placeholder="Digite o nome do orçamento"
             />
           </div>
           <div className="form-group">
-            <label>Vincular orçamento ao cliente</label>
+            <label>Vincular orçamento ao cliente (opcional):</label>
             <div className="autocomplete-container">
               <input
                 type="text"
@@ -128,21 +144,22 @@ const CadastroOrcamento = () => {
             </div>
           </div>
 
-          <div className="itens-orcamento-container">
-            <div className="item-orcamento-header">
-              <label className="item-descricao-label">Item *</label>
-              <label className="item-quantidade-label">Qtd. *</label>
-              <label className="item-valor-label">Valor (un.) *</label>
-            </div>
+          <div className="itens-orcamento-grid-container">
+            {/* Cabeçalho do Grid */}
+            <label className="grid-header">Item *</label>
+            <label className="grid-header">Qtd. *</label>
+            <label className="grid-header">Valor (un.) *</label>
+            <div /> {/* Célula vazia para alinhar com o botão de remover */}
+
+            {/* Linhas de Itens */}
             {itens.map((item, index) => (
-              <div key={index} className="item-orcamento-row">
+              <React.Fragment key={index}>
                 <input
                   type="text"
                   name="nome"
                   placeholder="Insira um produto/serviço"
                   value={item.nome}
                   onChange={e => handleItemChange(index, e)}
-                  className="item-descricao"
                 />
                 <input
                   type="number"
@@ -150,7 +167,6 @@ const CadastroOrcamento = () => {
                   placeholder="Qtd."
                   value={item.quantidade}
                   onChange={e => handleItemChange(index, e)}
-                  className="item-quantidade"
                 />
                 <input
                   type="number"
@@ -158,20 +174,18 @@ const CadastroOrcamento = () => {
                   placeholder="Valor (un.)"
                   value={item.valor}
                   onChange={e => handleItemChange(index, e)}
-                  className="item-valor"
                 />
                 <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
-              </div>
+              </React.Fragment>
             ))}
-            <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
           </div>
+          <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
 
           <div className="form-group">
             <label>Observações:</label>
             <textarea
               value={observacoes}
               onChange={e => setObservacoes(e.target.value)}
-              placeholder="Observações sobre o orçamento"
             />
           </div>
 
