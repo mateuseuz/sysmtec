@@ -9,12 +9,23 @@ function VisualizarOrdemServico() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [ordemServico, setOrdemServico] = useState(null);
+  const [orcamentoNome, setOrcamentoNome] = useState('Nenhum');
 
   useEffect(() => {
-    const carregarOrdemServico = async () => {
+    const carregarDados = async () => {
       try {
-        const data = await api.buscarOrdemServico(id);
-        setOrdemServico(data);
+        const osData = await api.buscarOrdemServico(id);
+        setOrdemServico(osData);
+
+        if (osData && osData.id_orcamento) {
+          try {
+            const orcamentoData = await api.buscarOrcamento(osData.id_orcamento);
+            setOrcamentoNome(orcamentoData.nome);
+          } catch (error) {
+            console.error("Erro ao buscar orçamento vinculado:", error);
+            setOrcamentoNome(`ID ${osData.id_orcamento} (não encontrado)`);
+          }
+        }
       } catch (error) {
         toast.error('Erro ao carregar ordem de serviço: ' + error.message);
         navigate('/ordens-servico');
@@ -23,7 +34,7 @@ function VisualizarOrdemServico() {
       }
     };
     
-    carregarOrdemServico();
+    carregarDados();
   }, [id, navigate]);
 
   if (isLoading) {
@@ -63,27 +74,7 @@ function VisualizarOrdemServico() {
             <label>Nome do projeto/serviço</label>
             <input
               type="text"
-              value={ordemServico?.nome_projeto || ''}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Orçamento</label>
-            <input
-              type="text"
-              value={ordemServico?.fk_id_orcamento || ''}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Orçamento</label>
-            <input
-              type="text"
-              value={ordemServico?.fk_id_orcamento || ''}
+              value={ordemServico?.nome || ''}
               readOnly
               disabled
             />
@@ -94,6 +85,16 @@ function VisualizarOrdemServico() {
             <input
               type="text"
               value={ordemServico?.nome_cliente || ''}
+              readOnly
+              disabled
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Orçamento vinculado</label>
+            <input
+              type="text"
+              value={orcamentoNome}
               readOnly
               disabled
             />

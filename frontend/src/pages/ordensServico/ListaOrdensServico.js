@@ -75,7 +75,7 @@ function ListaOrdensServico() {
             <table className="clientes-table">
               <thead>
                 <tr>
-                  <th>Nome do Projeto</th>
+                  <th>Nome do projeto/serviço</th>
                   <th>Cliente</th>
                   <th>Situação</th>
                   <th>Ações</th>
@@ -84,7 +84,7 @@ function ListaOrdensServico() {
               <tbody>
                 {ordensServico.map(os => (
                   <tr key={os.id_ordem_servico}>
-                    <td>{os.nome_projeto}</td>
+                    <td>{os.nome}</td>
                     <td>{os.nome_cliente}</td>
                     <td>{os.situacao}</td>
                     <td className="actions-cell">
