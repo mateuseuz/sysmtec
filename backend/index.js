@@ -3,6 +3,7 @@ const cors = require('cors');
 const clienteRoutes = require('./routes/clienteRoutes');
 const ordemServicoRoutes = require('./routes/ordemServicoRoutes');
 const orcamentoRoutes = require('./routes/orcamentoRoutes');
+const visitaRoutes = require('./routes/visitaRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/ordens-servico', ordemServicoRoutes);
 app.use('/api/orcamentos', orcamentoRoutes);
+app.use('/api/agenda', visitaRoutes);
 
 // Rota simples de teste
 app.get('/', (req, res) => {

@@ -48,6 +48,13 @@ const apiClientes = {
   buscarOrcamento: (id) => api.get(`/orcamentos/${id}`),
   atualizarOrcamento: (id, orcamento) => api.put(`/orcamentos/${id}`, orcamento),
   deletarOrcamento: (id) => api.delete(`/orcamentos/${id}`),
+
+  // Visitas (Agenda)
+  listarVisitas: () => api.get('/agenda'),
+  criarVisita: (visita) => api.post('/agenda', visita),
+  buscarVisita: (id) => api.get(`/agenda/${id}`),
+  atualizarVisita: (id, visita) => api.put(`/agenda/${id}`, visita),
+  deletarVisita: (id) => api.delete(`/agenda/${id}`),
 };
 
 export default apiClientes;

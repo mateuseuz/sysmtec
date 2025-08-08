@@ -12,13 +12,15 @@ import ListaOrcamentos from './pages/orcamentos/ListaOrcamentos';
 import CadastroOrcamento from './pages/orcamentos/CadastroOrcamento';
 import EditarOrcamento from './pages/orcamentos/EditarOrcamento';
 import VisualizarOrcamento from './pages/orcamentos/VisualizarOrcamento';
+import ListaVisitas from './pages/visitas/ListaVisitas';
+import CadastroVisita from './pages/visitas/CadastroVisita';
 
 function App() {
   return (
     <Router>
       <ToastContainer
         position="top-right"
-        autoClose={5000} // Fecha automaticamente após 5 segundos
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -29,7 +31,11 @@ function App() {
         theme="colored"
       />
       <Routes>
-        <Route path="/" element={<Navigate to="/clientes" replace />} />
+        <Route path="/" element={<Navigate to="/agenda" replace />} />
+
+        <Route path="/agenda" element={<ListaVisitas />} />
+        <Route path="/agenda/novo" element={<CadastroVisita />} />
+
         <Route path="/clientes" element={<ListaClientes />} />
         <Route path="/clientes/novo" element={<CadastroCliente />} />
         <Route path="/clientes/editar/:id" element={<EditarCliente />} />

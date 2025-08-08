@@ -4,34 +4,21 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function CadastroOrdemServico() {
+function CadastroVisita() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    nome: '',
+    titulo: '',
     id_cliente: '',
-    situacao: 'Em andamento',
-    observacoes: ''
+    data: '',
+    hora: '',
+    endereco: '',
+    observacoes: '',
   });
-  const [errors, setErrors] = useState({});
-
+  const [isLoading, setIsLoading] = useState(false);
+  
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
-
-  const [orcamentos, setOrcamentos] = useState([]);
-
-  useEffect(() => {
-    const carregarOrcamentos = async () => {
-      try {
-        const data = await api.listarOrcamentos();
-        setOrcamentos(data);
-      } catch (error) {
-        toast.error('Erro ao carregar orçamentos: ' + error.message);
-      }
-    };
-    carregarOrcamentos();
-  }, []);
 
   useEffect(() => {
     if (clientSearch.length > 1 && !selectedClient) {
@@ -65,47 +52,34 @@ function CadastroOrdemServico() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    let isValid = true;
-
-    if (!formData.nome.trim()) {
-      toast.warn('Nome do projeto é obrigatório');
-      newErrors.nome = 'Nome do projeto é obrigatório';
-      isValid = false;
-    }
-
-    if (!formData.id_cliente) {
-      toast.warn('Cliente é obrigatório');
-      newErrors.id_cliente = 'Cliente é obrigatório';
-      isValid = false;
-    }
-
-    if (!formData.id_orcamento) {
-      toast.warn('Orçamento é obrigatório');
-      newErrors.id_orcamento = 'Orçamento é obrigatório';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
-
+    if (!formData.titulo || !formData.data || !formData.hora || !formData.endereco) {
+      toast.error('Nome, data, hora e endereço são obrigatórios.');
+      return;
+    }
+    
     setIsLoading(true);
+
+    const data_agendamento = `${formData.data}T${formData.hora}:00`;
+
+    const visitaParaSalvar = {
+      titulo: formData.titulo,
+      data_agendamento,
+      endereco: formData.endereco,
+      id_cliente: formData.id_cliente || null,
+      observacoes: formData.observacoes,
+    };
+
     try {
-      await api.criarOrdemServico(formData);
-      toast.success('Ordem de serviço cadastrada com sucesso!');
-      navigate('/ordens-servico');
+      await api.criarVisita(visitaParaSalvar);
+      toast.success('Visita agendada com sucesso!');
+      navigate('/agenda');
     } catch (error) {
-      toast.error(error.message || 'Erro ao cadastrar ordem de serviço');
+      toast.error('Erro ao agendar visita: ' + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -116,13 +90,13 @@ function CadastroOrdemServico() {
       <header className="sysmtec-header">
         <h1>SYSMTEC</h1>
       </header>
-
+      
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
+            <li className="active"><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
             <li><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li className="active"><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
+            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
             <li><Link to="/log"><span>📋</span>Log de alterações</Link></li>
           </ul>
@@ -130,29 +104,28 @@ function CadastroOrdemServico() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/ordens-servico" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/agenda" className="back-button">&lt; VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
+
           <div className="form-group">
             <label>Nome *</label>
             <input
               type="text"
-              name="nome"
-              value={formData.nome}
+              name="titulo"
+              placeholder="Ex: Visita técnica para orçamento"
+              value={formData.titulo}
               onChange={handleChange}
-              placeholder="Nome do projeto/serviço"
-              className={errors.nome ? 'error' : ''}
+              required
             />
           </div>
 
           <div className="form-group">
-            <label>Cliente relacionado *</label>
+            <label>Vincular visita ao cliente</label>
             <input
               type="text"
-              name="id_cliente"
               value={clientSearch}
               onChange={handleClientChange}
-              className={errors.id_cliente ? 'error' : ''}
               placeholder="Digite para buscar..."
               autoComplete="off"
             />
@@ -166,59 +139,58 @@ function CadastroOrdemServico() {
               </ul>
             )}
           </div>
-
-          <div className="form-group">
-            <label>Orçamento *</label>
-            <select
-              name="id_orcamento"
-              value={formData.id_orcamento}
-              onChange={handleChange}
-              className={errors.id_orcamento ? 'error' : ''}
-            >
-              <option value="">Selecione um orçamento</option>
-              {orcamentos.map(orcamento => (
-                <option key={orcamento.id_orcamento} value={orcamento.id_orcamento}>
-                  {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
-                </option>
-              ))}
-            </select>
+          
+          <div className="form-row">
+            <div className="form-group">
+              <label>Data *</label>
+              <input
+                type="date"
+                name="data"
+                value={formData.data}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Hora *</label>
+              <input
+                type="time"
+                name="hora"
+                value={formData.hora}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group">
-            <label>Situação *</label>
-            <select
-              name="situacao"
-              value={formData.situacao}
+            <label>Endereço *</label>
+            <input
+              type="text"
+              name="endereco"
+              placeholder="Insira o endereço do local da visita"
+              value={formData.endereco}
               onChange={handleChange}
-            >
-              <option value="Em andamento">Em andamento</option>
-              <option value="Concluído">Concluído</option>
-              <option value="Cancelado">Cancelado</option>
-            </select>
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Observações</label>
             <textarea
               name="observacoes"
+              placeholder="Observações sobre a visita..."
               value={formData.observacoes}
               onChange={handleChange}
-              placeholder="Observações sobre a ordem de serviço"
-              maxLength="500"
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={isLoading}
             className={`submit-button ${isLoading ? 'loading' : ''}`}
           >
-            {isLoading ? (
-              <>
-                <span className="spinner"></span>
-                Salvando...
-              </>
-            ) : 'Cadastrar Ordem de Serviço'}
+            {isLoading ? 'Salvando...' : 'Salvar Agendamento'}
           </button>
         </form>
       </main>
@@ -226,4 +198,4 @@ function CadastroOrdemServico() {
   );
 }
 
-export default CadastroOrdemServico;
+export default CadastroVisita;

@@ -29,13 +29,22 @@ body {
   line-height: 1.6;
   color: var(--text-dark);
   background-color: var(--light-bg);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 35px,
+    rgba(255, 255, 255, 0.05) 35px,
+    rgba(255, 255, 255, 0.05) 70px
+  );
 }
 
 /* ========== LAYOUT PRINCIPAL ========== */
 .sysmtec-container {
   display: grid;
   grid-template-columns: 250px 1fr;
-  min-height: 100vh;
+  grid-template-rows: auto 1fr; /* Header e conteúdo */
+  height: 100vh;
+  overflow: hidden; /* Impede a rolagem do container principal */
 }
 
 .sysmtec-header {
@@ -69,6 +78,7 @@ body {
 
 /* ========== SIDEBAR ========== */
 .sysmtec-sidebar {
+  grid-row: 2; /* Coloca a sidebar na segunda linha do grid */
   background-image: linear-gradient(to bottom, var(--secondary-color), #02225a);
   padding: 1.5rem 1rem;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
@@ -159,8 +169,10 @@ body {
 
 /* ========== ÁREA PRINCIPAL ========== */
 .sysmtec-main {
+  grid-column: 2; /* Ocupa a segunda coluna */
+  grid-row: 2;    /* Ocupa a segunda linha */
   padding: 2rem;
-  min-height: calc(100vh - 60px);
+  overflow-y: auto; /* Adiciona rolagem vertical apenas aqui */
 }
 
 .sysmtec-main > h2 {
