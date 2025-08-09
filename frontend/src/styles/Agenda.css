@@ -99,3 +99,81 @@
 .form-row .form-group {
   flex: 1;
 }
+
+.appointment-info {
+  flex-grow: 1;
+}
+
+.appointment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Estilos do Carrossel */
+.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.carousel-arrow {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.left-arrow {
+  left: -20px;
+}
+
+.right-arrow {
+  right: -20px;
+}
+
+.carousel-track {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.carousel-card {
+  flex: 0 0 30%; /* Mostra 3-4 cards por vez */
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0.5;
+  transform: scale(0.9);
+}
+
+.carousel-card.center {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(3, 47, 126, 0.2);
+}
+
+.carousel-card h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.appointments-list {
+  max-height: 300px;
+  overflow-y: auto;
+}

@@ -74,9 +74,11 @@ const EditarOrcamento = () => {
   };
 
   const handleRemoveItem = index => {
-    const values = [...itens];
-    values.splice(index, 1);
-    setItens(values);
+    if (window.confirm('Tem certeza que deseja remover este item?')) {
+      const values = [...itens];
+      values.splice(index, 1);
+      setItens(values);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -95,6 +97,12 @@ const EditarOrcamento = () => {
     const itensInvalidos = itens.some(item => !item.nome.trim() || !String(item.valor).trim());
     if (itens.length === 0 || (itens.length === 1 && !itens[0].nome.trim()) || itensInvalidos) {
       toast.error('É obrigatório preencher o nome e o valor de todos os itens.');
+      return;
+    }
+
+    const valoresNegativos = itens.some(item => parseFloat(item.quantidade) < 0 || parseFloat(item.valor) < 0);
+    if (valoresNegativos) {
+      toast.error('Quantidade e valor dos itens não podem ser negativos.');
       return;
     }
 
@@ -156,7 +164,7 @@ const EditarOrcamento = () => {
       <main className="sysmtec-main">
         <Link to="/orcamentos" className="back-button">&lt; VOLTAR</Link>
 
-        <form onSubmit={handleSubmit} className="cliente-form">
+        <form onSubmit={handleSubmit} className="cliente-form" noValidate>
           <div className="form-group">
             <label>Nome *</label>
             <input
@@ -220,6 +228,7 @@ const EditarOrcamento = () => {
                   placeholder="Qtd."
                   value={item.quantidade}
                   onChange={e => handleItemChange(index, e)}
+                  min="0"
                 />
                 <input
                   type="number"
@@ -227,6 +236,7 @@ const EditarOrcamento = () => {
                   placeholder="0,00"
                   value={item.valor}
                   onChange={e => handleItemChange(index, e)}
+                  min="0"
                 />
                 <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
               </React.Fragment>
@@ -262,7 +272,7 @@ const EditarOrcamento = () => {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar alterações'}
+            ) : 'Atualizar Orçamento'}
           </button>
         </form>
       </main>

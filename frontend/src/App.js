@@ -14,6 +14,8 @@ import EditarOrcamento from './pages/orcamentos/EditarOrcamento';
 import VisualizarOrcamento from './pages/orcamentos/VisualizarOrcamento';
 import ListaVisitas from './pages/visitas/ListaVisitas';
 import CadastroVisita from './pages/visitas/CadastroVisita';
+import EditarVisita from './pages/visitas/EditarVisita';
+import VisualizarVisita from './pages/visitas/VisualizarVisita';
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
 
         <Route path="/agenda" element={<ListaVisitas />} />
         <Route path="/agenda/novo" element={<CadastroVisita />} />
+        <Route path="/agenda/editar/:id" element={<EditarVisita />} />
+        <Route path="/agenda/visualizar/:id" element={<VisualizarVisita />} />
 
         <Route path="/clientes" element={<ListaClientes />} />
         <Route path="/clientes/novo" element={<CadastroCliente />} />
