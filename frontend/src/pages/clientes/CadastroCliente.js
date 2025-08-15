@@ -165,7 +165,7 @@ function CadastroCliente() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/clientes" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/clientes" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
@@ -252,7 +252,7 @@ function CadastroCliente() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar ciente'}
+            ) : 'Salvar cliente'}
           </button>
         </form>
       </main>

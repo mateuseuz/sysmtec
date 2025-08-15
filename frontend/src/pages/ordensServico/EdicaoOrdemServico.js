@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function EditarOrdemServico() {
+function EdicaoOrdemServico() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -158,7 +158,7 @@ function EditarOrdemServico() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/ordens-servico" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/ordens-servico" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
@@ -244,7 +244,7 @@ function EditarOrdemServico() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'SALVAR ALTERAÇÕES'}
+            ) : 'Salvar ordem de serviço'}
           </button>
         </form>
       </main>
@@ -252,4 +252,4 @@ function EditarOrdemServico() {
   );
 }
 
-export default EditarOrdemServico;
+export default EdicaoOrdemServico;

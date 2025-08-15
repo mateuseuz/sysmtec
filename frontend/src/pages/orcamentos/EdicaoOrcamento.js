@@ -5,7 +5,7 @@ import api from '../../services/api';
 import '../../styles/Clientes.css';
 import '../../styles/Orcamentos.css';
 
-const EditarOrcamento = () => {
+const EdicaoOrcamento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -162,7 +162,7 @@ const EditarOrcamento = () => {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/orcamentos" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form" noValidate>
           <div className="form-group">
@@ -272,7 +272,7 @@ const EditarOrcamento = () => {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Atualizar Orçamento'}
+            ) : 'Salvar orçamento'}
           </button>
         </form>
       </main>
@@ -280,4 +280,4 @@ const EditarOrcamento = () => {
   );
 };
 
-export default EditarOrcamento;
+export default EdicaoOrcamento;

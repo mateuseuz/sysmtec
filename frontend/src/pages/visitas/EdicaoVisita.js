@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function EditarVisita() {
+function EdicaoVisita() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -146,7 +146,7 @@ function EditarVisita() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/agenda" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/agenda" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <h2>Editar Visita</h2>
@@ -196,7 +196,7 @@ function EditarVisita() {
             disabled={isLoading}
             className={`submit-button ${isLoading ? 'loading' : ''}`}
           >
-            {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+            {isLoading ? 'Salvando...' : 'Salvar visita'}
           </button>
         </form>
       </main>
@@ -204,4 +204,4 @@ function EditarVisita() {
   );
 }
 
-export default EditarVisita;
+export default EdicaoVisita;

@@ -5,7 +5,7 @@ import api from '../../services/api';
 import '../../styles/Clientes.css';
 import '../../styles/Agenda.css';
 
-function ListaVisitas() {
+function ListagemVisitas() {
   const [visitas, setVisitas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [centerDate, setCenterDate] = useState(new Date());
@@ -105,7 +105,7 @@ function ListaVisitas() {
 
       <main className="sysmtec-main">
         <div className="agenda-header">
-          <Link to="/agenda/novo" className="add-client-link">+ AGENDAR VISITA</Link>
+          <Link to="/agenda/novo" className="add-client-link">➕ CADASTRAR VISITA</Link>
           <div className="agenda-filters">
             <input 
               type="text"
@@ -164,4 +164,4 @@ function ListaVisitas() {
   );
 }
 
-export default ListaVisitas;
+export default ListagemVisitas;

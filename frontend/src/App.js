@@ -1,21 +1,21 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import ListaClientes from './pages/clientes/ListaClientes';
+import ListagemClientes from './pages/clientes/ListagemClientes';
 import CadastroCliente from './pages/clientes/CadastroCliente';
-import EditarCliente from './pages/clientes/EditarCliente';
-import VisualizarCliente from './pages/clientes/VisualizarCliente';
-import ListaOrdensServico from './pages/ordensServico/ListaOrdensServico';
+import EdicaoCliente from './pages/clientes/EdicaoCliente';
+import VisualizacaoCliente from './pages/clientes/VisualizacaoCliente';
+import ListagemOrdensServico from './pages/ordensServico/ListagemOrdensServico';
 import CadastroOrdemServico from './pages/ordensServico/CadastroOrdemServico';
-import EditarOrdemServico from './pages/ordensServico/EditarOrdemServico';
-import VisualizarOrdemServico from './pages/ordensServico/VisualizarOrdemServico';
-import ListaOrcamentos from './pages/orcamentos/ListaOrcamentos';
+import EdicaoOrdemServico from './pages/ordensServico/EdicaoOrdemServico';
+import VisualizacaoOrdemServico from './pages/ordensServico/VisualizacaoOrdemServico';
+import ListagemOrcamentos from './pages/orcamentos/ListagemOrcamentos';
 import CadastroOrcamento from './pages/orcamentos/CadastroOrcamento';
-import EditarOrcamento from './pages/orcamentos/EditarOrcamento';
-import VisualizarOrcamento from './pages/orcamentos/VisualizarOrcamento';
-import ListaVisitas from './pages/visitas/ListaVisitas';
+import EdicaoOrcamento from './pages/orcamentos/EdicaoOrcamento';
+import VisualizacaoOrcamento from './pages/orcamentos/VisualizacaoOrcamento';
+import ListagemVisitas from './pages/visitas/ListagemVisitas';
 import CadastroVisita from './pages/visitas/CadastroVisita';
-import EditarVisita from './pages/visitas/EditarVisita';
-import VisualizarVisita from './pages/visitas/VisualizarVisita';
+import EdicaoVisita from './pages/visitas/EdicaoVisita';
+import VisualizacaoVisita from './pages/visitas/VisualizacaoVisita';
 
 function App() {
   return (
@@ -35,25 +35,25 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/agenda" replace />} />
 
-        <Route path="/agenda" element={<ListaVisitas />} />
+        <Route path="/agenda" element={<ListagemVisitas />} />
         <Route path="/agenda/novo" element={<CadastroVisita />} />
-        <Route path="/agenda/editar/:id" element={<EditarVisita />} />
-        <Route path="/agenda/visualizar/:id" element={<VisualizarVisita />} />
+        <Route path="/agenda/editar/:id" element={<EdicaoVisita />} />
+        <Route path="/agenda/visualizar/:id" element={<VisualizacaoVisita />} />
 
-        <Route path="/clientes" element={<ListaClientes />} />
+        <Route path="/clientes" element={<ListagemClientes />} />
         <Route path="/clientes/novo" element={<CadastroCliente />} />
-        <Route path="/clientes/editar/:id" element={<EditarCliente />} />
-        <Route path="/clientes/visualizar/:id" element={<VisualizarCliente />} />
+        <Route path="/clientes/editar/:id" element={<EdicaoCliente />} />
+        <Route path="/clientes/visualizar/:id" element={<VisualizacaoCliente />} />
 
-        <Route path="/ordens-servico" element={<ListaOrdensServico />} />
+        <Route path="/ordens-servico" element={<ListagemOrdensServico />} />
         <Route path="/ordens-servico/novo" element={<CadastroOrdemServico />} />
-        <Route path="/ordens-servico/editar/:id" element={<EditarOrdemServico />} />
-        <Route path="/ordens-servico/visualizar/:id" element={<VisualizarOrdemServico />} />
+        <Route path="/ordens-servico/editar/:id" element={<EdicaoOrdemServico />} />
+        <Route path="/ordens-servico/visualizar/:id" element={<VisualizacaoOrdemServico />} />
 
-        <Route path="/orcamentos" element={<ListaOrcamentos />} />
+        <Route path="/orcamentos" element={<ListagemOrcamentos />} />
         <Route path="/orcamentos/novo" element={<CadastroOrcamento />} />
-        <Route path="/orcamentos/editar/:id" element={<EditarOrcamento />} />
-        <Route path="/orcamentos/visualizar/:id" element={<VisualizarOrcamento />} />
+        <Route path="/orcamentos/editar/:id" element={<EdicaoOrcamento />} />
+        <Route path="/orcamentos/visualizar/:id" element={<VisualizacaoOrcamento />} />
       </Routes>
     </Router>
   );

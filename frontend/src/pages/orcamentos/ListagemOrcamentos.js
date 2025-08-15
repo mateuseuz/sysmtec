@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function ListaOrcamentos() {
+function ListagemOrcamentos() {
   const [orcamentos, setOrcamentos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,7 +57,7 @@ function ListaOrcamentos() {
       <main className="sysmtec-main">
         <div className="clientes-header">
           <Link to="/orcamentos/novo" className="add-client-link">
-            + ADICIONAR NOVO ORÇAMENTO
+            ➕ CADASTRAR ORÇAMENTO
           </Link>
         </div>
 
@@ -126,4 +126,4 @@ function ListaOrcamentos() {
   );
 }
 
-export default ListaOrcamentos;
+export default ListagemOrcamentos;

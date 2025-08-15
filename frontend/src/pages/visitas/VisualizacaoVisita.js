@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function VisualizarVisita() {
+function VisualizacaoVisita() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +65,7 @@ function VisualizarVisita() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/agenda" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/agenda" className="back-button">⬅️ VOLTAR</Link>
 
         <div className="cliente-form">
           <h2>Visualizar Visita</h2>
@@ -106,4 +106,4 @@ function VisualizarVisita() {
   );
 }
 
-export default VisualizarVisita;
+export default VisualizacaoVisita;

@@ -76,7 +76,7 @@ function CadastroVisita() {
 
     try {
       await api.criarVisita(visitaParaSalvar);
-      toast.success('Visita agendada com sucesso!');
+      toast.success('Visita cadastrada com sucesso!');
       navigate('/agenda');
     } catch (error) {
       toast.error('Erro ao agendar visita: ' + error.message);
@@ -104,7 +104,7 @@ function CadastroVisita() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/agenda" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/agenda" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
 
@@ -190,7 +190,7 @@ function CadastroVisita() {
             disabled={isLoading}
             className={`submit-button ${isLoading ? 'loading' : ''}`}
           >
-            {isLoading ? 'Salvando...' : 'Salvar Agendamento'}
+            {isLoading ? 'Salvando...' : 'Salvar visita'}
           </button>
         </form>
       </main>

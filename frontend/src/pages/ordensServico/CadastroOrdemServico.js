@@ -130,7 +130,7 @@ function CadastroOrdemServico() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/ordens-servico" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/ordens-servico" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
@@ -218,7 +218,7 @@ function CadastroOrdemServico() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Cadastrar Ordem de Serviço'}
+            ) : 'Salvar ordem de serviço'}
           </button>
         </form>
       </main>

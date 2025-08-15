@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function ListaOrdensServico() {
+function ListagemOrdensServico() {
   const [ordensServico, setOrdensServico] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,7 +57,7 @@ function ListaOrdensServico() {
       <main className="sysmtec-main">
         <div className="clientes-header">
           <Link to="/ordens-servico/novo" className="add-client-link">
-            + ADICIONAR NOVA ORDEM DE SERVIÇO
+            ➕ CADASTRAR ORDEM DE SERVIÇO
           </Link>
         </div>
 
@@ -121,4 +121,4 @@ function ListaOrdensServico() {
   );
 }
 
-export default ListaOrdensServico;
+export default ListagemOrdensServico;

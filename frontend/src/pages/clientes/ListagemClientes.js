@@ -5,7 +5,7 @@ import api from '../../services/api';
 import { formatCPForCNPJ, formatCelular } from '../../utils/validations';
 import '../../styles/Clientes.css';
 
-function ListaClientes() {
+function ListagemClientes() {
   const [clientes, setClientes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,7 +58,7 @@ function ListaClientes() {
       <main className="sysmtec-main">
         <div className="clientes-header">
           <Link to="/clientes/novo" className="add-client-link">
-            + ADICIONAR NOVO CLIENTE
+            ➕ CADASTRAR CLIENTE
           </Link>
         </div>
 
@@ -124,4 +124,4 @@ function ListaClientes() {
   );
 }
 
-export default ListaClientes;
+export default ListagemClientes;

@@ -5,7 +5,7 @@ import api from '../../services/api';
 import { formatCPForCNPJ, formatCelular } from '../../utils/validations';
 import '../../styles/Clientes.css';
 
-function VisualizarCliente() {
+function VisualizacaoCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -71,7 +71,7 @@ function VisualizarCliente() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/clientes" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/clientes" className="back-button">⬅️ VOLTAR</Link>
 
         <div className="cliente-form"> {}
           <div className="form-group">
@@ -147,4 +147,4 @@ function VisualizarCliente() {
   );
 }
 
-export default VisualizarCliente;
+export default VisualizacaoCliente;

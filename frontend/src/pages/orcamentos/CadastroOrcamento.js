@@ -95,7 +95,7 @@ const CadastroOrcamento = () => {
     try {
       console.log('Enviando orçamento:', orcamento);
       await api.criarOrcamento(orcamento);
-      toast.success('Orçamento criado com sucesso!');
+      toast.success('Orçamento cadastrado com sucesso!');
       navigate('/orcamentos');
     } catch (error) {
       toast.error('Erro ao criar orçamento.');
@@ -123,7 +123,7 @@ const CadastroOrcamento = () => {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/orcamentos" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form" noValidate>
           <div className="form-group">
@@ -233,7 +233,7 @@ const CadastroOrcamento = () => {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar Orçamento'}
+            ) : 'Salvar orçamento'}
           </button>
         </form>
       </main>

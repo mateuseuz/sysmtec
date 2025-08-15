@@ -5,7 +5,7 @@ import api from '../../services/api';
 import { validarCPFCNPJ, validarCelular, formatCPForCNPJ, formatCelular } from '../../utils/validations';
 import '../../styles/Clientes.css';
 
-function EditarCliente() {
+function EdicaoCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -192,7 +192,7 @@ function EditarCliente() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/clientes" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/clientes" className="back-button">⬅️ VOLTAR</Link>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
@@ -275,7 +275,7 @@ function EditarCliente() {
                 <span className="spinner"></span>
                 Salvando...
               </>
-            ) : 'Salvar alterações'}
+            ) : 'Salvar cliente'}
           </button>
         </form>
       </main>
@@ -283,4 +283,4 @@ function EditarCliente() {
   );
 }
 
-export default EditarCliente;
+export default EdicaoCliente;

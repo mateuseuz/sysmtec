@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 
-function VisualizarOrdemServico() {
+function VisualizacaoOrdemServico() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +67,7 @@ function VisualizarOrdemServico() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/ordens-servico" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/ordens-servico" className="back-button">⬅️ VOLTAR</Link>
 
         <div className="cliente-form">
           <div className="form-group">
@@ -125,4 +125,4 @@ function VisualizarOrdemServico() {
   );
 }
 
-export default VisualizarOrdemServico;
+export default VisualizacaoOrdemServico;

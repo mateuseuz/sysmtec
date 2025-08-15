@@ -5,7 +5,7 @@ import api from '../../services/api';
 import '../../styles/Clientes.css';
 import '../../styles/Orcamentos.css';
 
-const VisualizarOrcamento = () => {
+const VisualizacaoOrcamento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ const VisualizarOrcamento = () => {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/orcamentos" className="back-button">&lt; VOLTAR</Link>
+        <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
 
         <div className="cliente-form">
           <div className="form-group">
@@ -159,4 +159,4 @@ const VisualizarOrcamento = () => {
   );
 };
 
-export default VisualizarOrcamento;
+export default VisualizacaoOrcamento;
