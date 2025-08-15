@@ -7,7 +7,7 @@
   --accent-color: #92969d;
   --danger-color: #e74c3c;
   --warning-color: #ffc107;
-  --light-bg: #e0eaff;
+  --light-bg: #82abf7;
   --text-dark: #2c3e50;
   --text-light: #7f8c8d;
   --white: #ffffff;
@@ -28,7 +28,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
-  background: linear-gradient(135deg, #e0eaff, #cce0ff);
+  background: linear-gradient(135deg, var(--light-bg), var(--primary-color), #0a4ab3);
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
 }
