@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function EdicaoVisita() {
@@ -15,7 +16,10 @@ function EdicaoVisita() {
     endereco: '',
     observacoes: '',
   });
+  const [initialFormData, setInitialFormData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
@@ -28,14 +32,16 @@ function EdicaoVisita() {
         const { data_agendamento } = visitaData;
         const date = new Date(data_agendamento);
         
-        setFormData({
+        const initialData = {
           titulo: visitaData.titulo || '',
           id_cliente: visitaData.id_cliente || '',
           data: date.toISOString().slice(0, 10),
           hora: date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
           endereco: visitaData.endereco || '',
           observacoes: visitaData.observacoes || '',
-        });
+        };
+        setFormData(initialData);
+        setInitialFormData(initialData);
 
         if (visitaData.id_cliente) {
           setClientSearch(visitaData.nome_cliente);
@@ -51,6 +57,20 @@ function EdicaoVisita() {
     };
     carregarVisita();
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (initialFormData) {
+      setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+    }
+  }, [formData, initialFormData]);
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setIsModalOpen(true);
+    } else {
+      navigate('/agenda');
+    }
+  };
 
   useEffect(() => {
     if (clientSearch.length > 1 && !selectedClient) {
@@ -146,7 +166,7 @@ function EdicaoVisita() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/agenda" className="back-button">⬅️ VOLTAR</Link>
+        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <h2>Editar Visita</h2>
@@ -200,6 +220,12 @@ function EdicaoVisita() {
           </button>
         </form>
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => navigate('/agenda')}
+        message="Você tem certeza que quer descartar as alterações?"
+      />
     </div>
   );
 }

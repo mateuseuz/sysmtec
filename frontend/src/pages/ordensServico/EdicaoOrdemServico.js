@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function EdicaoOrdemServico() {
@@ -14,7 +15,10 @@ function EdicaoOrdemServico() {
     situacao: '',
     observacoes: ''
   });
+  const [initialFormData, setInitialFormData] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
@@ -29,13 +33,15 @@ function EdicaoOrdemServico() {
           api.buscarOrdemServico(id),
           api.listarOrcamentos()
         ]);
-        setFormData({
+        const initialData = {
           nome: ordemServico.nome || '',
           id_cliente: ordemServico.id_cliente || '',
           situacao: ordemServico.situacao || '',
           observacoes: ordemServico.observacoes || '',
           id_orcamento: ordemServico.id_orcamento || ''
-        });
+        };
+        setFormData(initialData);
+        setInitialFormData(initialData);
         setClientSearch(ordemServico.nome_cliente);
         setSelectedClient({ id_cliente: ordemServico.id_cliente, nome: ordemServico.nome_cliente });
         setOrcamentos(orcamentosData);
@@ -49,6 +55,20 @@ function EdicaoOrdemServico() {
     
     carregarDados();
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (initialFormData) {
+      setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+    }
+  }, [formData, initialFormData]);
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setIsModalOpen(true);
+    } else {
+      navigate('/ordens-servico');
+    }
+  };
 
   useEffect(() => {
     if (clientSearch.length > 1 && !selectedClient) {
@@ -158,7 +178,7 @@ function EdicaoOrdemServico() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/ordens-servico" className="back-button">⬅️ VOLTAR</Link>
+        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
@@ -248,6 +268,12 @@ function EdicaoOrdemServico() {
           </button>
         </form>
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => navigate('/ordens-servico')}
+        message="Você tem certeza que quer descartar as alterações?"
+      />
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { validarCPFCNPJ, validarCelular } from '../../utils/validations';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function CadastroCliente() {
@@ -16,7 +17,29 @@ function CadastroCliente() {
     email: '',
     observacoes: ''
   });
+  const [initialFormData] = useState({
+    nome: '',
+    cpf_cnpj: '',
+    celular: '',
+    endereco: '',
+    email: '',
+    observacoes: ''
+  });
   const [errors, setErrors] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+  }, [formData, initialFormData]);
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setIsModalOpen(true);
+    } else {
+      navigate('/clientes');
+    }
+  };
 
   const handleChange = (e) => {
   const { name, value } = e.target;
@@ -165,7 +188,7 @@ function CadastroCliente() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/clientes" className="back-button">⬅️ VOLTAR</Link>
+        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
@@ -256,6 +279,12 @@ function CadastroCliente() {
           </button>
         </form>
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => navigate('/clientes')}
+        message="Você tem certeza que quer descartar as alterações?"
+      />
     </div>
   );
 }

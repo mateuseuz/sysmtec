@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function ListagemOrdensServico() {
   const [ordensServico, setOrdensServico] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrdemServicoId, setSelectedOrdemServicoId] = useState(null);
 
   useEffect(() => {
     carregarOrdensServico();
@@ -24,15 +27,21 @@ function ListagemOrdensServico() {
     }
   };
 
-  const handleExcluir = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir esta ordem de serviço?')) {
-      try {
-        await api.deletarOrdemServico(id);
-        toast.success('Ordem de serviço excluída com sucesso!');
-        carregarOrdensServico();
-      } catch (error) {
-        toast.error(error.response?.data?.error || 'Erro ao excluir ordem de serviço');
-      }
+  const handleExcluir = (id) => {
+    setSelectedOrdemServicoId(id);
+    setIsModalOpen(true);
+  };
+
+  const confirmExcluir = async () => {
+    try {
+      await api.deletarOrdemServico(selectedOrdemServicoId);
+      toast.success('Ordem de serviço excluída com sucesso!');
+      carregarOrdensServico();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Erro ao excluir ordem de serviço');
+    } finally {
+      setIsModalOpen(false);
+      setSelectedOrdemServicoId(null);
     }
   };
 
@@ -117,6 +126,12 @@ function ListagemOrdensServico() {
           </div>
         )}
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmExcluir}
+        message="Tem certeza que deseja excluir esta ordem de serviço?"
+      />
     </div>
   );
 }

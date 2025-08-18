@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 import '../../styles/Orcamentos.css';
 
@@ -15,6 +16,32 @@ const CadastroOrcamento = () => {
   const [itens, setItens] = useState([{ nome: '', quantidade: 1, valor: '' }]);
   const [valorTotal, setValorTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRemoveItemModalOpen, setIsRemoveItemModalOpen] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
+  const [isUnsavedChangesModalOpen, setIsUnsavedChangesModalOpen] = useState(false);
+  const [initialFormData] = useState({
+    nomeOrcamento: '',
+    observacoes: '',
+    itens: [{ nome: '', quantidade: 1, valor: '' }],
+  });
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    const currentFormData = {
+      nomeOrcamento,
+      observacoes,
+      itens,
+    };
+    setIsDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
+  }, [nomeOrcamento, observacoes, itens, initialFormData]);
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setIsUnsavedChangesModalOpen(true);
+    } else {
+      navigate('/orcamentos');
+    }
+  };
 
   useEffect(() => {
     if (termoBusca.length > 2 && !clienteSelecionado) {
@@ -45,12 +72,17 @@ const CadastroOrcamento = () => {
     setItens([...itens, { nome: '', quantidade: 1, valor: '' }]);
   };
 
-  const handleRemoveItem = index => {
-    if (window.confirm('Tem certeza que deseja remover este item?')) {
-      const values = [...itens];
-      values.splice(index, 1);
-      setItens(values);
-    }
+  const handleRemoveItem = (index) => {
+    setItemToRemove(index);
+    setIsRemoveItemModalOpen(true);
+  };
+
+  const confirmRemoveItem = () => {
+    const values = [...itens];
+    values.splice(itemToRemove, 1);
+    setItens(values);
+    setIsRemoveItemModalOpen(false);
+    setItemToRemove(null);
   };
 
   const handleSubmit = async (event) => {
@@ -123,7 +155,7 @@ const CadastroOrcamento = () => {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
+        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form" noValidate>
           <div className="form-group">
@@ -237,6 +269,18 @@ const CadastroOrcamento = () => {
           </button>
         </form>
       </main>
+      <ConfirmationModal
+        isOpen={isRemoveItemModalOpen}
+        onClose={() => setIsRemoveItemModalOpen(false)}
+        onConfirm={confirmRemoveItem}
+        message="Tem certeza que deseja remover este item?"
+      />
+      <ConfirmationModal
+        isOpen={isUnsavedChangesModalOpen}
+        onClose={() => setIsUnsavedChangesModalOpen(false)}
+        onConfirm={() => navigate('/orcamentos')}
+        message="Você tem certeza que quer descartar as alterações?"
+      />
     </div>
   );
 };

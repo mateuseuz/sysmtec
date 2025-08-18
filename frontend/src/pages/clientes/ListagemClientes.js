@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { formatCPForCNPJ, formatCelular } from '../../utils/validations';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function ListagemClientes() {
   const [clientes, setClientes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState(null);
 
   useEffect(() => {
     carregarClientes();
@@ -25,15 +28,21 @@ function ListagemClientes() {
     }
   };
 
-  const handleExcluir = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este cliente e todos os dados associados?')) {
-      try {
-        await api.deletarCliente(id);
-        toast.success('Cliente excluído com sucesso!');
-        carregarClientes();
-      } catch (error) {
-        toast.error(error.response?.data?.error || 'Erro ao excluir cliente');
-      }
+  const handleExcluir = (id) => {
+    setSelectedClientId(id);
+    setIsModalOpen(true);
+  };
+
+  const confirmExcluir = async () => {
+    try {
+      await api.deletarCliente(selectedClientId);
+      toast.success('Cliente excluído com sucesso!');
+      carregarClientes();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Erro ao excluir cliente');
+    } finally {
+      setIsModalOpen(false);
+      setSelectedClientId(null);
     }
   };
 
@@ -120,6 +129,12 @@ function ListagemClientes() {
           </div>
         )}
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmExcluir}
+        message="Tem certeza que deseja excluir este cliente e todos os dados associados?"
+      />
     </div>
   );
 }

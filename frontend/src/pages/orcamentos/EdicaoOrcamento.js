@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 import '../../styles/Orcamentos.css';
 
@@ -18,15 +19,26 @@ const EdicaoOrcamento = () => {
   const [valorTotal, setValorTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true); // Começa true para carregar dados
   const [isSaving, setIsSaving] = useState(false);
+  const [isRemoveItemModalOpen, setIsRemoveItemModalOpen] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
+  const [isUnsavedChangesModalOpen, setIsUnsavedChangesModalOpen] = useState(false);
+  const [initialFormData, setInitialFormData] = useState(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   // Efeito para carregar os dados do orçamento ao montar o componente
   useEffect(() => {
     const carregarOrcamento = async () => {
       try {
         const orcamento = await api.buscarOrcamento(id);
-        setNomeOrcamento(orcamento.nome);
-        setObservacoes(orcamento.observacoes || '');
-        setItens(orcamento.itens.length > 0 ? orcamento.itens : [{ nome: '', quantidade: 1, valor: '' }]);
+        const initialData = {
+          nomeOrcamento: orcamento.nome,
+          observacoes: orcamento.observacoes || '',
+          itens: orcamento.itens.length > 0 ? orcamento.itens : [{ nome: '', quantidade: 1, valor: '' }],
+        };
+        setNomeOrcamento(initialData.nomeOrcamento);
+        setObservacoes(initialData.observacoes);
+        setItens(initialData.itens);
+        setInitialFormData(initialData);
 
         if (orcamento.id_cliente) {
           const cliente = await api.buscarCliente(orcamento.id_cliente);
@@ -42,6 +54,25 @@ const EdicaoOrcamento = () => {
     };
     carregarOrcamento();
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (initialFormData) {
+      const currentFormData = {
+        nomeOrcamento,
+        observacoes,
+        itens,
+      };
+      setIsDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
+    }
+  }, [nomeOrcamento, observacoes, itens, initialFormData]);
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setIsUnsavedChangesModalOpen(true);
+    } else {
+      navigate('/orcamentos');
+    }
+  };
 
   // Efeito para buscar clientes na autocomplete
   useEffect(() => {
@@ -73,12 +104,17 @@ const EdicaoOrcamento = () => {
     setItens([...itens, { nome: '', quantidade: 1, valor: '' }]);
   };
 
-  const handleRemoveItem = index => {
-    if (window.confirm('Tem certeza que deseja remover este item?')) {
-      const values = [...itens];
-      values.splice(index, 1);
-      setItens(values);
-    }
+  const handleRemoveItem = (index) => {
+    setItemToRemove(index);
+    setIsRemoveItemModalOpen(true);
+  };
+
+  const confirmRemoveItem = () => {
+    const values = [...itens];
+    values.splice(itemToRemove, 1);
+    setItens(values);
+    setIsRemoveItemModalOpen(false);
+    setItemToRemove(null);
   };
 
   const handleSubmit = async (event) => {
@@ -162,7 +198,7 @@ const EdicaoOrcamento = () => {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
+        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form" noValidate>
           <div className="form-group">
@@ -276,6 +312,18 @@ const EdicaoOrcamento = () => {
           </button>
         </form>
       </main>
+      <ConfirmationModal
+        isOpen={isRemoveItemModalOpen}
+        onClose={() => setIsRemoveItemModalOpen(false)}
+        onConfirm={confirmRemoveItem}
+        message="Tem certeza que deseja remover este item?"
+      />
+      <ConfirmationModal
+        isOpen={isUnsavedChangesModalOpen}
+        onClose={() => setIsUnsavedChangesModalOpen(false)}
+        onConfirm={() => navigate('/orcamentos')}
+        message="Você tem certeza que quer descartar as alterações?"
+      />
     </div>
   );
 };

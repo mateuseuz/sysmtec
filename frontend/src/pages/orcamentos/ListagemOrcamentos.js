@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function ListagemOrcamentos() {
   const [orcamentos, setOrcamentos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrcamentoId, setSelectedOrcamentoId] = useState(null);
 
   useEffect(() => {
     carregarOrcamentos();
@@ -25,14 +28,32 @@ function ListagemOrcamentos() {
   };
 
   const handleExcluir = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este orçamento?')) {
-      try {
-        await api.deletarOrcamento(id);
-        toast.success('Orçamento excluído com sucesso!');
-        carregarOrcamentos();
-      } catch (error) {
-        toast.error(error.response?.data?.error || 'Erro ao excluir orçamento');
+    try {
+      const ordensServico = await api.listarOrdensServico();
+      const isOrcamentoEmUso = ordensServico.some(os => os.id_orcamento === id);
+
+      if (isOrcamentoEmUso) {
+        toast.error('Não foi possível excluir o orçamento porque ele está vinculado a uma ordem de serviço.');
+        return;
       }
+
+      setSelectedOrcamentoId(id);
+      setIsModalOpen(true);
+    } catch (error) {
+      toast.error('Erro ao verificar ordens de serviço: ' + error.message);
+    }
+  };
+
+  const confirmExcluir = async () => {
+    try {
+      await api.deletarOrcamento(selectedOrcamentoId);
+      toast.success('Orçamento excluído com sucesso!');
+      carregarOrcamentos();
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Erro ao excluir orçamento');
+    } finally {
+      setIsModalOpen(false);
+      setSelectedOrcamentoId(null);
     }
   };
 
@@ -122,6 +143,12 @@ function ListagemOrcamentos() {
           </div>
         )}
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmExcluir}
+        message="Tem certeza que deseja excluir este orçamento?"
+      />
     </div>
   );
 }

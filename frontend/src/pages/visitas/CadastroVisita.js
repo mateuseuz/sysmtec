@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
 
 function CadastroVisita() {
@@ -14,11 +15,33 @@ function CadastroVisita() {
     endereco: '',
     observacoes: '',
   });
+  const [initialFormData] = useState({
+    titulo: '',
+    id_cliente: '',
+    data: '',
+    hora: '',
+    endereco: '',
+    observacoes: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
+
+  useEffect(() => {
+    setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+  }, [formData, initialFormData]);
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setIsModalOpen(true);
+    } else {
+      navigate('/agenda');
+    }
+  };
 
   useEffect(() => {
     if (clientSearch.length > 1 && !selectedClient) {
@@ -104,7 +127,7 @@ function CadastroVisita() {
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/agenda" className="back-button">⬅️ VOLTAR</Link>
+        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form">
 
@@ -194,6 +217,12 @@ function CadastroVisita() {
           </button>
         </form>
       </main>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => navigate('/agenda')}
+        message="Você tem certeza que quer descartar as alterações?"
+      />
     </div>
   );
 }
