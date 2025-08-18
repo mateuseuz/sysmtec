@@ -1,0 +1,11 @@
+// mudar background, deixar um gradient movimentando, azul claro
+
+// "orçamento já em uso, não dá pra apagar" antes da confirmação "deseja apagar?"
+Eu quero que, ao tentar apagar um orçamento que está sendo usado em uma ordem de serviço, o sistema exiba o seguinte erro: "Não foi possível excluir o orçamento porque ele está vinculado a uma ordem de serviço.", e isso deve acontecer ANTES do pop-up de confirmação "Deseja excluir o orçamento?". A ideia é que o pop-up só apareça quando for totalmente possível excluir o orçamento.
+
+// fazer um pop-up bonitinho pra confirmar exclusão
+Quero fazer um pop-up bonitinho para confirmar a exclusão de objetos do sistema. Como se fosse uma janelinha, no centro da tela. Isso em vez de usar o pop-up padrão do navegador.
+
+// confirmar "voltar" se alterou alguma coisa no registro
+Quando o usuário está editando um objeto, se ele altera um campo (ou seja, deixa algo diferente do que estava quando clicou para editar) e tenta clicar no botão "Voltar", quero que o sistema exiba um pop-up de confirmação para confirmar o descarte das alterações.
+
