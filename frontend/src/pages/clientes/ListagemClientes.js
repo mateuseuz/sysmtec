@@ -85,7 +85,7 @@ function ListagemClientes() {
             <table className="clientes-table">
               <thead>
                 <tr>
-                  <th>Nome</th>
+                  <th>Nome do cliente</th>
                   <th>CPF/CNPJ</th>
                   <th>Celular</th>
                   <th>Ações</th>

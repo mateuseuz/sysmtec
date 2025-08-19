@@ -96,9 +96,9 @@ function ListagemOrcamentos() {
             <table className="clientes-table">
               <thead>
                 <tr>
-                  <th>Nome do Orçamento</th>
+                  <th>Nome do orçamento</th>
                   <th>Cliente</th>
-                  <th>Valor Total</th>
+                  <th>Valor total</th>
                   <th>Ações</th>
                 </tr>
               </thead>

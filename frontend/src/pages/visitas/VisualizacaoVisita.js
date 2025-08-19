@@ -68,7 +68,6 @@ function VisualizacaoVisita() {
         <Link to="/agenda" className="back-button">⬅️ VOLTAR</Link>
 
         <div className="cliente-form">
-          <h2>Visualizar Visita</h2>
 
           <div className="form-group">
             <label>Nome</label>
@@ -76,7 +75,7 @@ function VisualizacaoVisita() {
           </div>
 
           <div className="form-group">
-            <label>Cliente Vinculado</label>
+            <label>Cliente vinculado</label>
             <input type="text" value={visita?.nome_cliente || 'Nenhum'} readOnly disabled />
           </div>
           

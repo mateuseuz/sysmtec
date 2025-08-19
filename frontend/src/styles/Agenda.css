@@ -177,3 +177,51 @@
   max-height: 300px;
   overflow-y: auto;
 }
+
+/* Custom FullCalendar Styles */
+.calendar-container {
+  max-width: 900px; /* Controls the size */
+  margin: 2rem auto; /* Adds some space and centers it */
+}
+
+/* This is the main view area of the calendar */
+.fc-view-harness {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Make day cells white (might be redundant if the view harness is white, but good for specificity) */
+.fc-daygrid-day {
+  background-color: #ffffff !important;
+}
+
+/* Style for the calendar header (e.g., "September 2024") */
+.fc .fc-toolbar-title {
+  font-size: 1.5em !important;
+  color: var(--primary-color);
+}
+
+/* Style for today's date */
+.fc .fc-day-today {
+  background-color: #fffbe6 !important; /* A light yellow to highlight */
+}
+
+/* Style for the day headers (e.g., Sun, Mon, Tue) */
+.fc-col-header-cell {
+  background-color: #f8f9fa;
+}
+
+/* Style for calendar events */
+.fc-event {
+  cursor: pointer;
+  border: 1px solid var(--primary-color) !important;
+  background-color: var(--light-bg) !important;
+  color: var(--primary-color) !important;
+}
+
+.fc-event:hover {
+  background-color: var(--primary-color) !important;
+  color: var(--white) !important;
+}
