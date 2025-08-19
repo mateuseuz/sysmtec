@@ -169,7 +169,6 @@ function EdicaoVisita() {
         <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
 
         <form onSubmit={handleSubmit} className="cliente-form">
-          <h2>Editar Visita</h2>
 
           <div className="form-group">
             <label>Nome *</label>
@@ -177,7 +176,7 @@ function EdicaoVisita() {
           </div>
 
           <div className="form-group">
-            <label>Vincular visita ao cliente (opcional)</label>
+            <label>Vincular visita ao cliente</label>
             <input type="text" value={clientSearch} onChange={handleClientChange} placeholder="Digite para buscar um cliente" autoComplete="off" />
             {clientSuggestions.length > 0 && (
               <ul className="suggestions-list">

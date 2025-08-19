@@ -268,8 +268,10 @@
   cursor: pointer;
 }
 
-/* Remove a bolinha que aparece antes do horário */
-.fc-daygrid-event-dot {
-  display: none !important;
+.fc-event-time {
+  font-weight: bold;
 }
 
+.fc-daygrid-event .fc-event-title {
+  font-weight: normal;
+}
