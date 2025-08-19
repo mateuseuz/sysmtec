@@ -28,9 +28,29 @@ function ListagemClientes() {
     }
   };
 
-  const handleExcluir = (id) => {
-    setSelectedClientId(id);
-    setIsModalOpen(true);
+  const handleExcluir = async (id) => {
+    try {
+      const [orcamentos, ordensServico, visitas] = await Promise.all([
+        api.listarOrcamentos(),
+        api.listarOrdensServico(),
+        api.listarVisitas()
+      ]);
+
+      const isClienteEmUso = 
+        orcamentos.some(o => o.id_cliente === id) ||
+        ordensServico.some(os => os.id_cliente === id) ||
+        visitas.some(v => v.id_cliente === id);
+
+      if (isClienteEmUso) {
+        toast.error('Não foi possível excluir o cliente porque ele está vinculado a um orçamento, ordem de serviço ou visita.');
+        return;
+      }
+
+      setSelectedClientId(id);
+      setIsModalOpen(true);
+    } catch (error) {
+      toast.error('Erro ao verificar associações do cliente: ' + error.message);
+    }
   };
 
   const confirmExcluir = async () => {
