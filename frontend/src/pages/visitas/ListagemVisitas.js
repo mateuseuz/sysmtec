@@ -65,7 +65,7 @@ function ListagemVisitas() {
     if (visitaToDelete) {
       try {
         await api.deletarVisita(visitaToDelete);
-        toast.success('Visita deletada com sucesso!');
+        toast.success('Visita excluída com sucesso!');
         setVisitaToDelete(null);
         carregarVisitas(); // Recarrega as visitas
       } catch (error) {

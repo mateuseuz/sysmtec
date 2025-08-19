@@ -202,7 +202,7 @@ const EdicaoOrcamento = () => {
 
         <form onSubmit={handleSubmit} className="cliente-form" noValidate>
           <div className="form-group">
-            <label>Nome *</label>
+            <label>Nome <span className="required-asterisk">*</span></label>
             <input
               type="text"
               value={nomeOrcamento}
@@ -243,9 +243,9 @@ const EdicaoOrcamento = () => {
 
           <div className="itens-orcamento-grid-container">
             {/* Cabeçalho do Grid */}
-            <label className="grid-header">Item *</label>
-            <label className="grid-header">Qtd. *</label>
-            <label className="grid-header">Valor (un.) *</label>
+            <label className="grid-header">Item <span className="required-asterisk">*</span></label>
+            <label className="grid-header">Qtd. <span className="required-asterisk">*</span></label>
+            <label className="grid-header">Valor (un.) <span className="required-asterisk">*</span></label>
             <div /> {/* Célula vazia para alinhar com o botão de remover */}
 
             {/* Linhas de Itens */}

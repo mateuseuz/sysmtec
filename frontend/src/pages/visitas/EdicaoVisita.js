@@ -171,7 +171,7 @@ function EdicaoVisita() {
         <form onSubmit={handleSubmit} className="cliente-form">
 
           <div className="form-group">
-            <label>Nome *</label>
+            <label>Nome <span className="required-asterisk">*</span></label>
             <input type="text" name="titulo" value={formData.titulo} onChange={handleChange} required />
           </div>
 
@@ -191,17 +191,17 @@ function EdicaoVisita() {
           
           <div className="form-row">
             <div className="form-group">
-              <label>Data *</label>
+              <label>Data <span className="required-asterisk">*</span></label>
               <input type="date" name="data" value={formData.data} onChange={handleChange} required />
             </div>
             <div className="form-group">
-              <label>Hora *</label>
+              <label>Hora <span className="required-asterisk">*</span></label>
               <input type="time" name="hora" value={formData.hora} onChange={handleChange} required />
             </div>
           </div>
 
           <div className="form-group">
-            <label>Endereço *</label>
+            <label>Endereço <span className="required-asterisk">*</span></label>
             <input type="text" name="endereco" value={formData.endereco} onChange={handleChange} required />
           </div>
 

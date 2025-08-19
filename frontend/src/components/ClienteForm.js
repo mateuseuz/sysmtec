@@ -82,7 +82,7 @@ function ClienteForm({ cliente, onSubmit, isLoading }) {
   return (
     <form onSubmit={handleSubmit} className="cliente-form">
       <div className="form-group">
-        <label>Nome *</label>
+        <label>Nome <span className="required-asterisk">*</span></label>
         <input
           type="text"
           name="nome"
@@ -96,7 +96,7 @@ function ClienteForm({ cliente, onSubmit, isLoading }) {
       </div>
 
       <div className="form-group">
-        <label>CPF/CNPJ *</label>
+        <label>CPF/CNPJ <span className="required-asterisk">*</span></label>
         <input
           type="text"
           name="cpf_cnpj"

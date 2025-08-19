@@ -537,3 +537,7 @@ body {
     padding: 1.5rem;
   }
 }
+
+.required-asterisk {
+  color: red;
+}

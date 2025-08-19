@@ -192,7 +192,7 @@ function CadastroCliente() {
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
-            <label>Nome *</label>
+            <label>Nome <span className="required-asterisk">*</span></label>
             <input
               type="text"
               name="nome"
@@ -205,7 +205,7 @@ function CadastroCliente() {
           </div>
 
           <div className="form-group">
-            <label>CPF/CNPJ *</label>
+            <label>CPF/CNPJ <span className="required-asterisk">*</span></label>
             <input
               type="text"
               name="cpf_cnpj"
@@ -218,7 +218,7 @@ function CadastroCliente() {
           </div>
 
           <div className="form-group">
-            <label>Celular *</label>
+            <label>Celular <span className="required-asterisk">*</span></label>
             <input
               type="tel"
               name="celular"

@@ -132,7 +132,7 @@ function CadastroVisita() {
         <form onSubmit={handleSubmit} className="cliente-form">
 
           <div className="form-group">
-            <label>Nome *</label>
+            <label>Nome <span className="required-asterisk">*</span></label>
             <input
               type="text"
               name="titulo"
@@ -165,7 +165,7 @@ function CadastroVisita() {
           
           <div className="form-row">
             <div className="form-group">
-              <label>Data *</label>
+              <label>Data <span className="required-asterisk">*</span></label>
               <input
                 type="date"
                 name="data"
@@ -175,7 +175,7 @@ function CadastroVisita() {
               />
             </div>
             <div className="form-group">
-              <label>Hora *</label>
+              <label>Hora <span className="required-asterisk">*</span></label>
               <input
                 type="time"
                 name="hora"
@@ -187,7 +187,7 @@ function CadastroVisita() {
           </div>
 
           <div className="form-group">
-            <label>Endereço *</label>
+            <label>Endereço <span className="required-asterisk">*</span></label>
             <input
               type="text"
               name="endereco"

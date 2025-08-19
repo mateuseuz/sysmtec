@@ -182,7 +182,7 @@ function EdicaoOrdemServico() {
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">
-            <label>Nome do projeto/serviço *</label>
+            <label>Nome do projeto/serviço <span className="required-asterisk">*</span></label>
             <input
               type="text"
               name="nome"
@@ -193,7 +193,7 @@ function EdicaoOrdemServico() {
           </div>
 
           <div className="form-group">
-            <label>Cliente relacionado *</label>
+            <label>Cliente relacionado <span className="required-asterisk">*</span></label>
             <input
               type="text"
               name="id_cliente"
@@ -215,7 +215,7 @@ function EdicaoOrdemServico() {
           </div>
 
           <div className="form-group">
-            <label>Orçamento *</label>
+            <label>Orçamento <span className="required-asterisk">*</span></label>
             <select
               name="id_orcamento"
               value={formData.id_orcamento}
@@ -232,7 +232,7 @@ function EdicaoOrdemServico() {
           </div>
 
           <div className="form-group">
-            <label>Situação *</label>
+            <label>Situação <span className="required-asterisk">*</span></label>
             <select
               name="situacao"
               value={formData.situacao}

@@ -1,0 +1,2 @@
+Agora quero que não seja possível excluir um cliente se ele estiver vinculado a algum orçamento, ordem de serviço ou visita.
+Se o usuário tentar fazer isso, deve receber um erro semelhante ao toast que é exibido quando se tenta apagar um orçamento vinculado a uma ordem de serviço.
