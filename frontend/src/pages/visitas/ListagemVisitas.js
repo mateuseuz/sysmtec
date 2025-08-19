@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import '../../styles/Clientes.css';
 import '../../styles/Agenda.css';
 
 function ListagemVisitas() {
   const [visitas, setVisitas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [popover, setPopover] = useState({ visible: false, x: 0, y: 0, event: null });
+  const [visitaToDelete, setVisitaToDelete] = useState(null);
 
   const carregarVisitas = async () => {
     setIsLoading(true);
@@ -39,11 +40,43 @@ function ListagemVisitas() {
   }, [visitas]);
 
   const handleEventClick = (clickInfo) => {
-    navigate(`/agenda/visualizar/${clickInfo.event.id}`);
+    closePopover(); // Close any existing popover
+    const eventEl = clickInfo.el;
+    const rect = eventEl.getBoundingClientRect();
+    setPopover({
+      visible: true,
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY - 60, // Position above the event
+      event: clickInfo.event,
+    });
+    clickInfo.jsEvent.stopPropagation();
+  };
+
+  const closePopover = () => {
+    setPopover({ visible: false, x: 0, y: 0, event: null });
+  };
+
+  const handleDelete = (id) => {
+    setVisitaToDelete(id);
+    closePopover();
+  };
+
+  const handleConfirmDelete = async () => {
+    if (visitaToDelete) {
+      try {
+        await api.deletarVisita(visitaToDelete);
+        toast.success('Visita deletada com sucesso!');
+        setVisitaToDelete(null);
+        carregarVisitas(); // Recarrega as visitas
+      } catch (error) {
+        toast.error('Erro ao deletar visita: ' + error.message);
+        setVisitaToDelete(null);
+      }
+    }
   };
 
   return (
-    <div className="sysmtec-container">
+    <div className="sysmtec-container" onClick={closePopover}>
       <header className="sysmtec-header"><h1>SYSMTEC</h1></header>
       <div className="sysmtec-sidebar">
         <nav>
@@ -67,23 +100,35 @@ function ListagemVisitas() {
         ) : (
           <div className="calendar-container">
             <FullCalendar
-              plugins={[dayGridPlugin]}
+              plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
               events={calendarEvents}
               eventClick={handleEventClick}
               locale="pt-br"
-              buttonText={{
-                today: 'Hoje',
-              }}
+              buttonText={{ today: 'Hoje' }}
+              eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
             />
           </div>
         )}
       </main>
+
+      {popover.visible && (
+        <div
+          className="calendar-popover"
+          style={{ top: popover.y, left: popover.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon">🔍</Link>
+          <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon">✏️</Link>
+          <button onClick={() => handleDelete(popover.event.id)} className="popover-icon popover-button">🗑️</button>
+        </div>
+      )}
+
       <ConfirmationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={() => {}}
-        message="Esta ação não é mais suportada nesta tela."
+        isOpen={!!visitaToDelete}
+        onClose={() => setVisitaToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        message="Tem certeza que deseja excluir esta visita?"
       />
     </div>
   );
