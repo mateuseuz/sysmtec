@@ -9,14 +9,27 @@ const api = axios.create({
   }
 });
 
-api.interceptors.request.use(config => {
-  if (config.data) {
-    config.data = Object.fromEntries(
-      Object.entries(config.data).filter(([_, v]) => v !== null && v !== undefined)
-  );
+// Interceptor para adicionar o token de autenticação em todas as requisições
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    // Filtra dados nulos ou indefinidos do corpo da requisição
+    if (config.data) {
+      config.data = Object.fromEntries(
+        Object.entries(config.data).filter(([_, v]) => v !== null && v !== undefined)
+      );
+    }
+    
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
 api.interceptors.response.use(
   (response) => response.data, // Retorna apenas os dados da resposta
@@ -55,6 +68,9 @@ const apiClientes = {
   buscarVisita: (id) => api.get(`/agenda/${id}`),
   atualizarVisita: (id, visita) => api.put(`/agenda/${id}`, visita),
   deletarVisita: (id) => api.delete(`/agenda/${id}`),
+
+  // Autenticação
+  login: (credentials) => api.post('/auth/login', credentials),
 };
 
 export default apiClientes;

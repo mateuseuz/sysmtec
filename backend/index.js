@@ -4,6 +4,8 @@ const clienteRoutes = require('./routes/clienteRoutes');
 const ordemServicoRoutes = require('./routes/ordemServicoRoutes');
 const orcamentoRoutes = require('./routes/orcamentoRoutes');
 const visitaRoutes = require('./routes/visitaRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar rotas de usuário
+const authRoutes = require('./routes/authRoutes'); // Importar rotas de autenticação
 require('dotenv').config();
 
 const app = express();
@@ -17,6 +19,8 @@ app.use('/api/clientes', clienteRoutes);
 app.use('/api/ordens-servico', ordemServicoRoutes);
 app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api/agenda', visitaRoutes);
+app.use('/api/usuarios', usuarioRoutes); // Usar rotas de usuário
+app.use('/api/auth', authRoutes); // Usar rotas de autenticação
 
 // Rota simples de teste
 app.get('/', (req, res) => {

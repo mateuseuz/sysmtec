@@ -16,6 +16,8 @@ import ListagemVisitas from './pages/visitas/ListagemVisitas';
 import CadastroVisita from './pages/visitas/CadastroVisita';
 import EdicaoVisita from './pages/visitas/EdicaoVisita';
 import VisualizacaoVisita from './pages/visitas/VisualizacaoVisita';
+import LoginPage from './pages/Login'; // Importar a página de login
+import ProtectedRoute from './components/ProtectedRoute'; // Importar a rota protegida
 
 function App() {
   return (
@@ -33,27 +35,31 @@ function App() {
         theme="colored"
       />
       <Routes>
-        <Route path="/" element={<Navigate to="/agenda" replace />} />
+        <Route path="/login" element={<LoginPage />} />
+        
+        {/* Rotas Protegidas */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Navigate to="/agenda" replace />} />
+          <Route path="/agenda" element={<ListagemVisitas />} />
+          <Route path="/agenda/novo" element={<CadastroVisita />} />
+          <Route path="/agenda/editar/:id" element={<EdicaoVisita />} />
+          <Route path="/agenda/visualizar/:id" element={<VisualizacaoVisita />} />
 
-        <Route path="/agenda" element={<ListagemVisitas />} />
-        <Route path="/agenda/novo" element={<CadastroVisita />} />
-        <Route path="/agenda/editar/:id" element={<EdicaoVisita />} />
-        <Route path="/agenda/visualizar/:id" element={<VisualizacaoVisita />} />
+          <Route path="/clientes" element={<ListagemClientes />} />
+          <Route path="/clientes/novo" element={<CadastroCliente />} />
+          <Route path="/clientes/editar/:id" element={<EdicaoCliente />} />
+          <Route path="/clientes/visualizar/:id" element={<VisualizacaoCliente />} />
 
-        <Route path="/clientes" element={<ListagemClientes />} />
-        <Route path="/clientes/novo" element={<CadastroCliente />} />
-        <Route path="/clientes/editar/:id" element={<EdicaoCliente />} />
-        <Route path="/clientes/visualizar/:id" element={<VisualizacaoCliente />} />
+          <Route path="/ordens-servico" element={<ListagemOrdensServico />} />
+          <Route path="/ordens-servico/novo" element={<CadastroOrdemServico />} />
+          <Route path="/ordens-servico/editar/:id" element={<EdicaoOrdemServico />} />
+          <Route path="/ordens-servico/visualizar/:id" element={<VisualizacaoOrdemServico />} />
 
-        <Route path="/ordens-servico" element={<ListagemOrdensServico />} />
-        <Route path="/ordens-servico/novo" element={<CadastroOrdemServico />} />
-        <Route path="/ordens-servico/editar/:id" element={<EdicaoOrdemServico />} />
-        <Route path="/ordens-servico/visualizar/:id" element={<VisualizacaoOrdemServico />} />
-
-        <Route path="/orcamentos" element={<ListagemOrcamentos />} />
-        <Route path="/orcamentos/novo" element={<CadastroOrcamento />} />
-        <Route path="/orcamentos/editar/:id" element={<EdicaoOrcamento />} />
-        <Route path="/orcamentos/visualizar/:id" element={<VisualizacaoOrcamento />} />
+          <Route path="/orcamentos" element={<ListagemOrcamentos />} />
+          <Route path="/orcamentos/novo" element={<CadastroOrcamento />} />
+          <Route path="/orcamentos/editar/:id" element={<EdicaoOrcamento />} />
+          <Route path="/orcamentos/visualizar/:id" element={<VisualizacaoOrcamento />} />
+        </Route>
       </Routes>
     </Router>
   );
