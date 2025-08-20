@@ -1,4 +1,5 @@
 const Cliente = require('../models/clienteModel');
+const { createLog } = require('./logController');
 const { validarCPFCNPJ, validarCelular } = require('../../frontend/src/utils/validations');
 
 exports.createCliente = async (req, res) => {
@@ -18,6 +19,7 @@ exports.createCliente = async (req, res) => {
       observacoes
     );
     
+    await createLog(req.usuario.nome_usuario, `criou o cliente "${nome}"`);
     res.status(201).json(novoCliente);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -52,6 +54,7 @@ exports.updateCliente = async (req, res) => {
       observacoes
     );
 
+    await createLog(req.usuario.nome_usuario, `atualizou o cliente "${nome}"`);
     res.status(200).json(clienteAtualizado);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -82,7 +85,12 @@ exports.getClienteById = async (req, res) => {
 exports.deleteCliente = async (req, res) => {
   try {
     const id_cliente = req.params.id;
+    const cliente = await Cliente.getById(id_cliente);
+    if (!cliente) {
+      return res.status(404).json({ error: 'Cliente não encontrado' });
+    }
     await Cliente.delete(id_cliente);
+    await createLog(req.usuario.nome_usuario, `deletou o cliente "${cliente.nome}"`);
     res.status(200).json({ message: 'Cliente deletado com sucesso' });
   } catch (error) {
     res.status(400).json({ error: error.message });

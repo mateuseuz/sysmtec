@@ -6,6 +6,7 @@ const orcamentoRoutes = require('./routes/orcamentoRoutes');
 const visitaRoutes = require('./routes/visitaRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar rotas de usuário
 const authRoutes = require('./routes/authRoutes'); // Importar rotas de autenticação
+const logRoutes = require('./routes/logRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -21,6 +22,7 @@ app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api/agenda', visitaRoutes);
 app.use('/api/usuarios', usuarioRoutes); // Usar rotas de usuário
 app.use('/api/auth', authRoutes); // Usar rotas de autenticação
+app.use('/api', logRoutes);
 
 // Rota simples de teste
 app.get('/', (req, res) => {

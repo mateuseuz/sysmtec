@@ -17,6 +17,7 @@ import CadastroVisita from './pages/visitas/CadastroVisita';
 import EdicaoVisita from './pages/visitas/EdicaoVisita';
 import VisualizacaoVisita from './pages/visitas/VisualizacaoVisita';
 import LoginPage from './pages/Login'; // Importar a página de login
+import LogPage from './pages/Log';
 import ProtectedRoute from './components/ProtectedRoute'; // Importar a rota protegida
 
 function App() {
@@ -59,6 +60,8 @@ function App() {
           <Route path="/orcamentos/novo" element={<CadastroOrcamento />} />
           <Route path="/orcamentos/editar/:id" element={<EdicaoOrcamento />} />
           <Route path="/orcamentos/visualizar/:id" element={<VisualizacaoOrcamento />} />
+
+          <Route path="/logs" element={<LogPage />} />
         </Route>
       </Routes>
     </Router>
