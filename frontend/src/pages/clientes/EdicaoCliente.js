@@ -241,7 +241,7 @@ function EdicaoCliente() {
           </div>
 
           <div className="form-group">
-            <label>Celular <span className="required-asterisk">*</span></label>
+            <label>Celular/Telefone <span className="required-asterisk">*</span></label>
             <input
               type="tel"
               name="celular"

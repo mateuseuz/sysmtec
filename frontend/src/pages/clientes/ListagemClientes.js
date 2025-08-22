@@ -42,7 +42,7 @@ function ListagemClientes() {
         visitas.some(v => v.id_cliente === id);
 
       if (isClienteEmUso) {
-        toast.error('Não foi possível excluir o cliente porque ele está vinculado a um orçamento, ordem de serviço ou visita.');
+        toast.error('Não foi possível excluir o cliente porque ele está vinculado a um orçamento, ordem de serviço ou visita');
         return;
       }
 
@@ -107,7 +107,7 @@ function ListagemClientes() {
                 <tr>
                   <th>Nome do cliente</th>
                   <th>CPF/CNPJ</th>
-                  <th>Celular</th>
+                  <th>Celular/Telefone</th>
                   <th>Ações</th>
                 </tr>
               </thead>

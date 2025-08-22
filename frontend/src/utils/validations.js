@@ -92,7 +92,7 @@ export const validarCelular = (celular) => {
 
   const nums = celular.replace(/\D/g, '');
   if (nums.length < 10 || nums.length > 11) {
-    throw new Error('Celular deve ter 10 ou 11 dígitos (após DDD)');
+    throw new Error('Celular deve ter 11 dígitos ou telefone, 11 dígitos (considerando o DDD)');
   }
   return true;
 };
