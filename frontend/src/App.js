@@ -20,6 +20,11 @@ import LoginPage from './pages/Login'; // Importar a página de login
 import LogPage from './pages/Log';
 import ProtectedRoute from './components/ProtectedRoute'; // Importar a rota protegida
 
+const RedirectTo = () => {
+  const token = localStorage.getItem('token');
+  return token ? <Navigate to="/agenda" replace /> : <Navigate to="/login" replace />;
+};
+
 function App() {
   return (
     <Router>
@@ -37,10 +42,10 @@ function App() {
       />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<RedirectTo />} />
         
         {/* Rotas Protegidas */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Navigate to="/agenda" replace />} />
           <Route path="/agenda" element={<ListagemVisitas />} />
           <Route path="/agenda/novo" element={<CadastroVisita />} />
           <Route path="/agenda/editar/:id" element={<EdicaoVisita />} />

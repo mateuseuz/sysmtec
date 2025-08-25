@@ -21,7 +21,7 @@ function ListagemOrcamentos() {
       const data = await api.listarOrcamentos();
       setOrcamentos(data);
     } catch (error) {
-      toast.error('Erro ao carregar orçamentos: ' + error.message);
+      toast.error('Erro ao carregar orçamentos: ' + error.message + '.');
     } finally {
       setIsLoading(false);
     }
@@ -40,7 +40,7 @@ function ListagemOrcamentos() {
       setSelectedOrcamentoId(id);
       setIsModalOpen(true);
     } catch (error) {
-      toast.error('Erro ao verificar ordens de serviço: ' + error.message);
+      toast.error('Erro ao verificar ordens de serviço: ' + error.message + '.');
     }
   };
 
@@ -50,7 +50,7 @@ function ListagemOrcamentos() {
       toast.success('Orçamento excluído com sucesso!');
       carregarOrcamentos();
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Erro ao excluir orçamento');
+      toast.error(error.response?.data?.error || 'Erro ao excluir orçamento.');
     } finally {
       setIsModalOpen(false);
       setSelectedOrcamentoId(null);

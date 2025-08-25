@@ -34,6 +34,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response.data, // Retorna apenas os dados da resposta
   (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/login';
+      return Promise.reject(new Error('Sua sessão expirou. Por favor, faça login novamente.'));
+    }
     const errorMessage = error.response?.data?.error || error.message;
     return Promise.reject(new Error(errorMessage)); // Padroniza erros
   }
@@ -71,6 +77,9 @@ const apiClientes = {
 
   // Autenticação
   login: (credentials) => api.post('/auth/login', credentials),
+
+  // Logs
+  listarLogs: () => api.get('/logs'),
 };
 
 export default apiClientes;

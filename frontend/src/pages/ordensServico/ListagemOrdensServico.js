@@ -21,7 +21,7 @@ function ListagemOrdensServico() {
       const data = await api.listarOrdensServico();
       setOrdensServico(data);
     } catch (error) {
-      toast.error('Erro ao carregar ordens de serviço: ' + error.message);
+      toast.error('Erro ao carregar ordens de serviço: ' + error.message + '.');
     } finally {
       setIsLoading(false);
     }
@@ -38,7 +38,7 @@ function ListagemOrdensServico() {
       toast.success('Ordem de serviço excluída com sucesso!');
       carregarOrdensServico();
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Erro ao excluir ordem de serviço');
+      toast.error(error.response?.data?.error || 'Erro ao excluir ordem de serviço.');
     } finally {
       setIsModalOpen(false);
       setSelectedOrdemServicoId(null);

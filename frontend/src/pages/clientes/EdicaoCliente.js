@@ -38,7 +38,7 @@ function EdicaoCliente() {
         setFormData(initialData);
         setInitialFormData(initialData);
       } catch (error) {
-        toast.error('Erro ao carregar cliente: ' + error.message);
+        toast.error('Erro ao carregar cliente: ' + error.message + '.');
         navigate('/clientes');
       } finally {
         setIsLoading(false);
@@ -127,8 +127,8 @@ function EdicaoCliente() {
     let isValid = true;
 
     if (!formData.nome.trim()) {
-      toast.warn('Nome é obrigatório');
-      newErrors.nome = 'Nome é obrigatório';
+      toast.warn('Nome é obrigatório.');
+      newErrors.nome = 'Nome é obrigatório.';
       isValid = false;
     }
 
@@ -149,8 +149,8 @@ function EdicaoCliente() {
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      toast.warn('E-mail inválido');
-      newErrors.email = 'E-mail inválido';
+      toast.warn('E-mail inválido.');
+      newErrors.email = 'E-mail inválido.';
       isValid = false;
     }
 
@@ -176,7 +176,7 @@ function EdicaoCliente() {
       navigate('/clientes');
     } catch (error) {
       console.error('Erro ao atualizar:', error);
-      toast.error(error.response?.data?.error || 'Erro ao atualizar cliente');
+      toast.error(error.response?.data?.error || 'Erro ao atualizar cliente.');
     } finally {
       setIsLoading(false);
     }
@@ -241,7 +241,7 @@ function EdicaoCliente() {
           </div>
 
           <div className="form-group">
-            <label>Celular/Telefone <span className="required-asterisk">*</span></label>
+            <label>Celular <span className="required-asterisk">*</span></label>
             <input
               type="tel"
               name="celular"

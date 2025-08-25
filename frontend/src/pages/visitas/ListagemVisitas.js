@@ -21,7 +21,7 @@ function ListagemVisitas() {
       const data = await api.listarVisitas();
       setVisitas(data);
     } catch (error) {
-      toast.error('Erro ao carregar visitas: ' + error.message);
+      toast.error('Erro ao carregar visitas: ' + error.message + '.');
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +69,7 @@ function ListagemVisitas() {
         setVisitaToDelete(null);
         carregarVisitas(); // Recarrega as visitas
       } catch (error) {
-        toast.error('Erro ao deletar visita: ' + error.message);
+        toast.error('Erro ao deletar visita: ' + error.message + '.');
         setVisitaToDelete(null);
       }
     }

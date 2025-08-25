@@ -22,7 +22,7 @@ function ListagemClientes() {
       const data = await api.listarClientes();
       setClientes(data);
     } catch (error) {
-      toast.error('Erro ao carregar clientes: ' + error.message);
+      toast.error('Erro ao carregar clientes: ' + error.message + '.');
     } finally {
       setIsLoading(false);
     }
@@ -42,14 +42,14 @@ function ListagemClientes() {
         visitas.some(v => v.id_cliente === id);
 
       if (isClienteEmUso) {
-        toast.error('Não foi possível excluir o cliente porque ele está vinculado a um orçamento, ordem de serviço ou visita');
+        toast.error('Não foi possível excluir o cliente porque ele está vinculado a um orçamento, ordem de serviço ou visita.');
         return;
       }
 
       setSelectedClientId(id);
       setIsModalOpen(true);
     } catch (error) {
-      toast.error('Erro ao verificar associações do cliente: ' + error.message);
+      toast.error('Erro ao verificar associações do cliente: ' + error.message + '.');
     }
   };
 
@@ -59,7 +59,7 @@ function ListagemClientes() {
       toast.success('Cliente excluído com sucesso!');
       carregarClientes();
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Erro ao excluir cliente');
+      toast.error(error.response?.data?.error || 'Erro ao excluir cliente.');
     } finally {
       setIsModalOpen(false);
       setSelectedClientId(null);
@@ -107,7 +107,7 @@ function ListagemClientes() {
                 <tr>
                   <th>Nome do cliente</th>
                   <th>CPF/CNPJ</th>
-                  <th>Celular/Telefone</th>
+                  <th>Celular</th>
                   <th>Ações</th>
                 </tr>
               </thead>

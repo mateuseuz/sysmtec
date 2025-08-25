@@ -79,7 +79,7 @@ function EdicaoVisita() {
           const data = await api.buscarClientesPorNome(clientSearch);
           setClientSuggestions(data);
         } catch (error) {
-          toast.error('Erro ao buscar clientes: ' + error.message);
+          toast.error('Erro ao buscar clientes: ' + error.message + '.');
         }
       };
       fetchClients();
@@ -130,7 +130,7 @@ function EdicaoVisita() {
       toast.success('Visita atualizada com sucesso!');
       navigate('/agenda');
     } catch (error) {
-      toast.error('Erro ao atualizar visita: ' + error.message);
+      toast.error('Erro ao atualizar visita: ' + error.message + '.');
     } finally {
       setIsLoading(false);
     }

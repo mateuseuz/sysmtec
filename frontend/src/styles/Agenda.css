@@ -219,6 +219,14 @@
   border: 1px solid var(--primary-color) !important;
   background-color: var(--light-bg) !important;
   color: var(--primary-color) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+
+.fc-daygrid-day-frame {
+  overflow: hidden;
 }
 
 .fc-event:hover {
@@ -270,8 +278,14 @@
 
 .fc-event-time {
   font-weight: bold;
+  color: var(--primary-color) !important;
 }
 
 .fc-daygrid-event .fc-event-title {
   font-weight: normal;
+  color: var(--primary-color) !important;
+}
+
+.fc-daygrid-event .fc-event-main {
+  padding: 0 4px;
 }

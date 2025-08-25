@@ -31,7 +31,7 @@ function VisualizacaoCliente() {
           observacoes: cliente.observacoes || ''
         });
       } catch (error) {
-        toast.error('Erro ao carregar cliente: ' + error.message);
+        toast.error('Erro ao carregar cliente: ' + error.message + '.');
         navigate('/clientes');
       } finally {
         setIsLoading(false);

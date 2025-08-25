@@ -50,7 +50,7 @@ function CadastroVisita() {
           const data = await api.buscarClientesPorNome(clientSearch);
           setClientSuggestions(data);
         } catch (error) {
-          toast.error('Erro ao buscar clientes: ' + error.message);
+          toast.error('Erro ao buscar clientes: ' + error.message + '.');
         }
       };
       fetchClients();
@@ -102,7 +102,7 @@ function CadastroVisita() {
       toast.success('Visita cadastrada com sucesso!');
       navigate('/agenda');
     } catch (error) {
-      toast.error('Erro ao agendar visita: ' + error.message);
+      toast.error('Erro ao agendar visita: ' + error.message + '.');
     } finally {
       setIsLoading(false);
     }

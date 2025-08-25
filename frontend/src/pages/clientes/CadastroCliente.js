@@ -108,8 +108,8 @@ function CadastroCliente() {
     let isValid = true;
 
     if (!formData.nome.trim()) {
-      toast.warn('Nome é obrigatório');
-      newErrors.nome = 'Nome é obrigatório';
+      toast.warn('Nome é obrigatório.');
+      newErrors.nome = 'Nome é obrigatório.';
       isValid = false;
     }
 
@@ -130,8 +130,8 @@ function CadastroCliente() {
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      toast.warn('E-mail inválido');
-      newErrors.email = 'E-mail inválido';
+      toast.warn('E-mail inválido.');
+      newErrors.email = 'E-mail inválido.';
       isValid = false;
     }
 
@@ -163,7 +163,7 @@ function CadastroCliente() {
     navigate('/clientes');
   } catch (error) {
     console.error('Erro detalhado:', error);
-    toast.error(error.message || 'Erro ao cadastrar cliente');
+    toast.error(error.message || 'Erro ao cadastrar cliente.');
   } finally {
     setIsLoading(false);
   }
@@ -218,7 +218,7 @@ function CadastroCliente() {
           </div>
 
           <div className="form-group">
-            <label>Celular/Telefone <span className="required-asterisk">*</span></label>
+            <label>Celular <span className="required-asterisk">*</span></label>
             <input
               type="tel"
               name="celular"

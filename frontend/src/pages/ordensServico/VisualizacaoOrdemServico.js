@@ -27,7 +27,7 @@ function VisualizacaoOrdemServico() {
           }
         }
       } catch (error) {
-        toast.error('Erro ao carregar ordem de serviço: ' + error.message);
+        toast.error('Erro ao carregar ordem de serviço: ' + error.message + '.');
         navigate('/ordens-servico');
       } finally {
         setIsLoading(false);

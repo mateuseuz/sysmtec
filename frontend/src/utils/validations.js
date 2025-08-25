@@ -68,6 +68,9 @@ export const validarCNPJ = (cnpj) => {
 };
 
 export const validarCPFCNPJ = (doc) => {
+  if (!doc || !doc.trim()) {
+    throw new Error('Documento é obrigatório (CPF/CNPJ).');
+  }
   const docLimpo = doc.replace(/\D/g, '');
 
   if (docLimpo.length === 11) {
@@ -92,7 +95,7 @@ export const validarCelular = (celular) => {
 
   const nums = celular.replace(/\D/g, '');
   if (nums.length < 10 || nums.length > 11) {
-    throw new Error('Celular deve ter 11 dígitos ou telefone, 11 dígitos (considerando o DDD)');
+    throw new Error('Celular deve ter 10 ou 11 dígitos (após DDD)');
   }
   return true;
 };

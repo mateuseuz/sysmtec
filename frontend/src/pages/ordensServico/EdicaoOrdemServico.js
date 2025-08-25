@@ -46,7 +46,7 @@ function EdicaoOrdemServico() {
         setSelectedClient({ id_cliente: ordemServico.id_cliente, nome: ordemServico.nome_cliente });
         setOrcamentos(orcamentosData);
       } catch (error) {
-        toast.error('Erro ao carregar dados: ' + error.message);
+        toast.error('Erro ao carregar dados: ' + error.message + '.');
         navigate('/ordens-servico');
       } finally {
         setIsLoading(false);
@@ -77,7 +77,7 @@ function EdicaoOrdemServico() {
           const data = await api.buscarClientesPorNome(clientSearch);
           setClientSuggestions(data);
         } catch (error) {
-          toast.error('Erro ao buscar clientes: ' + error.message);
+          toast.error('Erro ao buscar clientes: ' + error.message + '.');
         }
       };
       fetchClients();
@@ -110,20 +110,20 @@ function EdicaoOrdemServico() {
     let isValid = true;
 
     if (!formData.nome.trim()) {
-      toast.warn('Nome do projeto é obrigatório');
-      newErrors.nome = 'Nome do projeto é obrigatório';
+      toast.warn('Nome do projeto/serviço é obrigatório.');
+      newErrors.nome = 'Nome do projeto/serviço é obrigatório.';
       isValid = false;
     }
 
     if (!formData.id_cliente) {
-      toast.warn('Cliente é obrigatório');
-      newErrors.id_cliente = 'Cliente é obrigatório';
+      toast.warn('Cliente inexistente. Selecione um cliente já cadastrado.');
+      newErrors.id_cliente = 'Cliente inexistente. Selecione um cliente já cadastrado.';
       isValid = false;
     }
 
     if (!formData.id_orcamento) {
-      toast.warn('Orçamento é obrigatório');
-      newErrors.id_orcamento = 'Orçamento é obrigatório';
+      toast.warn('Orçamento é obrigatório.');
+      newErrors.id_orcamento = 'Orçamento é obrigatório.';
       isValid = false;
     }
 
@@ -142,7 +142,7 @@ function EdicaoOrdemServico() {
       toast.success('Ordem de serviço atualizada com sucesso!');
       navigate('/ordens-servico');
     } catch (error) {
-      toast.error(error.message || 'Erro ao atualizar ordem de serviço');
+      toast.error(error.message || 'Erro ao atualizar ordem de serviço.');
     } finally {
       setIsLoading(false);
     }
