@@ -172,7 +172,7 @@ function EdicaoOrdemServico() {
             <li><Link to="/clientes"><span>👥</span>Clientes</Link></li>
             <li className="active"><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li><Link to="/log"><span>📋</span>Log de alterações</Link></li>
+            <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
           </ul>
         </nav>
       </div>
