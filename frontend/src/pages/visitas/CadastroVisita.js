@@ -15,6 +15,7 @@ function CadastroVisita() {
     endereco: '',
     observacoes: '',
   });
+  const [erros, setErros] = useState({});
   const [initialFormData] = useState({
     titulo: '',
     id_cliente: '',
@@ -79,12 +80,31 @@ function CadastroVisita() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.titulo || !formData.data || !formData.hora || !formData.endereco) {
-      toast.error('Nome, data, hora e endereço são obrigatórios.');
+
+    const novosErros = {};
+    if (!formData.titulo) {
+      novosErros.titulo = 'Nome da visita é obrigatório.';
+      toast.warn('Nome da visita é obrigatório.');
+    }
+    if (!formData.data) {
+      novosErros.data = 'A data da visita é obrigatória.';
+      toast.warn('A data da visita é obrigatória.');
+    }
+    if (!formData.hora) {
+      novosErros.hora = 'A hora da visita é obrigatória.';
+      toast.warn('A hora da visita é obrigatória.');
+    }
+    if (!formData.endereco) {
+      novosErros.endereco = 'Endereço é obrigatório.';
+      toast.warn('Endereço é obrigatório.');
+    }
+
+    if (Object.keys(novosErros).length > 0) {
+      setErros(novosErros);
       return;
     }
-    
+
+    setErros({});
     setIsLoading(true);
 
     const data_agendamento = `${formData.data}T${formData.hora}:00`;
@@ -140,7 +160,7 @@ function CadastroVisita() {
               placeholder="Ex: Visita técnica para orçamento"
               value={formData.titulo}
               onChange={handleChange}
-              required
+              className={erros.titulo ? 'error' : ''}
             />
           </div>
 
@@ -172,7 +192,7 @@ function CadastroVisita() {
                 name="data"
                 value={formData.data}
                 onChange={handleChange}
-                required
+                className={erros.data ? 'error' : ''}
               />
             </div>
             <div className="form-group">
@@ -182,7 +202,7 @@ function CadastroVisita() {
                 name="hora"
                 value={formData.hora}
                 onChange={handleChange}
-                required
+                className={erros.hora ? 'error' : ''}
               />
             </div>
           </div>
@@ -195,7 +215,7 @@ function CadastroVisita() {
               placeholder="Insira o endereço do local da visita"
               value={formData.endereco}
               onChange={handleChange}
-              required
+              className={erros.endereco ? 'error' : ''}
             />
           </div>
 

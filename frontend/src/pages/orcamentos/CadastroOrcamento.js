@@ -16,6 +16,7 @@ const CadastroOrcamento = () => {
   const [itens, setItens] = useState([{ nome: '', quantidade: 1, valor: '' }]);
   const [valorTotal, setValorTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [erros, setErros] = useState({});
   const [isRemoveItemModalOpen, setIsRemoveItemModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [isUnsavedChangesModalOpen, setIsUnsavedChangesModalOpen] = useState(false);
@@ -63,9 +64,22 @@ const CadastroOrcamento = () => {
   }, [itens]);
 
   const handleItemChange = (index, event) => {
-    const values = [...itens];
-    values[index][event.target.name] = event.target.value;
-    setItens(values);
+    const { name, value } = event.target;
+    const newItens = [...itens];
+    newItens[index][name] = value;
+    setItens(newItens);
+
+    if (erros.itens && erros.itens[index] && erros.itens[index][name]) {
+      const newErros = { ...erros };
+      delete newErros.itens[index][name];
+      if (Object.keys(newErros.itens[index]).length === 0) {
+        delete newErros.itens[index];
+      }
+      if (Object.keys(newErros.itens).length === 0) {
+        delete newErros.itens;
+      }
+      setErros(newErros);
+    }
   };
 
   const handleAddItem = () => {
@@ -88,28 +102,50 @@ const CadastroOrcamento = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validação
+    const novosErros = { itens: {} };
     if (!nomeOrcamento.trim()) {
-      toast.error('Nome do orçamento é obrigatório.');
-      return;
+      novosErros.nomeOrcamento = 'Nome do orçamento é obrigatório.';
+      toast.warn('Nome do orçamento é obrigatório.');
     }
     if (termoBusca.trim() && !clienteSelecionado) {
-      toast.error('Cliente inexistente. Selecione um cliente da lista ou deixe o campo em branco.');
+      novosErros.cliente = 'Cliente inexistente. Selecione um cliente da lista ou deixe o campo em branco.';
+      toast.warn('Cliente inexistente. Selecione um cliente da lista ou deixe o campo em branco.');
+    }
+
+    let hasItemError = false;
+    itens.forEach((item, index) => {
+      const itemErros = {};
+      if (!item.nome.trim()) {
+        itemErros.nome = true;
+        hasItemError = true;
+      }
+      if (!String(item.valor).trim()) {
+        itemErros.valor = true;
+        hasItemError = true;
+      }
+      if (parseFloat(item.quantidade) < 0) {
+        itemErros.quantidade = true;
+        hasItemError = true;
+      }
+      if (parseFloat(item.valor) < 0) {
+        itemErros.valor = true;
+        hasItemError = true;
+      }
+      if (Object.keys(itemErros).length > 0) {
+        novosErros.itens[index] = itemErros;
+      }
+    });
+
+    if (hasItemError) {
+      toast.warn('Por favor, corrija os itens inválidos.');
+    }
+
+    if (Object.keys(novosErros).length > 1 || Object.keys(novosErros.itens).length > 0) {
+      setErros(novosErros);
       return;
     }
 
-    const itensInvalidos = itens.some(item => !item.nome.trim() || !String(item.valor).trim());
-    if (itens.length === 0 || (itens.length === 1 && !itens[0].nome.trim()) || itensInvalidos) {
-      toast.error('É obrigatório preencher o nome e o valor de todos os itens.');
-      return;
-    }
-
-    const valoresNegativos = itens.some(item => parseFloat(item.quantidade) < 0 || parseFloat(item.valor) < 0);
-    if (valoresNegativos) {
-      toast.error('Quantidade e valor dos itens não podem ser negativos.');
-      return;
-    }
-
+    setErros({});
     setIsLoading(true);
 
     const itensNumericos = itens.map(item => ({
@@ -166,6 +202,7 @@ const CadastroOrcamento = () => {
               value={nomeOrcamento}
               onChange={e => setNomeOrcamento(e.target.value)}
               placeholder="Nome do orçamento"
+              className={erros.nomeOrcamento ? 'error' : ''}
             />
           </div>
           <div className="form-group">
@@ -179,6 +216,7 @@ const CadastroOrcamento = () => {
                   setClienteSelecionado(null);
                 }}
                 placeholder="Nome do cliente"
+                className={erros.cliente ? 'error' : ''}
               />
               {sugestoes.length > 0 && (
                 <ul className="sugestoes-lista">
@@ -215,6 +253,7 @@ const CadastroOrcamento = () => {
                   placeholder="Produto/serviço"
                   value={item.nome}
                   onChange={e => handleItemChange(index, e)}
+                  className={erros.itens?.[index]?.nome ? 'error' : ''}
                 />
                 <input
                   type="number"
@@ -223,6 +262,7 @@ const CadastroOrcamento = () => {
                   value={item.quantidade}
                   onChange={e => handleItemChange(index, e)}
                   min="0"
+                  className={erros.itens?.[index]?.quantidade ? 'error' : ''}
                 />
                 <input
                   type="number"
@@ -231,6 +271,7 @@ const CadastroOrcamento = () => {
                   value={item.valor}
                   onChange={e => handleItemChange(index, e)}
                   min="0"
+                  className={erros.itens?.[index]?.valor ? 'error' : ''}
                 />
                 <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
               </React.Fragment>

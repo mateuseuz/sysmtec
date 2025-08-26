@@ -17,6 +17,7 @@ function EdicaoVisita() {
     observacoes: '',
   });
   const [initialFormData, setInitialFormData] = useState(null);
+  const [erros, setErros] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
@@ -108,12 +109,31 @@ function EdicaoVisita() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.titulo || !formData.data || !formData.hora || !formData.endereco) {
-      toast.error('Nome, data, hora e endereço são obrigatórios.');
+
+    const novosErros = {};
+    if (!formData.titulo) {
+      novosErros.titulo = 'Nome da visita é obrigatório.';
+      toast.warn('Nome da visita é obrigatório.');
+    }
+    if (!formData.data) {
+      novosErros.data = 'A data da visita é obrigatória.';
+      toast.warn('A data da visita é obrigatória.');
+    }
+    if (!formData.hora) {
+      novosErros.hora = 'A hora da visita é obrigatória.';
+      toast.warn('A hora da visita é obrigatória.');
+    }
+    if (!formData.endereco) {
+      novosErros.endereco = 'Endereço é obrigatório.';
+      toast.warn('Endereço é obrigatório.');
+    }
+
+    if (Object.keys(novosErros).length > 0) {
+      setErros(novosErros);
       return;
     }
-    
+
+    setErros({});
     setIsLoading(true);
     const data_agendamento = `${formData.data}T${formData.hora}:00`;
 
@@ -173,7 +193,13 @@ function EdicaoVisita() {
 
           <div className="form-group">
             <label>Nome <span className="required-asterisk">*</span></label>
-            <input type="text" name="titulo" value={formData.titulo} onChange={handleChange} required />
+            <input
+              type="text"
+              name="titulo"
+              value={formData.titulo}
+              onChange={handleChange}
+              className={erros.titulo ? 'error' : ''}
+            />
           </div>
 
           <div className="form-group">
@@ -193,17 +219,35 @@ function EdicaoVisita() {
           <div className="form-row">
             <div className="form-group">
               <label>Data <span className="required-asterisk">*</span></label>
-              <input type="date" name="data" value={formData.data} onChange={handleChange} required />
+              <input
+                type="date"
+                name="data"
+                value={formData.data}
+                onChange={handleChange}
+                className={erros.data ? 'error' : ''}
+              />
             </div>
             <div className="form-group">
               <label>Hora <span className="required-asterisk">*</span></label>
-              <input type="time" name="hora" value={formData.hora} onChange={handleChange} required />
+              <input
+                type="time"
+                name="hora"
+                value={formData.hora}
+                onChange={handleChange}
+                className={erros.hora ? 'error' : ''}
+              />
             </div>
           </div>
 
           <div className="form-group">
             <label>Endereço <span className="required-asterisk">*</span></label>
-            <input type="text" name="endereco" value={formData.endereco} onChange={handleChange} required />
+            <input
+              type="text"
+              name="endereco"
+              value={formData.endereco}
+              onChange={handleChange}
+              className={erros.endereco ? 'error' : ''}
+            />
           </div>
 
           <div className="form-group">

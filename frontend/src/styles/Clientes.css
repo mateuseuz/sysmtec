@@ -393,13 +393,15 @@ body {
 
 .form-group input.error,
 .form-group textarea.error,
-.form-group select.error {
+.form-group select.error,
+.itens-orcamento-grid-container input.error {
   border-color: var(--danger-color) !important;
 }
 
 .form-group input.error:focus,
 .form-group textarea.error:focus,
-.form-group select.error:focus {
+.form-group select.error:focus,
+.itens-orcamento-grid-container input.error:focus {
   border-color: var(--danger-color) !important;
   box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25) !important;
 }
