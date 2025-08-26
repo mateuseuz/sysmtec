@@ -66,6 +66,7 @@ function VisualizacaoCliente() {
             <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
             <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
+            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
           </ul>
         </nav>
       </div>

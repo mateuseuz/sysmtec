@@ -47,11 +47,11 @@ function LogPage() {
             <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
             <li className="active"><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
+            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
           </ul>
         </nav>
       </div>
       <main className="sysmtec-main">
-        <h2>Log de Alterações</h2>
         <div className="clientes-table-container">
           <table className="clientes-table">
             <thead>

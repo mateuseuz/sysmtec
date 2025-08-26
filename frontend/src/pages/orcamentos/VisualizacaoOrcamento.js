@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import api from '../../services/api';
 import '../../styles/Clientes.css';
 import '../../styles/Orcamentos.css';
@@ -9,31 +11,20 @@ const VisualizacaoOrcamento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [nomeOrcamento, setNomeOrcamento] = useState('');
-  const [clienteNome, setClienteNome] = useState('');
-  const [observacoes, setObservacoes] = useState('');
-  const [itens, setItens] = useState([]);
-  const [valorTotal, setValorTotal] = useState(0);
+  const [orcamento, setOrcamento] = useState(null);
+  const [cliente, setCliente] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const carregarDados = async () => {
       try {
         const orcamentoData = await api.buscarOrcamento(id);
-        setNomeOrcamento(orcamentoData.nome);
-        setObservacoes(orcamentoData.observacoes || '');
-        setItens(orcamentoData.itens || []);
+        setOrcamento(orcamentoData);
 
         if (orcamentoData.id_cliente) {
           const clienteData = await api.buscarCliente(orcamentoData.id_cliente);
-          setClienteNome(clienteData.nome);
-        } else {
-          setClienteNome('Nenhum cliente vinculado');
+          setCliente(clienteData);
         }
-
-        const total = orcamentoData.itens.reduce((acc, item) => acc + (item.quantidade * item.valor), 0);
-        setValorTotal(total);
-
       } catch (error) {
         toast.error('Erro ao carregar dados do orçamento.');
         navigate('/orcamentos');
@@ -45,7 +36,68 @@ const VisualizacaoOrcamento = () => {
     carregarDados();
   }, [id, navigate]);
 
-  if (isLoading) {
+  const handleExportPDF = () => {
+    if (!orcamento) {
+      toast.error("Dados do orçamento não carregados.");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    // Título
+    doc.setFontSize(20);
+    doc.text("Orçamento - SYSMTEC", 14, 22);
+
+    // Informações do Cliente e Orçamento
+    doc.setFontSize(12);
+    doc.text(`Orçamento: ${orcamento.nome}`, 14, 32);
+    if (cliente) {
+      doc.text(`Cliente: ${cliente.nome}`, 14, 40);
+      doc.text(`CPF/CNPJ: ${cliente.cpf_cnpj}`, 14, 48);
+    } else {
+      doc.text("Cliente: Não informado", 14, 40);
+    }
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 170, 48);
+
+    // Tabela de Itens
+    const tableColumn = ["Item", "Quantidade", "Valor Unitário", "Valor Total"];
+    const tableRows = [];
+
+    orcamento.itens.forEach(item => {
+      const itemData = [
+        item.nome,
+        item.quantidade,
+        new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.valor),
+        new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.quantidade * item.valor)
+      ];
+      tableRows.push(itemData);
+    });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 60,
+    });
+
+    // Valor Total
+    const total = orcamento.itens.reduce((acc, item) => acc + (item.quantidade * item.valor), 0);
+    const finalY = doc.lastAutoTable.finalY; // Pega a posição Y após a tabela
+    doc.setFontSize(14);
+    doc.text(`Valor Total: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)}`, 14, finalY + 15);
+
+    // Observações
+    if (orcamento.observacoes) {
+      doc.setFontSize(12);
+      doc.text("Observações:", 14, finalY + 25);
+      const splitObservacoes = doc.splitTextToSize(orcamento.observacoes, 180);
+      doc.text(splitObservacoes, 14, finalY + 30);
+    }
+
+    // Salvar o PDF
+    doc.save(`Orcamento-${orcamento.nome.replace(/\s+/g, '_')}-${id}.pdf`);
+  };
+
+  if (isLoading || !orcamento) {
     return (
       <div className="sysmtec-container">
         <div className="loading-container">
@@ -55,6 +107,8 @@ const VisualizacaoOrcamento = () => {
       </div>
     );
   }
+
+  const valorTotal = orcamento.itens.reduce((acc, item) => acc + (item.quantidade * item.valor), 0);
 
   return (
     <div className="sysmtec-container">
@@ -70,19 +124,23 @@ const VisualizacaoOrcamento = () => {
             <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
             <li className="active"><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
             <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
+            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
           </ul>
         </nav>
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
+        <div className="form-actions">
+          <Link to="/orcamentos" className="back-button">⬅️ VOLTAR</Link>
+          <button onClick={handleExportPDF} className="export-pdf-button">📄 EXPORTAR PARA PDF</button>
+        </div>
 
         <div className="cliente-form">
           <div className="form-group">
             <label>Nome do orçamento</label>
             <input
               type="text"
-              value={nomeOrcamento}
+              value={orcamento.nome}
               readOnly
               disabled
             />
@@ -91,7 +149,7 @@ const VisualizacaoOrcamento = () => {
             <label>Cliente</label>
             <input
               type="text"
-              value={clienteNome}
+              value={cliente ? cliente.nome : 'Nenhum cliente vinculado'}
               readOnly
               disabled
             />
@@ -106,7 +164,7 @@ const VisualizacaoOrcamento = () => {
             <div /> {/* Célula vazia para alinhamento */}
 
             {/* Linhas de Itens */}
-            {itens.map((item, index) => (
+            {orcamento.itens.map((item, index) => (
               <React.Fragment key={index}>
                 <input
                   type="text"
@@ -148,7 +206,7 @@ const VisualizacaoOrcamento = () => {
           <div className="form-group">
             <label>Observações</label>
             <textarea
-              value={observacoes}
+              value={orcamento.observacoes || ''}
               readOnly
               disabled
             />

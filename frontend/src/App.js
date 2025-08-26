@@ -18,6 +18,7 @@ import EdicaoVisita from './pages/visitas/EdicaoVisita';
 import VisualizacaoVisita from './pages/visitas/VisualizacaoVisita';
 import LoginPage from './pages/Login'; // Importar a página de login
 import LogPage from './pages/Log';
+import PainelControlePage from './pages/PainelControle';
 import ProtectedRoute from './components/ProtectedRoute'; // Importar a rota protegida
 
 const RedirectTo = () => {
@@ -67,6 +68,7 @@ function App() {
           <Route path="/orcamentos/visualizar/:id" element={<VisualizacaoOrcamento />} />
 
           <Route path="/logs" element={<LogPage />} />
+          <Route path="/painel-controle" element={<PainelControlePage />} />
         </Route>
       </Routes>
     </Router>
