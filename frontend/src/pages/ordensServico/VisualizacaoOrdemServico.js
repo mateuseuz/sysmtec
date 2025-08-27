@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import NavLink from '../../components/NavLink';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/Clientes.css';
 
 function VisualizacaoOrdemServico() {
@@ -57,18 +60,20 @@ function VisualizacaoOrdemServico() {
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li className="active"><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
-            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
+            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
+            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
+            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
+            <NavLink to="/orcamentos" icon={faFileInvoiceDollar}>Orçamentos</NavLink>
+            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
+            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
           </ul>
         </nav>
       </div>
 
       <main className="sysmtec-main">
-        <Link to="/ordens-servico" className="back-button">⬅️ VOLTAR</Link>
+        <button onClick={() => navigate('/ordens-servico')} className="back-button">
+          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+        </button>
 
         <div className="cliente-form">
           <div className="form-group">

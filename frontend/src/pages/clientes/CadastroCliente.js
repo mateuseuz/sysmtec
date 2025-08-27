@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { validarCPFCNPJ, validarCelular } from '../../utils/validations';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import NavLink from '../../components/NavLink';
+import { faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../styles/Clientes.css';
 
 function CadastroCliente() {
@@ -178,18 +181,20 @@ function CadastroCliente() {
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
-            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
+            <NavLink to="/agenda" icon={faCalendarAlt} isDirty={isDirty}>Agenda</NavLink>
+            <NavLink to="/clientes" icon={faUsers} isDirty={isDirty}>Clientes</NavLink>
+            <NavLink to="/ordens-servico" icon={faWrench} isDirty={isDirty}>Ordens de Serviço</NavLink>
+            <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isDirty}>Orçamentos</NavLink>
+            <NavLink to="/logs" icon={faHistory} isDirty={isDirty}>Log de alterações</NavLink>
+            <NavLink to="/painel-controle" icon={faCogs} isDirty={isDirty}>Painel de Controle</NavLink>
           </ul>
         </nav>
       </div>
 
       <main className="sysmtec-main">
-        <button type="button" onClick={handleBackClick} className="back-button">⬅️ VOLTAR</button>
+        <button type="button" onClick={handleBackClick} className="back-button">
+          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+        </button>
 
         <form onSubmit={handleSubmit} className="cliente-form">
           <div className="form-group">

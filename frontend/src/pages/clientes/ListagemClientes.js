@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import NavLink from '../../components/NavLink';
+import { faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs, faPlus, faEye, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import api from '../../services/api';
 import { formatCPForCNPJ, formatCelular } from '../../utils/validations';
 import ConfirmationModal from '../../components/ConfirmationModal';
@@ -75,12 +78,12 @@ function ListagemClientes() {
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
-            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
+            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
+            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
+            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
+            <NavLink to="/orcamentos" icon={faFileInvoiceDollar}>Orçamentos</NavLink>
+            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
+            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
           </ul>
         </nav>
       </div>
@@ -88,7 +91,7 @@ function ListagemClientes() {
       <main className="sysmtec-main">
         <div className="clientes-header">
           <Link to="/clientes/novo" className="add-client-link">
-            ➕ CADASTRAR CLIENTE
+            <FontAwesomeIcon icon={faPlus} /> CADASTRAR CLIENTE
           </Link>
         </div>
 
@@ -126,21 +129,21 @@ function ListagemClientes() {
                         className="view-button"
                         title="Visualizar cliente"
                       >
-                        🔎
+                        <FontAwesomeIcon icon={faEye} />
                       </Link>
                       <Link 
                         to={`/clientes/editar/${cliente.id_cliente}`} 
                         className="edit-button"
                         title="Editar cliente"
                       >
-                        ✏️
+                        <FontAwesomeIcon icon={faPencilAlt} />
                       </Link>
                       <button 
                         onClick={() => handleExcluir(cliente.id_cliente)}
                         className="delete-button"
                         title="Excluir cliente"
                       >
-                        🗑️
+                        <FontAwesomeIcon icon={faTrashAlt} />
                       </button>
                     </td>
                   </tr>

@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import NavLink from '../../components/NavLink';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEye, faPencilAlt, faTrashAlt, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -81,19 +84,19 @@ function ListagemVisitas() {
       <div className="sysmtec-sidebar">
         <nav>
           <ul>
-            <li className="active"><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
-            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
+            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
+            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
+            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
+            <NavLink to="/orcamentos" icon={faFileInvoiceDollar}>Orçamentos</NavLink>
+            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
+            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
           </ul>
         </nav>
       </div>
 
       <main className="sysmtec-main">
         <div className="agenda-header">
-          <Link to="/agenda/novo" className="add-client-link">➕ CADASTRAR VISITA</Link>
+          <Link to="/agenda/novo" className="add-client-link"><FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA</Link>
         </div>
 
         {isLoading ? (
@@ -119,9 +122,9 @@ function ListagemVisitas() {
           style={{ top: popover.y, left: popover.x }}
           onClick={(e) => e.stopPropagation()}
         >
-          <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon">🔍</Link>
-          <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon">✏️</Link>
-          <button onClick={() => handleDelete(popover.event.id)} className="popover-icon popover-button">🗑️</button>
+          <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faEye} /></Link>
+          <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faPencilAlt} /></Link>
+          <button onClick={() => handleDelete(popover.event.id)} className="popover-icon popover-button"><FontAwesomeIcon icon={faTrashAlt} /></button>
         </div>
       )}
 
