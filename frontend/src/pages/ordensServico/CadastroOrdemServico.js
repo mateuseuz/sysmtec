@@ -15,7 +15,8 @@ function CadastroOrdemServico() {
     nome: '',
     id_cliente: '',
     situacao: 'Em andamento',
-    observacoes: ''
+    observacoes: '',
+    selectedClient: null
   });
   const [initialFormData] = useState({
     nome: '',
@@ -33,8 +34,15 @@ function CadastroOrdemServico() {
   const [orcamentos, setOrcamentos] = useState([]);
 
   useEffect(() => {
-    setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
-  }, [formData, initialFormData, setFormDirty]);
+    const isClientDirty = initialFormData.selectedClient?.id_cliente !== selectedClient?.id_cliente;
+    const isFormDataDirty = (
+      formData.nome !== initialFormData.nome ||
+      formData.situacao !== initialFormData.situacao ||
+      formData.observacoes !== initialFormData.observacoes ||
+      formData.id_orcamento !== initialFormData.id_orcamento
+    );
+    setFormDirty(isClientDirty || isFormDataDirty);
+  }, [formData, selectedClient, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
     if (isFormDirty) {

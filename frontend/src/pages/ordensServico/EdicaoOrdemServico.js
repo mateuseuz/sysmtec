@@ -35,9 +35,13 @@ function EdicaoOrdemServico() {
           api.buscarOrdemServico(id),
           api.listarOrcamentos()
         ]);
+        
+        const cliente = ordemServico.id_cliente ? await api.buscarCliente(ordemServico.id_cliente) : null;
+
         const initialData = {
           nome: ordemServico.nome || '',
           id_cliente: ordemServico.id_cliente || '',
+          selectedClient: cliente,
           situacao: ordemServico.situacao || '',
           observacoes: ordemServico.observacoes || '',
           id_orcamento: ordemServico.id_orcamento || ''
@@ -45,7 +49,7 @@ function EdicaoOrdemServico() {
         setFormData(initialData);
         setInitialFormData(initialData);
         setClientSearch(ordemServico.nome_cliente);
-        setSelectedClient({ id_cliente: ordemServico.id_cliente, nome: ordemServico.nome_cliente });
+        setSelectedClient(cliente);
         setOrcamentos(orcamentosData);
       } catch (error) {
         toast.error('Erro ao carregar dados: ' + error.message + '.');
@@ -60,9 +64,16 @@ function EdicaoOrdemServico() {
 
   useEffect(() => {
     if (initialFormData) {
-      setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+      const isClientDirty = initialFormData.selectedClient?.id_cliente !== selectedClient?.id_cliente;
+      const isFormDataDirty = (
+        formData.nome !== initialFormData.nome ||
+        formData.situacao !== initialFormData.situacao ||
+        formData.observacoes !== initialFormData.observacoes ||
+        formData.id_orcamento !== initialFormData.id_orcamento
+      );
+      setFormDirty(isClientDirty || isFormDataDirty);
     }
-  }, [formData, initialFormData, setFormDirty]);
+  }, [formData, selectedClient, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
     if (isFormDirty) {

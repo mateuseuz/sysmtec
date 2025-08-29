@@ -17,6 +17,7 @@ function CadastroVisita() {
     hora: '',
     endereco: '',
     observacoes: '',
+    selectedClient: null
   });
   const [erros, setErros] = useState({});
   const [initialFormData] = useState({
@@ -35,8 +36,16 @@ function CadastroVisita() {
   const [selectedClient, setSelectedClient] = useState(null);
 
   useEffect(() => {
-    setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
-  }, [formData, initialFormData, setFormDirty]);
+    const isClientDirty = initialFormData.selectedClient?.id_cliente !== selectedClient?.id_cliente;
+    const isFormDataDirty = (
+      formData.titulo !== initialFormData.titulo ||
+      formData.data !== initialFormData.data ||
+      formData.hora !== initialFormData.hora ||
+      formData.endereco !== initialFormData.endereco ||
+      formData.observacoes !== initialFormData.observacoes
+    );
+    setFormDirty(isClientDirty || isFormDataDirty);
+  }, [formData, selectedClient, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
     if (isFormDirty) {

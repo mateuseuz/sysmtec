@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,7 @@ import '../../styles/Clientes.css';
 function EdicaoVisita() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isFormDirty, setFormDirty } = useOutletContext();
   const [formData, setFormData] = useState({
     titulo: '',
     id_cliente: '',
@@ -22,8 +23,7 @@ function EdicaoVisita() {
   const [erros, setErros] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
-
+  
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -34,10 +34,12 @@ function EdicaoVisita() {
         const visitaData = await api.buscarVisita(id);
         const { data_agendamento } = visitaData;
         const date = new Date(data_agendamento);
-
+        const cliente = visitaData.id_cliente ? await api.buscarCliente(visitaData.id_cliente) : null;
+        
         const initialData = {
           titulo: visitaData.titulo || '',
           id_cliente: visitaData.id_cliente || '',
+          selectedClient: cliente,
           data: date.toISOString().slice(0, 10),
           hora: date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
           endereco: visitaData.endereco || '',
@@ -46,9 +48,9 @@ function EdicaoVisita() {
         setFormData(initialData);
         setInitialFormData(initialData);
 
-        if (visitaData.id_cliente) {
-          setClientSearch(visitaData.nome_cliente);
-          setSelectedClient({ id_cliente: visitaData.id_cliente, nome: visitaData.nome_cliente });
+        if (cliente) {
+          setClientSearch(cliente.nome);
+          setSelectedClient(cliente);
         }
 
       } catch (error) {
@@ -63,12 +65,20 @@ function EdicaoVisita() {
 
   useEffect(() => {
     if (initialFormData) {
-      setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+      const isClientDirty = initialFormData.selectedClient?.id_cliente !== selectedClient?.id_cliente;
+      const isFormDataDirty = (
+        formData.titulo !== initialFormData.titulo ||
+        formData.data !== initialFormData.data ||
+        formData.hora !== initialFormData.hora ||
+        formData.endereco !== initialFormData.endereco ||
+        formData.observacoes !== initialFormData.observacoes
+      );
+      setFormDirty(isClientDirty || isFormDataDirty);
     }
-  }, [formData, initialFormData]);
+  }, [formData, selectedClient, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
-    if (isDirty) {
+    if (isFormDirty) {
       setIsModalOpen(true);
     } else {
       navigate('/agenda');
@@ -149,6 +159,7 @@ function EdicaoVisita() {
 
     try {
       await api.atualizarVisita(id, visitaParaSalvar);
+      setFormDirty(false);
       toast.success('Visita atualizada com sucesso!');
       navigate('/agenda');
     } catch (error) {
@@ -199,7 +210,7 @@ function EdicaoVisita() {
             </ul>
           )}
         </div>
-
+        
         <div className="form-row">
           <div className="form-group">
             <label>Data <span className="required-asterisk">*</span></label>
@@ -251,8 +262,8 @@ function EdicaoVisita() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
-          setIsDirty(false); // reseta o "dirty" antes de sair
-          setTimeout(() => navigate('/agenda'), 0); // navega logo depois
+          setFormDirty(false);
+          setTimeout(() => navigate('/agenda'), 0);
         }}
         message="Você tem certeza que quer descartar as alterações?"
       />

@@ -33,19 +33,22 @@ const EdicaoOrcamento = () => {
     const carregarOrcamento = async () => {
       try {
         const orcamento = await api.buscarOrcamento(id);
+        const cliente = orcamento.id_cliente ? await api.buscarCliente(orcamento.id_cliente) : null;
+        
         const initialData = {
           nomeOrcamento: orcamento.nome,
+          clienteSelecionado: cliente,
           observacoes: orcamento.observacoes || '',
           itens: orcamento.itens.length > 0 ? orcamento.itens : [{ nome: '', quantidade: 1, valor: '' }],
         };
+
         setNomeOrcamento(initialData.nomeOrcamento);
+        setClienteSelecionado(initialData.clienteSelecionado);
         setObservacoes(initialData.observacoes);
         setItens(initialData.itens);
         setInitialFormData(initialData);
 
-        if (orcamento.id_cliente) {
-          const cliente = await api.buscarCliente(orcamento.id_cliente);
-          setClienteSelecionado(cliente);
+        if (cliente) {
           setTermoBusca(cliente.nome);
         }
       } catch (error) {
@@ -62,12 +65,13 @@ const EdicaoOrcamento = () => {
     if (initialFormData) {
       const currentFormData = {
         nomeOrcamento,
+        clienteSelecionado,
         observacoes,
         itens,
       };
       setFormDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
     }
-  }, [nomeOrcamento, observacoes, itens, initialFormData, setFormDirty]);
+  }, [nomeOrcamento, clienteSelecionado, observacoes, itens, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
     if (isFormDirty) {

@@ -25,6 +25,7 @@ const CadastroOrcamento = () => {
   const [isUnsavedChangesModalOpen, setIsUnsavedChangesModalOpen] = useState(false);
   const [initialFormData] = useState({
     nomeOrcamento: '',
+    clienteSelecionado: null,
     observacoes: '',
     itens: [{ nome: '', quantidade: 1, valor: '' }],
   });
@@ -32,11 +33,12 @@ const CadastroOrcamento = () => {
   useEffect(() => {
     const currentFormData = {
       nomeOrcamento,
+      clienteSelecionado,
       observacoes,
       itens,
     };
     setFormDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
-  }, [nomeOrcamento, observacoes, itens, initialFormData, setFormDirty]);
+  }, [nomeOrcamento, clienteSelecionado, observacoes, itens, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
     if (isFormDirty) {
