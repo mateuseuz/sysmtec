@@ -17,7 +17,6 @@ function CadastroVisita() {
     hora: '',
     endereco: '',
     observacoes: '',
-    selectedClient: null
   });
   const [erros, setErros] = useState({});
   const [initialFormData] = useState({
@@ -27,6 +26,7 @@ function CadastroVisita() {
     hora: '',
     endereco: '',
     observacoes: '',
+    selectedClient: null
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
