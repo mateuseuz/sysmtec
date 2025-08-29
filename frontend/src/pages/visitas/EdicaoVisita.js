@@ -23,7 +23,7 @@ function EdicaoVisita() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
-  
+
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -34,7 +34,7 @@ function EdicaoVisita() {
         const visitaData = await api.buscarVisita(id);
         const { data_agendamento } = visitaData;
         const date = new Date(data_agendamento);
-        
+
         const initialData = {
           titulo: visitaData.titulo || '',
           id_cliente: visitaData.id_cliente || '',
@@ -199,7 +199,7 @@ function EdicaoVisita() {
             </ul>
           )}
         </div>
-        
+
         <div className="form-row">
           <div className="form-group">
             <label>Data <span className="required-asterisk">*</span></label>
@@ -250,7 +250,10 @@ function EdicaoVisita() {
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={() => navigate('/agenda')}
+        onConfirm={() => {
+          setIsDirty(false); // reseta o "dirty" antes de sair
+          setTimeout(() => navigate('/agenda'), 0); // navega logo depois
+        }}
         message="Você tem certeza que quer descartar as alterações?"
       />
     </>

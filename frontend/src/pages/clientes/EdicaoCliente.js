@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { validarCPFCNPJ, validarCelular, formatCPForCNPJ, formatCelular } from '../../utils/validations';
@@ -11,6 +11,7 @@ import '../../styles/Clientes.css';
 function EdicaoCliente() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isFormDirty, setFormDirty } = useOutletContext();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     nome: '',
@@ -23,7 +24,6 @@ function EdicaoCliente() {
   const [initialFormData, setInitialFormData] = useState(null);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const carregarCliente = async () => {
@@ -52,12 +52,12 @@ function EdicaoCliente() {
 
   useEffect(() => {
     if (initialFormData) {
-      setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+      setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
     }
-  }, [formData, initialFormData]);
+  }, [formData, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
-    if (isDirty) {
+    if (isFormDirty) {
       setIsModalOpen(true);
     } else {
       navigate('/clientes');
@@ -174,6 +174,7 @@ function EdicaoCliente() {
       };
 
       await api.atualizarCliente(id, payload);
+      setFormDirty(false);
       toast.success('Cliente atualizado com sucesso!');
       navigate('/clientes');
     } catch (error) {
@@ -286,7 +287,10 @@ function EdicaoCliente() {
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={() => navigate('/clientes')}
+        onConfirm={() => {
+          setFormDirty(false);
+          setTimeout(() => navigate('/clientes'), 0);
+        }}
         message="Você tem certeza que quer descartar as alterações?"
       />
     </>

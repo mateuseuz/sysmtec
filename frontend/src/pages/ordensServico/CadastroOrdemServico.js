@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import '../../styles/Clientes.css';
 
 function CadastroOrdemServico() {
   const navigate = useNavigate();
+  const { isFormDirty, setFormDirty } = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome: '',
@@ -24,7 +25,6 @@ function CadastroOrdemServico() {
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
 
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
@@ -33,11 +33,11 @@ function CadastroOrdemServico() {
   const [orcamentos, setOrcamentos] = useState([]);
 
   useEffect(() => {
-    setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
-  }, [formData, initialFormData]);
+    setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+  }, [formData, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
-    if (isDirty) {
+    if (isFormDirty) {
       setIsModalOpen(true);
     } else {
       navigate('/ordens-servico');
@@ -125,6 +125,7 @@ function CadastroOrdemServico() {
     setIsLoading(true);
     try {
       await api.criarOrdemServico(formData);
+      setFormDirty(false);
       toast.success('Ordem de serviço cadastrada com sucesso!');
       navigate('/ordens-servico');
     } catch (error) {
@@ -232,7 +233,10 @@ function CadastroOrdemServico() {
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={() => navigate('/ordens-servico')}
+        onConfirm={() => {
+          setFormDirty(false);
+          setTimeout(() => navigate('/ordens-servico'), 0);
+        }}
         message="Você tem certeza que quer descartar as alterações?"
       />
     </>

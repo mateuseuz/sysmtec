@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ConfirmationModal from './ConfirmationModal';
 
-const NavLink = ({ to, icon, isDirty = false, children }) => {
+const NavLink = ({ to, icon, isDirty = false, setFormDirty, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +20,9 @@ const NavLink = ({ to, icon, isDirty = false, children }) => {
 
   const confirmNavigation = () => {
     setIsModalOpen(false);
+    if (setFormDirty) {
+      setFormDirty(false);
+    }
     navigate(to);
   };
 

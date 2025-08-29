@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import '../../styles/Clientes.css';
 
 function CadastroVisita() {
   const navigate = useNavigate();
+  const { isFormDirty, setFormDirty } = useOutletContext();
   const [formData, setFormData] = useState({
     titulo: '',
     id_cliente: '',
@@ -28,18 +29,17 @@ function CadastroVisita() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
   
   const [clientSearch, setClientSearch] = useState('');
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
 
   useEffect(() => {
-    setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
-  }, [formData, initialFormData]);
+    setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+  }, [formData, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
-    if (isDirty) {
+    if (isFormDirty) {
       setIsModalOpen(true);
     } else {
       navigate('/agenda');
@@ -121,6 +121,7 @@ function CadastroVisita() {
 
     try {
       await api.criarVisita(visitaParaSalvar);
+      setFormDirty(false);
       toast.success('Visita cadastrada com sucesso!');
       navigate('/agenda');
     } catch (error) {
@@ -226,7 +227,10 @@ function CadastroVisita() {
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={() => navigate('/agenda')}
+        onConfirm={() => {
+          setFormDirty(false);
+          setTimeout(() => navigate('/agenda'), 0);
+        }}
         message="Você tem certeza que quer descartar as alterações?"
       />
     </>

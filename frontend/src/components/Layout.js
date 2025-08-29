@@ -15,17 +15,17 @@ const Layout = () => {
         </header>
         <nav>
           <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt} isDirty={isFormDirty}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers} isDirty={isFormDirty}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench} isDirty={isFormDirty}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isFormDirty}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory} isDirty={isFormDirty}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs} isDirty={isFormDirty}>Painel de Controle</NavLink>
+<NavLink to="/agenda" icon={faCalendarAlt} isDirty={isFormDirty} setFormDirty={setFormDirty}>Agenda</NavLink>
+<NavLink to="/clientes" icon={faUsers} isDirty={isFormDirty} setFormDirty={setFormDirty}>Clientes</NavLink>
+<NavLink to="/ordens-servico" icon={faWrench} isDirty={isFormDirty} setFormDirty={setFormDirty}>Ordens de Serviço</NavLink>
+<NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isFormDirty} setFormDirty={setFormDirty}>Orçamentos</NavLink>
+<NavLink to="/logs" icon={faHistory} isDirty={isFormDirty} setFormDirty={setFormDirty}>Log de alterações</NavLink>
+<NavLink to="/painel-controle" icon={faCogs} isDirty={isFormDirty} setFormDirty={setFormDirty}>Painel de Controle</NavLink>
           </ul>
         </nav>
       </div>
       <main className="sysmtec-main">
-        <Outlet context={{ setFormDirty }} />
+<Outlet context={{ isFormDirty, setFormDirty }} />
       </main>
     </div>
   );

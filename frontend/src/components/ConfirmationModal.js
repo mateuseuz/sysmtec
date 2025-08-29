@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import '../styles/ConfirmationModal.css';
 
-const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
-  if (!isOpen) {
-    return null;
-  }
+const modalRoot =
+  document.getElementById('modal-root') || document.body;
 
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+const ConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  message,
+  closeOnBackdrop = true,
+}) => {
+  // trava o scroll enquanto o modal está aberto
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const modal = (
+    <div
+      className="modal-overlay"
+      onClick={closeOnBackdrop ? onClose : undefined}
+      role="presentation"
+    >
+      <div
+        className="modal-content"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
         <p>{message}</p>
         <div className="modal-actions">
           <button onClick={onConfirm} className="confirm-button">Confirmar</button>
@@ -17,6 +44,8 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
       </div>
     </div>
   );
+
+  return ReactDOM.createPortal(modal, modalRoot);
 };
 
 export default ConfirmationModal;

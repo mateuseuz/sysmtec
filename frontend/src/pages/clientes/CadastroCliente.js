@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { validarCPFCNPJ, validarCelular } from '../../utils/validations';
@@ -10,6 +10,7 @@ import '../../styles/Clientes.css';
 
 function CadastroCliente() {
   const navigate = useNavigate();
+  const { isFormDirty, setFormDirty } = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome: '',
@@ -29,14 +30,13 @@ function CadastroCliente() {
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
-    setIsDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
-  }, [formData, initialFormData]);
+    setFormDirty(JSON.stringify(formData) !== JSON.stringify(initialFormData));
+  }, [formData, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
-    if (isDirty) {
+    if (isFormDirty) {
       setIsModalOpen(true);
     } else {
       navigate('/clientes');
@@ -161,6 +161,7 @@ function CadastroCliente() {
     console.log('Payload enviado:', payload); // Para debug
 
     await api.criarCliente(payload);
+    setFormDirty(false);
     toast.success('Cliente cadastrado com sucesso!');
     navigate('/clientes');
   } catch (error) {
@@ -268,7 +269,10 @@ function CadastroCliente() {
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={() => navigate('/clientes')}
+        onConfirm={() => {
+          setFormDirty(false);
+          setTimeout(() => navigate('/clientes'), 0);
+        }}
         message="Você tem certeza que quer descartar as alterações?"
       />
     </>

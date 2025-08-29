@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,7 @@ import '../../styles/Orcamentos.css';
 
 const CadastroOrcamento = () => {
   const navigate = useNavigate();
+  const { isFormDirty, setFormDirty } = useOutletContext();
   const [nomeOrcamento, setNomeOrcamento] = useState('');
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [termoBusca, setTermoBusca] = useState('');
@@ -27,7 +28,6 @@ const CadastroOrcamento = () => {
     observacoes: '',
     itens: [{ nome: '', quantidade: 1, valor: '' }],
   });
-  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const currentFormData = {
@@ -35,11 +35,11 @@ const CadastroOrcamento = () => {
       observacoes,
       itens,
     };
-    setIsDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
-  }, [nomeOrcamento, observacoes, itens, initialFormData]);
+    setFormDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
+  }, [nomeOrcamento, observacoes, itens, initialFormData, setFormDirty]);
 
   const handleBackClick = () => {
-    if (isDirty) {
+    if (isFormDirty) {
       setIsUnsavedChangesModalOpen(true);
     } else {
       navigate('/orcamentos');
@@ -165,6 +165,7 @@ const CadastroOrcamento = () => {
     try {
       console.log('Enviando orçamento:', orcamento);
       await api.criarOrcamento(orcamento);
+      setFormDirty(false);
       toast.success('Orçamento cadastrado com sucesso!');
       navigate('/orcamentos');
     } catch (error) {
@@ -305,7 +306,10 @@ const CadastroOrcamento = () => {
       <ConfirmationModal
         isOpen={isUnsavedChangesModalOpen}
         onClose={() => setIsUnsavedChangesModalOpen(false)}
-        onConfirm={() => navigate('/orcamentos')}
+        onConfirm={() => {
+          setFormDirty(false);
+          setTimeout(() => navigate('/orcamentos'), 0);
+        }}
         message="Você tem certeza que quer descartar as alterações?"
       />
     </>
