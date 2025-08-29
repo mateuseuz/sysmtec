@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
-import NavLink from '../../components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEye, faPencilAlt, faTrashAlt, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -79,42 +78,26 @@ function ListagemVisitas() {
   };
 
   return (
-    <div className="sysmtec-container" onClick={closePopover}>
-      <header className="sysmtec-header"><h1>SYSMTEC</h1></header>
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
+    <div onClick={closePopover}>
+      <div className="agenda-header">
+        <Link to="/agenda/novo" className="add-client-link"><FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA</Link>
       </div>
 
-      <main className="sysmtec-main">
-        <div className="agenda-header">
-          <Link to="/agenda/novo" className="add-client-link"><FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA</Link>
+      {isLoading ? (
+        <div className="loading-container"><div className="spinner"></div><p>Carregando...</p></div>
+      ) : (
+        <div className="calendar-container">
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            events={calendarEvents}
+            eventClick={handleEventClick}
+            locale="pt-br"
+            buttonText={{ today: 'Hoje' }}
+            eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+          />
         </div>
-
-        {isLoading ? (
-          <div className="loading-container"><div className="spinner"></div><p>Carregando...</p></div>
-        ) : (
-          <div className="calendar-container">
-            <FullCalendar
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              events={calendarEvents}
-              eventClick={handleEventClick}
-              locale="pt-br"
-              buttonText={{ today: 'Hoje' }}
-              eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
-            />
-          </div>
-        )}
-      </main>
+      )}
 
       {popover.visible && (
         <div

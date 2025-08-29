@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavLink from '../../components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
@@ -176,146 +175,127 @@ const CadastroOrcamento = () => {
   };
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
+    <>
+      <button type="button" onClick={handleBackClick} className="back-button">
+        <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      </button>
 
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt} isDirty={isDirty}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers} isDirty={isDirty}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench} isDirty={isDirty}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isDirty}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory} isDirty={isDirty}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs} isDirty={isDirty}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
-      </div>
-
-      <main className="sysmtec-main">
-        <button type="button" onClick={handleBackClick} className="back-button">
-          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
-        </button>
-
-        <form onSubmit={handleSubmit} className="cliente-form" noValidate>
-          <div className="form-group">
-            <label>Nome <span className="required-asterisk">*</span></label>
+      <form onSubmit={handleSubmit} className="cliente-form" noValidate>
+        <div className="form-group">
+          <label>Nome <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            value={nomeOrcamento}
+            onChange={e => setNomeOrcamento(e.target.value)}
+            placeholder="Nome do orçamento"
+            className={erros.nomeOrcamento ? 'error' : ''}
+          />
+        </div>
+        <div className="form-group">
+          <label>Vincular orçamento ao cliente</label>
+          <div className="autocomplete-container">
             <input
               type="text"
-              value={nomeOrcamento}
-              onChange={e => setNomeOrcamento(e.target.value)}
-              placeholder="Nome do orçamento"
-              className={erros.nomeOrcamento ? 'error' : ''}
+              value={termoBusca}
+              onChange={e => {
+                setTermoBusca(e.target.value);
+                setClienteSelecionado(null);
+              }}
+              placeholder="Nome do cliente"
+              className={erros.cliente ? 'error' : ''}
             />
+            {sugestoes.length > 0 && (
+              <ul className="sugestoes-lista">
+                {sugestoes.map(cliente => (
+                  <li
+                    key={cliente.id_cliente}
+                    onMouseDown={() => { // Usar onMouseDown para evitar problemas de foco
+                      setClienteSelecionado(cliente);
+                      setTermoBusca(cliente.nome);
+                      setSugestoes([]);
+                    }}
+                  >
+                    {cliente.nome}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <div className="form-group">
-            <label>Vincular orçamento ao cliente</label>
-            <div className="autocomplete-container">
+        </div>
+
+        <div className="itens-orcamento-grid-container">
+          {/* Cabeçalho do Grid */}
+          <label className="grid-header">Item <span className="required-asterisk">*</span></label>
+          <label className="grid-header">Qtd. <span className="required-asterisk">*</span></label>
+          <label className="grid-header">Valor (un.) <span className="required-asterisk">*</span></label>
+          <div /> {/* Célula vazia para alinhar com o botão de remover */}
+
+          {/* Linhas de Itens */}
+          {itens.map((item, index) => (
+            <React.Fragment key={index}>
               <input
                 type="text"
-                value={termoBusca}
-                onChange={e => {
-                  setTermoBusca(e.target.value);
-                  setClienteSelecionado(null);
-                }}
-                placeholder="Nome do cliente"
-                className={erros.cliente ? 'error' : ''}
+                name="nome"
+                placeholder="Produto/serviço"
+                value={item.nome}
+                onChange={e => handleItemChange(index, e)}
+                className={erros.itens?.[index]?.nome ? 'error' : ''}
               />
-              {sugestoes.length > 0 && (
-                <ul className="sugestoes-lista">
-                  {sugestoes.map(cliente => (
-                    <li
-                      key={cliente.id_cliente}
-                      onMouseDown={() => { // Usar onMouseDown para evitar problemas de foco
-                        setClienteSelecionado(cliente);
-                        setTermoBusca(cliente.nome);
-                        setSugestoes([]);
-                      }}
-                    >
-                      {cliente.nome}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
+              <input
+                type="number"
+                name="quantidade"
+                placeholder="Qtd."
+                value={item.quantidade}
+                onChange={e => handleItemChange(index, e)}
+                min="0"
+                className={erros.itens?.[index]?.quantidade ? 'error' : ''}
+              />
+              <input
+                type="number"
+                name="valor"
+                placeholder="0,00"
+                value={item.valor}
+                onChange={e => handleItemChange(index, e)}
+                min="0"
+                className={erros.itens?.[index]?.valor ? 'error' : ''}
+              />
+              <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
+            </React.Fragment>
+          ))}
+        </div>
+        <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
 
-          <div className="itens-orcamento-grid-container">
-            {/* Cabeçalho do Grid */}
-            <label className="grid-header">Item <span className="required-asterisk">*</span></label>
-            <label className="grid-header">Qtd. <span className="required-asterisk">*</span></label>
-            <label className="grid-header">Valor (un.) <span className="required-asterisk">*</span></label>
-            <div /> {/* Célula vazia para alinhar com o botão de remover */}
+        <div className="form-group">
+          <label>Valor total</label>
+          <input
+            type="text"
+            value={valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            disabled
+          />
+        </div>
 
-            {/* Linhas de Itens */}
-            {itens.map((item, index) => (
-              <React.Fragment key={index}>
-                <input
-                  type="text"
-                  name="nome"
-                  placeholder="Produto/serviço"
-                  value={item.nome}
-                  onChange={e => handleItemChange(index, e)}
-                  className={erros.itens?.[index]?.nome ? 'error' : ''}
-                />
-                <input
-                  type="number"
-                  name="quantidade"
-                  placeholder="Qtd."
-                  value={item.quantidade}
-                  onChange={e => handleItemChange(index, e)}
-                  min="0"
-                  className={erros.itens?.[index]?.quantidade ? 'error' : ''}
-                />
-                <input
-                  type="number"
-                  name="valor"
-                  placeholder="0,00"
-                  value={item.valor}
-                  onChange={e => handleItemChange(index, e)}
-                  min="0"
-                  className={erros.itens?.[index]?.valor ? 'error' : ''}
-                />
-                <button type="button" onClick={() => handleRemoveItem(index)} className="remove-item-btn">Remover</button>
-              </React.Fragment>
-            ))}
-          </div>
-          <button type="button" onClick={handleAddItem} className="add-item-btn">Adicionar item</button>
+        <div className="form-group">
+          <label>Observações</label>
+          <textarea
+            value={observacoes}
+            onChange={e => setObservacoes(e.target.value)}
+            placeholder="Observações sobre o orçamento"
+          />
+        </div>
 
-          <div className="form-group">
-            <label>Valor total</label>
-            <input
-              type="text"
-              value={valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Observações</label>
-            <textarea
-              value={observacoes}
-              onChange={e => setObservacoes(e.target.value)}
-              placeholder="Observações sobre o orçamento"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`submit-button ${isLoading ? 'loading' : ''}`}
-          >
-            {isLoading ? (
-              <>
-                <span className="spinner"></span>
-                Salvando...
-              </>
-            ) : 'Salvar orçamento'}
-          </button>
-        </form>
-      </main>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`submit-button ${isLoading ? 'loading' : ''}`}
+        >
+          {isLoading ? (
+            <>
+              <span className="spinner"></span>
+              Salvando...
+            </>
+          ) : 'Salvar orçamento'}
+        </button>
+      </form>
       <ConfirmationModal
         isOpen={isRemoveItemModalOpen}
         onClose={() => setIsRemoveItemModalOpen(false)}
@@ -328,7 +308,7 @@ const CadastroOrcamento = () => {
         onConfirm={() => navigate('/orcamentos')}
         message="Você tem certeza que quer descartar as alterações?"
       />
-    </div>
+    </>
   );
 };
 

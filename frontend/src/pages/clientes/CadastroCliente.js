@@ -4,8 +4,7 @@ import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { validarCPFCNPJ, validarCelular } from '../../utils/validations';
 import ConfirmationModal from '../../components/ConfirmationModal';
-import NavLink from '../../components/NavLink';
-import { faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../styles/Clientes.css';
 
@@ -173,125 +172,106 @@ function CadastroCliente() {
 };
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
+    <>
+      <button type="button" onClick={handleBackClick} className="back-button">
+        <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      </button>
 
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt} isDirty={isDirty}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers} isDirty={isDirty}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench} isDirty={isDirty}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isDirty}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory} isDirty={isDirty}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs} isDirty={isDirty}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
-      </div>
+      <form onSubmit={handleSubmit} className="cliente-form">
+        <div className="form-group">
+          <label>Nome <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            name="nome"
+            value={formData.nome}
+            onChange={handleChange}
+            placeholder="Nome do cliente"
+            className={errors.nome ? 'error' : ''}
+          />
+          {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
+        </div>
 
-      <main className="sysmtec-main">
-        <button type="button" onClick={handleBackClick} className="back-button">
-          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+        <div className="form-group">
+          <label>CPF/CNPJ <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            name="cpf_cnpj"
+            value={formData.cpf_cnpj}
+            onChange={handleChange}
+            className={errors.cpf_cnpj ? 'error' : ''}
+            placeholder="000.000.000-00 ou 00.000.000/0000-00"
+          />
+          {/* {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>} */}
+        </div>
+
+        <div className="form-group">
+          <label>Celular <span className="required-asterisk">*</span></label>
+          <input
+            type="tel"
+            name="celular"
+            value={formData.celular}
+            onChange={handleChange}
+            className={errors.celular ? 'error' : ''}
+            placeholder="(00) 00000-0000"
+          />
+          {/* {errors.celular && <span className="error-message">{errors.celular}</span>} */}
+        </div>
+
+        <div className="form-group">
+          <label>Endereço</label>
+          <input
+            type="text"
+            name="endereco"
+            value={formData.endereco}
+            onChange={handleChange}
+            placeholder="Endereço do cliente"
+          />
+        </div>
+
+        <div className="form-group">
+          <label>E-mail</label>
+          <input
+            type="text"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Endereço de e-mail do cliente"
+            className={errors.email ? 'error' : ''}
+          />
+          {/* {errors.email && <span className="error-message">{errors.email}</span>} */}
+        </div>
+
+        <div className="form-group">
+          <label>Observações</label>
+          <textarea
+            name="observacoes"
+            value={formData.observacoes}
+            onChange={handleChange}
+            placeholder="Observações sobre o cliente"
+            maxLength="500"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          className={`submit-button ${isLoading ? 'loading' : ''}`}
+        >
+          {isLoading ? (
+            <>
+              <span className="spinner"></span>
+              Salvando...
+            </>
+          ) : 'Salvar cliente'}
         </button>
-
-        <form onSubmit={handleSubmit} className="cliente-form">
-          <div className="form-group">
-            <label>Nome <span className="required-asterisk">*</span></label>
-            <input
-              type="text"
-              name="nome"
-              value={formData.nome}
-              onChange={handleChange}
-              placeholder="Nome do cliente"
-              className={errors.nome ? 'error' : ''}
-            />
-            {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
-          </div>
-
-          <div className="form-group">
-            <label>CPF/CNPJ <span className="required-asterisk">*</span></label>
-            <input
-              type="text"
-              name="cpf_cnpj"
-              value={formData.cpf_cnpj}
-              onChange={handleChange}
-              className={errors.cpf_cnpj ? 'error' : ''}
-              placeholder="000.000.000-00 ou 00.000.000/0000-00"
-            />
-            {/* {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>} */}
-          </div>
-
-          <div className="form-group">
-            <label>Celular <span className="required-asterisk">*</span></label>
-            <input
-              type="tel"
-              name="celular"
-              value={formData.celular}
-              onChange={handleChange}
-              className={errors.celular ? 'error' : ''}
-              placeholder="(00) 00000-0000"
-            />
-            {/* {errors.celular && <span className="error-message">{errors.celular}</span>} */}
-          </div>
-
-          <div className="form-group">
-            <label>Endereço</label>
-            <input
-              type="text"
-              name="endereco"
-              value={formData.endereco}
-              onChange={handleChange}
-              placeholder="Endereço do cliente"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>E-mail</label>
-            <input
-              type="text"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Endereço de e-mail do cliente"
-              className={errors.email ? 'error' : ''}
-            />
-            {/* {errors.email && <span className="error-message">{errors.email}</span>} */}
-          </div>
-
-          <div className="form-group">
-            <label>Observações</label>
-            <textarea
-              name="observacoes"
-              value={formData.observacoes}
-              onChange={handleChange}
-              placeholder="Observações sobre o cliente"
-              maxLength="500"
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className={`submit-button ${isLoading ? 'loading' : ''}`}
-          >
-            {isLoading ? (
-              <>
-                <span className="spinner"></span>
-                Salvando...
-              </>
-            ) : 'Salvar cliente'}
-          </button>
-        </form>
-      </main>
+      </form>
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => navigate('/clientes')}
         message="Você tem certeza que quer descartar as alterações?"
       />
-    </div>
+    </>
   );
 }
 

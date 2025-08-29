@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
-import NavLink from '../../components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEye, faPencilAlt, faTrashAlt, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/Clientes.css';
 
 function ListagemOrcamentos() {
@@ -61,99 +60,80 @@ function ListagemOrcamentos() {
   };
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
-
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
+    <>
+      <div className="clientes-header">
+        <Link to="/orcamentos/novo" className="add-client-link">
+          <FontAwesomeIcon icon={faPlus} /> CADASTRAR ORÇAMENTO
+        </Link>
       </div>
 
-      <main className="sysmtec-main">
-        <div className="clientes-header">
-          <Link to="/orcamentos/novo" className="add-client-link">
-            <FontAwesomeIcon icon={faPlus} /> CADASTRAR ORÇAMENTO
-          </Link>
+      {isLoading ? (
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Carregando orçamentos...</p>
         </div>
-
-        {isLoading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Carregando orçamentos...</p>
-          </div>
-        ) : orcamentos.length === 0 ? (
-          <div className="no-results">
-            <p>Nenhum orçamento cadastrado ainda</p>
-          </div>
-        ) : (
-          <div className="clientes-table-container">
-            <table className="clientes-table">
-              <thead>
-                <tr>
-                  <th>Nome do orçamento</th>
-                  <th>Cliente</th>
-                  <th>Valor total</th>
-                  <th>Ações</th>
+      ) : orcamentos.length === 0 ? (
+        <div className="no-results">
+          <p>Nenhum orçamento cadastrado ainda</p>
+        </div>
+      ) : (
+        <div className="clientes-table-container">
+          <table className="clientes-table">
+            <thead>
+              <tr>
+                <th>Nome do orçamento</th>
+                <th>Cliente</th>
+                <th>Valor total</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orcamentos.map(orcamento => (
+                <tr key={orcamento.id_orcamento}>
+                  <td>{orcamento.nome}</td>
+                  <td>{orcamento.nome_cliente || 'N/A'}</td>
+                  <td>
+                    {new Intl.NumberFormat('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    }).format(orcamento.valor_total)}
+                  </td>
+                  <td className="actions-cell">
+                    <Link
+                      to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
+                      className="view-button"
+                      title="Visualizar orçamento"
+                    >
+                      <FontAwesomeIcon icon={faEye} />
+                    </Link>
+                    <Link
+                      to={`/orcamentos/editar/${orcamento.id_orcamento}`}
+                      className="edit-button"
+                      title="Editar orçamento"
+                    >
+                      <FontAwesomeIcon icon={faPencilAlt} />
+                    </Link>
+                    <button
+                      onClick={() => handleExcluir(orcamento.id_orcamento)}
+                      className="delete-button"
+                      title="Excluir orçamento"
+                    >
+                      <FontAwesomeIcon icon={faTrashAlt} />
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {orcamentos.map(orcamento => (
-                  <tr key={orcamento.id_orcamento}>
-                    <td>{orcamento.nome}</td>
-                    <td>{orcamento.nome_cliente || 'N/A'}</td>
-                    <td>
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      }).format(orcamento.valor_total)}
-                    </td>
-                    <td className="actions-cell">
-                      <Link
-                        to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
-                        className="view-button"
-                        title="Visualizar orçamento"
-                      >
-                        <FontAwesomeIcon icon={faEye} />
-                      </Link>
-                      <Link
-                        to={`/orcamentos/editar/${orcamento.id_orcamento}`}
-                        className="edit-button"
-                        title="Editar orçamento"
-                      >
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                      </Link>
-                      <button
-                        onClick={() => handleExcluir(orcamento.id_orcamento)}
-                        className="delete-button"
-                        title="Excluir orçamento"
-                      >
-                        <FontAwesomeIcon icon={faTrashAlt} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </main>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={confirmExcluir}
         message="Tem certeza que deseja excluir este orçamento?"
       />
-    </div>
+    </>
   );
 }
 

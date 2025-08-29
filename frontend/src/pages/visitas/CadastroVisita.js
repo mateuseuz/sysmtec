@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavLink from '../../components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
@@ -132,124 +131,105 @@ function CadastroVisita() {
   };
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
-      
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt} isDirty={isDirty}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers} isDirty={isDirty}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench} isDirty={isDirty}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isDirty}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory} isDirty={isDirty}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs} isDirty={isDirty}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
-      </div>
+    <>
+      <button type="button" onClick={handleBackClick} className="back-button">
+        <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      </button>
 
-      <main className="sysmtec-main">
-        <button type="button" onClick={handleBackClick} className="back-button">
-          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      <form onSubmit={handleSubmit} className="cliente-form">
+
+        <div className="form-group">
+          <label>Nome <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            name="titulo"
+            placeholder="Ex: Visita técnica para orçamento"
+            value={formData.titulo}
+            onChange={handleChange}
+            className={erros.titulo ? 'error' : ''}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Vincular visita ao cliente</label>
+          <input
+            type="text"
+            value={clientSearch}
+            onChange={handleClientChange}
+            placeholder="Digite para buscar..."
+            autoComplete="off"
+          />
+          {clientSuggestions.length > 0 && (
+            <ul className="suggestions-list">
+              {clientSuggestions.map(client => (
+                <li key={client.id_cliente} onMouseDown={() => handleClientSuggestionClick(client)}>
+                  {client.nome}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        
+        <div className="form-row">
+          <div className="form-group">
+            <label>Data <span className="required-asterisk">*</span></label>
+            <input
+              type="date"
+              name="data"
+              value={formData.data}
+              onChange={handleChange}
+              className={erros.data ? 'error' : ''}
+            />
+          </div>
+          <div className="form-group">
+            <label>Hora <span className="required-asterisk">*</span></label>
+            <input
+              type="time"
+              name="hora"
+              value={formData.hora}
+              onChange={handleChange}
+              className={erros.hora ? 'error' : ''}
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label>Endereço <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            name="endereco"
+            placeholder="Insira o endereço do local da visita"
+            value={formData.endereco}
+            onChange={handleChange}
+            className={erros.endereco ? 'error' : ''}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Observações</label>
+          <textarea
+            name="observacoes"
+            placeholder="Observações sobre a visita..."
+            value={formData.observacoes}
+            onChange={handleChange}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`submit-button ${isLoading ? 'loading' : ''}`}
+        >
+          {isLoading ? 'Salvando...' : 'Salvar visita'}
         </button>
-
-        <form onSubmit={handleSubmit} className="cliente-form">
-
-          <div className="form-group">
-            <label>Nome <span className="required-asterisk">*</span></label>
-            <input
-              type="text"
-              name="titulo"
-              placeholder="Ex: Visita técnica para orçamento"
-              value={formData.titulo}
-              onChange={handleChange}
-              className={erros.titulo ? 'error' : ''}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Vincular visita ao cliente</label>
-            <input
-              type="text"
-              value={clientSearch}
-              onChange={handleClientChange}
-              placeholder="Digite para buscar..."
-              autoComplete="off"
-            />
-            {clientSuggestions.length > 0 && (
-              <ul className="suggestions-list">
-                {clientSuggestions.map(client => (
-                  <li key={client.id_cliente} onMouseDown={() => handleClientSuggestionClick(client)}>
-                    {client.nome}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          
-          <div className="form-row">
-            <div className="form-group">
-              <label>Data <span className="required-asterisk">*</span></label>
-              <input
-                type="date"
-                name="data"
-                value={formData.data}
-                onChange={handleChange}
-                className={erros.data ? 'error' : ''}
-              />
-            </div>
-            <div className="form-group">
-              <label>Hora <span className="required-asterisk">*</span></label>
-              <input
-                type="time"
-                name="hora"
-                value={formData.hora}
-                onChange={handleChange}
-                className={erros.hora ? 'error' : ''}
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Endereço <span className="required-asterisk">*</span></label>
-            <input
-              type="text"
-              name="endereco"
-              placeholder="Insira o endereço do local da visita"
-              value={formData.endereco}
-              onChange={handleChange}
-              className={erros.endereco ? 'error' : ''}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Observações</label>
-            <textarea
-              name="observacoes"
-              placeholder="Observações sobre a visita..."
-              value={formData.observacoes}
-              onChange={handleChange}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`submit-button ${isLoading ? 'loading' : ''}`}
-          >
-            {isLoading ? 'Salvando...' : 'Salvar visita'}
-          </button>
-        </form>
-      </main>
+      </form>
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => navigate('/agenda')}
         message="Você tem certeza que quer descartar as alterações?"
       />
-    </div>
+    </>
   );
 }
 

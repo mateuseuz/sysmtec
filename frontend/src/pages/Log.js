@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/Clientes.css';
 
@@ -24,56 +23,36 @@ function LogPage() {
 
   if (loading) {
     return (
-      <div className="sysmtec-container">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Carregando logs...</p>
-        </div>
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Carregando logs...</p>
       </div>
     );
   }
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
-
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li className="active"><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
-            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
-          </ul>
-        </nav>
-      </div>
-      <main className="sysmtec-main">
-        <div className="clientes-table-container">
-          <table className="clientes-table">
-            <thead>
-              <tr>
-                <th>Autor</th>
-                <th>Ação</th>
-                <th>Data e Hora</th>
+    <>
+      <div className="clientes-table-container">
+        <table className="clientes-table">
+          <thead>
+            <tr>
+              <th>Autor</th>
+              <th>Ação</th>
+              <th>Data e Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            {logs.map((log) => (
+              <tr key={log.id_log}>
+                <td>{log.autor}</td>
+                <td>{log.acao}</td>
+                <td>{new Date(log.data).toLocaleString('pt-BR')}</td>
               </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log.id_log}>
-                  <td>{log.autor}</td>
-                  <td>{log.acao}</td>
-                  <td>{new Date(log.data).toLocaleString('pt-BR')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 

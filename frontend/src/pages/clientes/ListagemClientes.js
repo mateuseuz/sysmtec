@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavLink from '../../components/NavLink';
-import { faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs, faPlus, faEye, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEye, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import api from '../../services/api';
 import { formatCPForCNPJ, formatCelular } from '../../utils/validations';
@@ -70,96 +69,77 @@ function ListagemClientes() {
   };
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
-
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
+    <>
+      <div className="clientes-header">
+        <Link to="/clientes/novo" className="add-client-link">
+          <FontAwesomeIcon icon={faPlus} /> CADASTRAR CLIENTE
+        </Link>
       </div>
 
-      <main className="sysmtec-main">
-        <div className="clientes-header">
-          <Link to="/clientes/novo" className="add-client-link">
-            <FontAwesomeIcon icon={faPlus} /> CADASTRAR CLIENTE
-          </Link>
+      {isLoading ? (
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Carregando clientes...</p>
         </div>
-
-        {isLoading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Carregando clientes...</p>
-          </div>
-        ) : clientes.length === 0 ? (
-          <div className="no-results">
-            <p>Nenhum cliente cadastrado ainda</p>
-          </div>
-        ) : (
-          <div className="clientes-table-container">
-            <table className="clientes-table">
-              <thead>
-                <tr>
-                  <th>Nome do cliente</th>
-                  <th>CPF/CNPJ</th>
-                  <th>Celular</th>
-                  <th>Ações</th>
+      ) : clientes.length === 0 ? (
+        <div className="no-results">
+          <p>Nenhum cliente cadastrado ainda</p>
+        </div>
+      ) : (
+        <div className="clientes-table-container">
+          <table className="clientes-table">
+            <thead>
+              <tr>
+                <th>Nome do cliente</th>
+                <th>CPF/CNPJ</th>
+                <th>Celular</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clientes.map(cliente => (
+                <tr key={cliente.id_cliente}>
+                  <td>
+                    {cliente.nome}
+                  </td>
+                  <td>{formatCPForCNPJ(cliente.cpf_cnpj) || '-'}</td>
+                  <td>{formatCelular(cliente.celular) || '-'}</td>
+                  <td className="actions-cell">
+                    <Link
+                      to={`/clientes/visualizar/${cliente.id_cliente}`}
+                      className="view-button"
+                      title="Visualizar cliente"
+                    >
+                      <FontAwesomeIcon icon={faEye} />
+                    </Link>
+                    <Link 
+                      to={`/clientes/editar/${cliente.id_cliente}`} 
+                      className="edit-button"
+                      title="Editar cliente"
+                    >
+                      <FontAwesomeIcon icon={faPencilAlt} />
+                    </Link>
+                    <button 
+                      onClick={() => handleExcluir(cliente.id_cliente)}
+                      className="delete-button"
+                      title="Excluir cliente"
+                    >
+                      <FontAwesomeIcon icon={faTrashAlt} />
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {clientes.map(cliente => (
-                  <tr key={cliente.id_cliente}>
-                    <td>
-                      {cliente.nome}
-                    </td>
-                    <td>{formatCPForCNPJ(cliente.cpf_cnpj) || '-'}</td>
-                    <td>{formatCelular(cliente.celular) || '-'}</td>
-                    <td className="actions-cell">
-                      <Link
-                        to={`/clientes/visualizar/${cliente.id_cliente}`}
-                        className="view-button"
-                        title="Visualizar cliente"
-                      >
-                        <FontAwesomeIcon icon={faEye} />
-                      </Link>
-                      <Link 
-                        to={`/clientes/editar/${cliente.id_cliente}`} 
-                        className="edit-button"
-                        title="Editar cliente"
-                      >
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                      </Link>
-                      <button 
-                        onClick={() => handleExcluir(cliente.id_cliente)}
-                        className="delete-button"
-                        title="Excluir cliente"
-                      >
-                        <FontAwesomeIcon icon={faTrashAlt} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </main>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={confirmExcluir}
         message="Tem certeza que deseja excluir este cliente e todos os dados associados?"
       />
-    </div>
+    </>
   );
 }
 

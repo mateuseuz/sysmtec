@@ -43,108 +43,87 @@ function VisualizacaoCliente() {
 
   if (isLoading) {
     return (
-      <div className="sysmtec-container">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Carregando cliente...</p>
-        </div>
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Carregando cliente...</p>
       </div>
     );
   }
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
+    <>
+      <Link to="/clientes" className="back-button">⬅️ VOLTAR</Link>
 
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <li><Link to="/agenda"><span>🗓️</span>Agenda</Link></li>
-            <li className="active"><Link to="/clientes"><span>👥</span>Clientes</Link></li>
-            <li><Link to="/ordens-servico"><span>🛠️</span>Ordens de Serviço</Link></li>
-            <li><Link to="/orcamentos"><span>📄</span>Orçamentos</Link></li>
-            <li><Link to="/logs"><span>📋</span>Log de alterações</Link></li>
-            <li><Link to="/painel-controle"><span>⚙️</span>Painel de Controle</Link></li>
-          </ul>
-        </nav>
-      </div>
-
-      <main className="sysmtec-main">
-        <Link to="/clientes" className="back-button">⬅️ VOLTAR</Link>
-
-        <div className="cliente-form"> {}
-          <div className="form-group">
-            <label>Nome</label> {}
-            <input
-              type="text"
-              name="nome"
-              value={formData.nome}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>CPF/CNPJ</label> {}
-            <input
-              type="text"
-              name="cpf_cnpj"
-              value={formData.cpf_cnpj}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Celular</label>
-            <input
-              type="tel"
-              name="celular"
-              value={formData.celular}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Endereço</label>
-            <input
-              type="text"
-              name="endereco"
-              value={formData.endereco}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>E-mail</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Observações</label>
-            <textarea
-              name="observacoes"
-              value={formData.observacoes}
-              readOnly
-              disabled
-              maxLength="500"
-            />
-          </div>
-
-          {}
+      <div className="cliente-form"> {}
+        <div className="form-group">
+          <label>Nome</label> {}
+          <input
+            type="text"
+            name="nome"
+            value={formData.nome}
+            readOnly
+            disabled
+          />
         </div>
-      </main>
-    </div>
+
+        <div className="form-group">
+          <label>CPF/CNPJ</label> {}
+          <input
+            type="text"
+            name="cpf_cnpj"
+            value={formData.cpf_cnpj}
+            readOnly
+            disabled
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Celular</label>
+          <input
+            type="tel"
+            name="celular"
+            value={formData.celular}
+            readOnly
+            disabled
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Endereço</label>
+          <input
+            type="text"
+            name="endereco"
+            value={formData.endereco}
+            readOnly
+            disabled
+          />
+        </div>
+
+        <div className="form-group">
+          <label>E-mail</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            readOnly
+            disabled
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Observações</label>
+          <textarea
+            name="observacoes"
+            value={formData.observacoes}
+            readOnly
+            disabled
+            maxLength="500"
+          />
+        </div>
+
+        {}
+      </div>
+    </>
   );
 }
 

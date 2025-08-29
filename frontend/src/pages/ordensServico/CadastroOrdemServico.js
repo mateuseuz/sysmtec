@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavLink from '../../components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import '../../styles/Clientes.css';
@@ -136,126 +135,107 @@ function CadastroOrdemServico() {
   };
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
+    <>
+      <button type="button" onClick={handleBackClick} className="back-button">
+        <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      </button>
 
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt} isDirty={isDirty}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers} isDirty={isDirty}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench} isDirty={isDirty}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isDirty}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory} isDirty={isDirty}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs} isDirty={isDirty}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
-      </div>
+      <form onSubmit={handleSubmit} className="cliente-form">
+        <div className="form-group">
+          <label>Nome <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            name="nome"
+            value={formData.nome}
+            onChange={handleChange}
+            placeholder="Nome do projeto/serviço"
+            className={errors.nome ? 'error' : ''}
+          />
+        </div>
 
-      <main className="sysmtec-main">
-        <button type="button" onClick={handleBackClick} className="back-button">
-          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
-        </button>
-
-        <form onSubmit={handleSubmit} className="cliente-form">
-          <div className="form-group">
-            <label>Nome <span className="required-asterisk">*</span></label>
-            <input
-              type="text"
-              name="nome"
-              value={formData.nome}
-              onChange={handleChange}
-              placeholder="Nome do projeto/serviço"
-              className={errors.nome ? 'error' : ''}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Cliente relacionado <span className="required-asterisk">*</span></label>
-            <input
-              type="text"
-              name="id_cliente"
-              value={clientSearch}
-              onChange={handleClientChange}
-              className={errors.id_cliente ? 'error' : ''}
-              placeholder="Digite para buscar..."
-              autoComplete="off"
-            />
-            {clientSuggestions.length > 0 && (
-              <ul className="suggestions-list">
-                {clientSuggestions.map(client => (
-                  <li key={client.id_cliente} onMouseDown={() => handleClientSuggestionClick(client)}>
-                    {client.nome}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label>Orçamento <span className="required-asterisk">*</span></label>
-            <select
-              name="id_orcamento"
-              value={formData.id_orcamento}
-              onChange={handleChange}
-              className={errors.id_orcamento ? 'error' : ''}
-            >
-              <option value="">Selecione um orçamento</option>
-              {orcamentos.map(orcamento => (
-                <option key={orcamento.id_orcamento} value={orcamento.id_orcamento}>
-                  {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
-                </option>
+        <div className="form-group">
+          <label>Cliente relacionado <span className="required-asterisk">*</span></label>
+          <input
+            type="text"
+            name="id_cliente"
+            value={clientSearch}
+            onChange={handleClientChange}
+            className={errors.id_cliente ? 'error' : ''}
+            placeholder="Digite para buscar..."
+            autoComplete="off"
+          />
+          {clientSuggestions.length > 0 && (
+            <ul className="suggestions-list">
+              {clientSuggestions.map(client => (
+                <li key={client.id_cliente} onMouseDown={() => handleClientSuggestionClick(client)}>
+                  {client.nome}
+                </li>
               ))}
-            </select>
-          </div>
+            </ul>
+          )}
+        </div>
 
-          <div className="form-group">
-            <label>Situação <span className="required-asterisk">*</span></label>
-            <select
-              name="situacao"
-              value={formData.situacao}
-              onChange={handleChange}
-            >
-              <option value="Em andamento">Em andamento</option>
-              <option value="Concluído">Concluído</option>
-              <option value="Cancelado">Cancelado</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Observações</label>
-            <textarea
-              name="observacoes"
-              value={formData.observacoes}
-              onChange={handleChange}
-              placeholder="Observações sobre a ordem de serviço"
-              maxLength="500"
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className={`submit-button ${isLoading ? 'loading' : ''}`}
+        <div className="form-group">
+          <label>Orçamento <span className="required-asterisk">*</span></label>
+          <select
+            name="id_orcamento"
+            value={formData.id_orcamento}
+            onChange={handleChange}
+            className={errors.id_orcamento ? 'error' : ''}
           >
-            {isLoading ? (
-              <>
-                <span className="spinner"></span>
-                Salvando...
-              </>
-            ) : 'Salvar ordem de serviço'}
-          </button>
-        </form>
-      </main>
+            <option value="">Selecione um orçamento</option>
+            {orcamentos.map(orcamento => (
+              <option key={orcamento.id_orcamento} value={orcamento.id_orcamento}>
+                {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Situação <span className="required-asterisk">*</span></label>
+          <select
+            name="situacao"
+            value={formData.situacao}
+            onChange={handleChange}
+          >
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Observações</label>
+          <textarea
+            name="observacoes"
+            value={formData.observacoes}
+            onChange={handleChange}
+            placeholder="Observações sobre a ordem de serviço"
+            maxLength="500"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          className={`submit-button ${isLoading ? 'loading' : ''}`}
+        >
+          {isLoading ? (
+            <>
+              <span className="spinner"></span>
+              Salvando...
+            </>
+          ) : 'Salvar ordem de serviço'}
+        </button>
+      </form>
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => navigate('/ordens-servico')}
         message="Você tem certeza que quer descartar as alterações?"
       />
-    </div>
+    </>
   );
 }
 

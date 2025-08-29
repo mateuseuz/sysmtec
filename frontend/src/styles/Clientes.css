@@ -50,19 +50,18 @@ body {
 .sysmtec-container {
   display: grid;
   grid-template-columns: 250px 1fr;
-  grid-template-rows: auto 1fr; /* Header e conteúdo */
   height: 100vh;
-  overflow: hidden; /* Impede a rolagem do container principal */
+  overflow: hidden;
 }
 
 .sysmtec-header {
-  grid-column: 1 / -1;
   background-image: linear-gradient(135deg, var(--primary-color) 0%, #022664 100%);
   background-color: var(--primary-color);
   color: var(--white);
   padding: 1rem;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex-shrink: 0; /* Impede que o header encolha */
 }
 
 .sysmtec-header h1 {
@@ -86,19 +85,25 @@ body {
 
 /* ========== SIDEBAR ========== */
 .sysmtec-sidebar {
-  grid-row: 2; /* Coloca a sidebar na segunda linha do grid */
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
   background-image: linear-gradient(to bottom, var(--secondary-color), #02225a);
-  padding: 1.5rem 1rem;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
   background-color: var(--secondary-color);
   position: relative;
   overflow: hidden;
   z-index: 0;
+  padding: 0; /* Removido para que o header e a nav controlem seus próprios espaçamentos */
 }
 
 .sysmtec-sidebar nav {
   position: relative;
   z-index: 1;
+  padding: 1.5rem 1rem;
+  flex-grow: 1; /* Faz a navegação ocupar o espaço restante */
+  overflow-y: auto; /* Adiciona rolagem se os itens do menu excederem a altura */
 }
 
 .sysmtec-sidebar::before {
@@ -161,7 +166,7 @@ body {
   font-size: 1.1em;
 }
 
-.sysmtec-sidebar nav li.active a {
+.sysmtec-sidebar nav li.active .nav-link-container {
   background-color: rgba(255, 255, 255, 0.08);
   color: var(--white); 
   border-left: 3px solid var(--success-color);
@@ -172,17 +177,19 @@ body {
 }
 
 /* Efeito hover */
-.sysmtec-sidebar nav a:hover {
-  background-color: #005bc0;
+.sysmtec-sidebar nav a:hover,
+.sysmtec-sidebar nav .nav-link-container:hover {
+  background-color: rgba(255, 255, 255, 0.15);
   color: var(--white);
+  transform: translateX(5px);
 }
 
 /* ========== ÁREA PRINCIPAL ========== */
 .sysmtec-main {
-  grid-column: 2; /* Ocupa a segunda coluna */
-  grid-row: 2;    /* Ocupa a segunda linha */
+  grid-column: 2;
+  grid-row: 1;
   padding: 2rem;
-  overflow-y: auto; /* Adiciona rolagem vertical apenas aqui */
+  overflow-y: auto;
 }
 
 .sysmtec-main > h2 {

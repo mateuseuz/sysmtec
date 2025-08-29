@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavLink from '../../components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faFilePdf, faFileInvoiceDollar as faFileInvoiceDollarSidebar, faCalendarAlt, faUsers, faWrench, faHistory, faCogs } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import api from '../../services/api';
@@ -102,11 +101,9 @@ const VisualizacaoOrcamento = () => {
 
   if (isLoading || !orcamento) {
     return (
-      <div className="sysmtec-container">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Carregando orçamento...</p>
-        </div>
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Carregando orçamento...</p>
       </div>
     );
   }
@@ -114,113 +111,94 @@ const VisualizacaoOrcamento = () => {
   const valorTotal = orcamento.itens.reduce((acc, item) => acc + (item.quantidade * item.valor), 0);
 
   return (
-    <div className="sysmtec-container">
-      <header className="sysmtec-header">
-        <h1>SYSMTEC</h1>
-      </header>
-
-      <div className="sysmtec-sidebar">
-        <nav>
-          <ul>
-            <NavLink to="/agenda" icon={faCalendarAlt}>Agenda</NavLink>
-            <NavLink to="/clientes" icon={faUsers}>Clientes</NavLink>
-            <NavLink to="/ordens-servico" icon={faWrench}>Ordens de Serviço</NavLink>
-            <NavLink to="/orcamentos" icon={faFileInvoiceDollarSidebar}>Orçamentos</NavLink>
-            <NavLink to="/logs" icon={faHistory}>Log de alterações</NavLink>
-            <NavLink to="/painel-controle" icon={faCogs}>Painel de Controle</NavLink>
-          </ul>
-        </nav>
+    <>
+      <div className="form-actions">
+        <button onClick={() => navigate('/orcamentos')} className="back-button">
+          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+        </button>
+        <button onClick={handleExportPDF} className="export-pdf-button">
+          <FontAwesomeIcon icon={faFilePdf} /> EXPORTAR PARA PDF
+        </button>
       </div>
 
-      <main className="sysmtec-main">
-        <div className="form-actions">
-          <button onClick={() => navigate('/orcamentos')} className="back-button">
-            <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
-          </button>
-          <button onClick={handleExportPDF} className="export-pdf-button">
-            <FontAwesomeIcon icon={faFilePdf} /> EXPORTAR PARA PDF
-          </button>
+      <div className="cliente-form">
+        <div className="form-group">
+          <label>Nome do orçamento</label>
+          <input
+            type="text"
+            value={orcamento.nome}
+            readOnly
+            disabled
+          />
+        </div>
+        <div className="form-group">
+          <label>Cliente</label>
+          <input
+            type="text"
+            value={cliente ? cliente.nome : 'Nenhum cliente vinculado'}
+            readOnly
+            disabled
+          />
         </div>
 
-        <div className="cliente-form">
-          <div className="form-group">
-            <label>Nome do orçamento</label>
-            <input
-              type="text"
-              value={orcamento.nome}
-              readOnly
-              disabled
-            />
-          </div>
-          <div className="form-group">
-            <label>Cliente</label>
-            <input
-              type="text"
-              value={cliente ? cliente.nome : 'Nenhum cliente vinculado'}
-              readOnly
-              disabled
-            />
-          </div>
+        <div className="form-group">
+          <div className="itens-orcamento-grid-container">
+            {/* Cabeçalho do Grid */}
+            <label className="grid-header">Item</label>
+          <label className="grid-header">Qtd.</label>
+          <label className="grid-header">Valor (un.)</label>
+          <div /> {/* Célula vazia para alinhamento */}
 
-          <div className="form-group">
-            <div className="itens-orcamento-grid-container">
-              {/* Cabeçalho do Grid */}
-              <label className="grid-header">Item</label>
-            <label className="grid-header">Qtd.</label>
-            <label className="grid-header">Valor (un.)</label>
-            <div /> {/* Célula vazia para alinhamento */}
-
-            {/* Linhas de Itens */}
-            {orcamento.itens.map((item, index) => (
-              <React.Fragment key={index}>
-                <input
-                  type="text"
-                  name="nome"
-                  value={item.nome}
-                  readOnly
-                  disabled
-                />
-                <input
-                  type="number"
-                  name="quantidade"
-                  value={item.quantidade}
-                  readOnly
-                  disabled
-                />
-                <input
-                  type="text"
-                  name="valor"
-                  value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.valor)}
-                  readOnly
-                  disabled
-                />
-                <div /> {/* Célula vazia para alinhamento */}
-              </React.Fragment>
-            ))}
-            </div>
-          </div>
-          
-          <div className="form-group">
-            <label>Valor total</label>
-            <input
-              type="text"
-              value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
-              readOnly
-              disabled
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Observações</label>
-            <textarea
-              value={orcamento.observacoes || ''}
-              readOnly
-              disabled
-            />
+          {/* Linhas de Itens */}
+          {orcamento.itens.map((item, index) => (
+            <React.Fragment key={index}>
+              <input
+                type="text"
+                name="nome"
+                value={item.nome}
+                readOnly
+                disabled
+              />
+              <input
+                type="number"
+                name="quantidade"
+                value={item.quantidade}
+                readOnly
+                disabled
+              />
+              <input
+                type="text"
+                name="valor"
+                value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.valor)}
+                readOnly
+                disabled
+              />
+              <div /> {/* Célula vazia para alinhamento */}
+            </React.Fragment>
+          ))}
           </div>
         </div>
-      </main>
-    </div>
+        
+        <div className="form-group">
+          <label>Valor total</label>
+          <input
+            type="text"
+            value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
+            readOnly
+            disabled
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Observações</label>
+          <textarea
+            value={orcamento.observacoes || ''}
+            readOnly
+            disabled
+          />
+        </div>
+      </div>
+    </>
   );
 };
 
