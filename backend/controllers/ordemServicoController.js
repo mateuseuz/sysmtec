@@ -4,7 +4,7 @@ const { createLog } = require('./logController');
 exports.createOrdemServico = async (req, res) => {
   try {
     const novaOrdemServico = await OrdemServico.create(req.body);
-    await createLog(req.usuario.nome_usuario, `criou a ordem de serviço #${novaOrdemServico.id_ordem_servico}`);
+    await createLog(req.usuario.nome_usuario, 'Criação', `Ordem de Serviço "${req.body.nome}"`);
     res.status(201).json(novaOrdemServico);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -14,7 +14,7 @@ exports.createOrdemServico = async (req, res) => {
 exports.updateOrdemServico = async (req, res) => {
   try {
     const ordemServicoAtualizada = await OrdemServico.update(req.params.id, req.body);
-    await createLog(req.usuario.nome_usuario, `atualizou a ordem de serviço #${req.params.id}`);
+    await createLog(req.usuario.nome_usuario, 'Atualização', `Ordem de Serviço "${req.body.nome}"`);
     res.status(200).json(ordemServicoAtualizada);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -45,8 +45,12 @@ exports.getOrdemServicoById = async (req, res) => {
 exports.deleteOrdemServico = async (req, res) => {
   try {
     const id_ordem_servico = req.params.id;
+    const ordemServico = await OrdemServico.getById(id_ordem_servico);
+    if (!ordemServico) {
+      return res.status(404).json({ error: 'Ordem de serviço não encontrada' });
+    }
     await OrdemServico.delete(id_ordem_servico);
-    await createLog(req.usuario.nome_usuario, `deletou a ordem de serviço #${id_ordem_servico}`);
+    await createLog(req.usuario.nome_usuario, 'Exclusão', `Ordem de Serviço "${ordemServico.nome}"`);
     res.status(200).json({ message: 'Ordem de serviço deletada com sucesso' });
   } catch (error) {
     res.status(400).json({ error: error.message });

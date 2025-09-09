@@ -2,27 +2,23 @@ const pool = require('../config/database');
 
 const OrdemServico = {
   async create(ordemData) {
-    const { nome, id_cliente, situacao, observacoes = null, id_orcamento = null } = ordemData;
+    const { nome, id_cliente, observacoes = null, id_orcamento = null } = ordemData;
     if (!nome || nome.length > 100) {
       throw new Error('Nome do projeto é obrigatório e deve ter até 100 caracteres');
     }
     if (!id_cliente) {
       throw new Error('Cliente é obrigatório');
     }
-    if (!situacao) {
-      throw new Error('Situação é obrigatória');
-    }
 
     const query = `
       INSERT INTO ordens_servico 
-      (nome, id_cliente, situacao, observacoes, id_orcamento) 
-      VALUES ($1, $2, $3, $4, $5) 
+      (nome, id_cliente, observacoes, id_orcamento) 
+      VALUES ($1, $2, $3, $4) 
       RETURNING *`;
     
     const values = [
       nome,
       id_cliente,
-      situacao,
       observacoes,
       id_orcamento
     ];
@@ -32,7 +28,7 @@ const OrdemServico = {
   },
 
   async update(id_ordem_servico, ordemData) {
-    const { nome, id_cliente, situacao, observacoes, id_orcamento } = ordemData;
+    const { nome, id_cliente, observacoes, id_orcamento } = ordemData;
     
     const fields = [];
     const values = [];
@@ -48,7 +44,6 @@ const OrdemServico = {
 
     addField('nome', nome);
     addField('id_cliente', id_cliente);
-    addField('situacao', situacao);
     addField('observacoes', observacoes);
     addField('id_orcamento', id_orcamento);
 

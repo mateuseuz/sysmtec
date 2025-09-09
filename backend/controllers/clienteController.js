@@ -19,7 +19,7 @@ exports.createCliente = async (req, res) => {
       observacoes
     );
     
-    await createLog(req.usuario.nome_usuario, `criou o cliente "${nome}"`);
+    await createLog(req.usuario.nome_usuario, 'Criação', `Cliente "${nome}"`);
     res.status(201).json(novoCliente);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -54,7 +54,7 @@ exports.updateCliente = async (req, res) => {
       observacoes
     );
 
-    await createLog(req.usuario.nome_usuario, `atualizou o cliente "${nome}"`);
+    await createLog(req.usuario.nome_usuario, 'Atualização', `Cliente "${nome}"`);
     res.status(200).json(clienteAtualizado);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -90,7 +90,7 @@ exports.deleteCliente = async (req, res) => {
       return res.status(404).json({ error: 'Cliente não encontrado' });
     }
     await Cliente.delete(id_cliente);
-    await createLog(req.usuario.nome_usuario, `deletou o cliente "${cliente.nome}"`);
+    await createLog(req.usuario.nome_usuario, 'Exclusão', `Cliente "${cliente.nome}"`);
     res.status(200).json({ message: 'Cliente deletado com sucesso' });
   } catch (error) {
     res.status(400).json({ error: error.message });

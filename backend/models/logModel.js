@@ -1,13 +1,13 @@
 const pool = require('../config/database');
 
 const Log = {
-  async create(autor, acao) {
+  async create(autor, acao, alvo) {
     const query = `
-      INSERT INTO logs (autor, acao) 
-      VALUES ($1, $2) 
+      INSERT INTO logs (autor, acao, alvo) 
+      VALUES ($1, $2, $3) 
       RETURNING *`;
     
-    const values = [autor, acao];
+    const values = [autor, acao, alvo];
     
     try {
       const { rows } = await pool.query(query, values);

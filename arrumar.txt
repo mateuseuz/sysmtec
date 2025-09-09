@@ -1,5 +1,5 @@
 
-Caso de uso gerar log -> é realmente necessário? Pois como ficaria a especificação desse caso de uso?
-Não julgo necessário, pois seria como "Salvar registro no banco de dados"
-
 modal para formulários
+
+- inserir diagramas e especificações no apendice
+- cardinalidade: sai da entidade (1,1) chega em Log (1,n)

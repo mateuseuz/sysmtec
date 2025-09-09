@@ -71,7 +71,6 @@ function ListagemOrdensServico() {
               <tr>
                 <th>Nome do projeto/serviço</th>
                 <th>Cliente</th>
-                <th>Situação</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -80,7 +79,6 @@ function ListagemOrdensServico() {
                 <tr key={os.id_ordem_servico}>
                   <td>{os.nome}</td>
                   <td>{os.nome_cliente}</td>
-                  <td>{os.situacao}</td>
                   <td className="actions-cell">
                     <Link
                       to={`/ordens-servico/visualizar/${os.id_ordem_servico}`}

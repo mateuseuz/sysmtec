@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: linear-gradient(135deg, hsl(220, 100%, 83%), #6594ea, #bed6ff);
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
@@ -117,6 +117,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: inherit;
 }
 
 .login-button:hover {

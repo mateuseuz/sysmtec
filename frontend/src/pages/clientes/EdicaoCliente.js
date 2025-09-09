@@ -213,7 +213,7 @@ function EdicaoCliente() {
           {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
         </div>
 
-        <div className="form-grup">
+        <div className="form-group">
           <label>CPF/CNPJ <span className="required-asterisk">*</span></label>
           <input
             type="text"

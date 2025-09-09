@@ -1,8 +1,8 @@
 const Log = require('../models/logModel');
 
-exports.createLog = async (autor, acao) => {
+exports.createLog = async (autor, acao, alvo) => {
   try {
-    await Log.create(autor, acao);
+    await Log.create(autor, acao, alvo);
   } catch (error) {
     console.error('Falha ao registrar log:', error);
   }

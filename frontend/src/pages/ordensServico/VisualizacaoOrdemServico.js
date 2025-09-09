@@ -86,16 +86,6 @@ function VisualizacaoOrdemServico() {
         </div>
 
         <div className="form-group">
-          <label>Situação</label>
-          <input
-            type="text"
-            value={ordemServico?.situacao || ''}
-            readOnly
-            disabled
-          />
-        </div>
-
-        <div className="form-group">
           <label>Observações</label>
           <textarea
             value={ordemServico?.observacoes || ''}

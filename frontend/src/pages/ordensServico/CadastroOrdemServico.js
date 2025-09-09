@@ -14,15 +14,13 @@ function CadastroOrdemServico() {
   const [formData, setFormData] = useState({
     nome: '',
     id_cliente: '',
-    situacao: 'Em andamento',
-    observacoes: '',
-    selectedClient: null
+    observacoes: ''
   });
   const [initialFormData] = useState({
     nome: '',
     id_cliente: '',
-    situacao: 'Em andamento',
-    observacoes: ''
+    observacoes: '',
+    selectedClient: null
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +35,6 @@ function CadastroOrdemServico() {
     const isClientDirty = initialFormData.selectedClient?.id_cliente !== selectedClient?.id_cliente;
     const isFormDataDirty = (
       formData.nome !== initialFormData.nome ||
-      formData.situacao !== initialFormData.situacao ||
       formData.observacoes !== initialFormData.observacoes ||
       formData.id_orcamento !== initialFormData.id_orcamento
     );
@@ -198,19 +195,6 @@ function CadastroOrdemServico() {
                 {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
               </option>
             ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Situação <span className="required-asterisk">*</span></label>
-          <select
-            name="situacao"
-            value={formData.situacao}
-            onChange={handleChange}
-          >
-            <option value="Em andamento">Em andamento</option>
-            <option value="Concluído">Concluído</option>
-            <option value="Cancelado">Cancelado</option>
           </select>
         </div>
 

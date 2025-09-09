@@ -15,7 +15,6 @@ function EdicaoOrdemServico() {
   const [formData, setFormData] = useState({
     nome: '',
     id_cliente: '',
-    situacao: '',
     observacoes: ''
   });
   const [initialFormData, setInitialFormData] = useState(null);
@@ -42,7 +41,6 @@ function EdicaoOrdemServico() {
           nome: ordemServico.nome || '',
           id_cliente: ordemServico.id_cliente || '',
           selectedClient: cliente,
-          situacao: ordemServico.situacao || '',
           observacoes: ordemServico.observacoes || '',
           id_orcamento: ordemServico.id_orcamento || ''
         };
@@ -67,7 +65,6 @@ function EdicaoOrdemServico() {
       const isClientDirty = initialFormData.selectedClient?.id_cliente !== selectedClient?.id_cliente;
       const isFormDataDirty = (
         formData.nome !== initialFormData.nome ||
-        formData.situacao !== initialFormData.situacao ||
         formData.observacoes !== initialFormData.observacoes ||
         formData.id_orcamento !== initialFormData.id_orcamento
       );
@@ -225,19 +222,6 @@ function EdicaoOrdemServico() {
                 {orcamento.nome} - {orcamento.nome_cliente || 'N/A'}
               </option>
             ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Situação <span className="required-asterisk">*</span></label>
-          <select
-            name="situacao"
-            value={formData.situacao}
-            onChange={handleChange}
-          >
-            <option value="Em andamento">Em andamento</option>
-            <option value="Concluído">Concluído</option>
-            <option value="Cancelado">Cancelado</option>
           </select>
         </div>
 

@@ -9,7 +9,7 @@
   --warning-color: #ffc107;
   --light-bg: hsl(220, 100%, 83%);
   --gradient-bg: #6594ea;
-  --text-dark: #2c3e50;
+  --text-dark: #000;
   --text-light: #7f8c8d;
   --white: #ffffff;
   --border-color: #ddd;
@@ -26,7 +26,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
   background: linear-gradient(135deg, var(--light-bg), var(--gradient-bg), #bed6ff);
@@ -212,6 +212,8 @@ body {
 .back-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center; /* Centraliza o conteúdo */
+  height: 44px; /* Define uma altura fixa */
   gap: 0.5rem;
   background-color: var(--primary-color);
   color: var(--white);
@@ -223,6 +225,7 @@ body {
   border: none;
   text-align: center;
   transition: all 0.3s ease;
+  font-family: inherit;
 }
 
 .add-client-link:hover,
@@ -460,6 +463,7 @@ body {
   transition: all 0.3s ease;
   width: 100%;
   font-weight: bold;
+  font-family: inherit;
 }
 
 .submit-button:hover {
@@ -485,6 +489,7 @@ body {
   border: none;
   text-align: center;
   transition: all 0.3s ease;
+  font-family: inherit;
 }
 
 .back-button {

@@ -26,4 +26,13 @@ const protect = (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const isAdmin = (req, res, next) => {
+  // O usuário com id_usuario = 1 é considerado administrador
+  if (req.usuario && req.usuario.id_usuario === 1) {
+    next();
+  } else {
+    res.status(403).json({ error: 'Acesso negado. Rota apenas para administradores.' });
+  }
+};
+
+module.exports = { protect, isAdmin };
