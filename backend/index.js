@@ -7,6 +7,8 @@ const visitaRoutes = require('./routes/visitaRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar rotas de usuário
 const authRoutes = require('./routes/authRoutes'); // Importar rotas de autenticação
 const logRoutes = require('./routes/logRoutes');
+const mensagemRoutes = require('./routes/mensagemRoutes'); // Importar rotas de mensagem
+const { initSocket } = require('./services/socketService'); // Importar o inicializador do socket
 require('dotenv').config();
 
 const app = express();
@@ -22,6 +24,7 @@ app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api/agenda', visitaRoutes);
 app.use('/api/usuarios', usuarioRoutes); // Usar rotas de usuário
 app.use('/api/auth', authRoutes); // Usar rotas de autenticação
+app.use('/api/mensagens', mensagemRoutes); // Usar rotas de mensagem
 app.use('/api', logRoutes);
 
 // Rota simples de teste
@@ -49,6 +52,24 @@ pool.query('SELECT NOW()', (err, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+
+// --- Integração com Socket.IO ---
+const http = require('http');
+const { Server } = require("socket.io");
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+// Inicializa a lógica do Socket.IO
+initSocket(io);
+
+// --- Fim da Integração ---
+
+server.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

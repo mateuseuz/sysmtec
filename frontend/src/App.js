@@ -22,6 +22,9 @@ import PainelControlePage from './pages/PainelControle';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute'; // Importar a rota de admin
 import Layout from './components/Layout';
+import GerenciarUsuariosPage from './pages/admin/GerenciarUsuarios';
+import DefinirSenhaPage from './pages/DefinirSenha';
+import EsqueciSenhaPage from './pages/EsqueciSenha';
 
 const RedirectTo = () => {
   const token = localStorage.getItem('token');
@@ -45,6 +48,9 @@ function App() {
       />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/esqueci-senha" element={<EsqueciSenhaPage />} />
+        <Route path="/ativar-conta/:token" element={<DefinirSenhaPage />} />
+        <Route path="/redefinir-senha/:token" element={<DefinirSenhaPage />} />
         <Route path="/" element={<RedirectTo />} />
         
         {/* Rotas Protegidas */}
@@ -74,6 +80,7 @@ function App() {
             <Route element={<AdminRoute />}>
               <Route path="/painel-controle" element={<PainelControlePage />} />
               <Route path="/painel-controle/logs" element={<LogPage />} />
+              <Route path="/painel-controle/usuarios" element={<GerenciarUsuariosPage />} />
             </Route>
           </Route>
         </Route>

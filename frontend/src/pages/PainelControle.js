@@ -20,10 +20,10 @@ function PainelControlePage() {
             </Link>
           </li>
           <li>
-            <div className="action-card" title="Em breve">
+            <Link to="/painel-controle/usuarios" className="action-card">
               <FontAwesomeIcon icon={faUsersCog} className="icon" />
               <span>Gerenciar Usuários</span>
-            </div>
+            </Link>
           </li>
           <li>
             <div className="action-card" title="Em breve">

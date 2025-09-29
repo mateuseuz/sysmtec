@@ -1,26 +1,22 @@
 const pool = require('../config/database');
 
 const Usuario = {
-  async create(nome_usuario, email, senha_hash) {
+  // Modificado para ser usado por um administrador para criar um novo usuário.
+  // O nome de usuário será o e-mail inicialmente.
+  async create(email, perfil = 'usuario') {
     const query = `
-      INSERT INTO usuarios (nome_usuario, email, senha_hash)
+      INSERT INTO usuarios (nome_usuario, email, perfil)
       VALUES ($1, $2, $3)
-      RETURNING id_usuario, nome_usuario, email;
+      RETURNING id_usuario, nome_usuario, email, perfil;
     `;
-    const values = [nome_usuario, email, senha_hash];
+    const values = [email, email, perfil];
     
     try {
       const { rows } = await pool.query(query, values);
       return rows[0];
     } catch (error) {
-      // Código de erro para violação de unicidade (ex: usuário ou email já existe)
       if (error.code === '23505') {
-        if (error.constraint === 'usuarios_nome_usuario_key') {
-          throw new Error('Nome de usuário já está em uso.');
-        }
-        if (error.constraint === 'usuarios_email_key') {
-          throw new Error('E-mail já está em uso.');
-        }
+        throw new Error('E-mail ou nome de usuário já está em uso.');
       }
       throw error;
     }
@@ -32,7 +28,76 @@ const Usuario = {
     `;
     const values = [nome_usuario];
     const { rows } = await pool.query(query, values);
-    return rows[0]; // Retorna o usuário encontrado ou undefined
+    return rows[0];
+  },
+
+  async findByEmail(email) {
+    const query = `
+      SELECT * FROM usuarios WHERE email = $1;
+    `;
+    const values = [email];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+  },
+
+  async findById(id) {
+    const query = `
+      SELECT id_usuario, nome_usuario, email, perfil FROM usuarios WHERE id_usuario = $1;
+    `;
+    const values = [id];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+  },
+
+  async findByToken(token) {
+    const query = `
+      SELECT * FROM usuarios WHERE token_redefinir_senha = $1 AND token_expiracao > NOW();
+    `;
+    const values = [token];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+  },
+
+  async findAll() {
+    const query = `
+      SELECT id_usuario, nome_usuario, email, perfil FROM usuarios ORDER BY nome_usuario;
+    `;
+    const { rows } = await pool.query(query);
+    return rows;
+  },
+
+  // Função de atualização flexível para modificar quaisquer campos.
+  async update(id, fields) {
+    const validFields = Object.entries(fields).filter(([key, value]) => key !== 'id_usuario' && value !== undefined);
+
+    if (validFields.length === 0) {
+      return this.findById(id); // Nada a atualizar, retorna o usuário atual
+    }
+
+    const setClause = validFields
+      .map(([key], index) => `${key} = $${index + 2}`)
+      .join(', ');
+
+    const values = validFields.map(([, value]) => value);
+    
+    const query = `
+      UPDATE usuarios
+      SET ${setClause}
+      WHERE id_usuario = $1
+      RETURNING id_usuario, nome_usuario, email, perfil;
+    `;
+
+    const { rows } = await pool.query(query, [id, ...values]);
+    return rows[0];
+  },
+
+  async delete(id) {
+    const query = `
+      DELETE FROM usuarios WHERE id_usuario = $1 RETURNING *;
+    `;
+    const values = [id];
+    const { rows } = await pool.query(query, values);
+    return rows[0];
   }
 };
 

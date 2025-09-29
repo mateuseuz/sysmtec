@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavLink from './NavLink';
+import Chat from './Chat'; // Importar o Chat
 import { faCalendarAlt, faUsers, faWrench, faFileInvoiceDollar, faCogs } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Clientes.css';
 
@@ -20,15 +21,17 @@ const Layout = () => {
             <NavLink to="/clientes" icon={faUsers} isDirty={isFormDirty} setFormDirty={setFormDirty}>Clientes</NavLink>
             <NavLink to="/ordens-servico" icon={faWrench} isDirty={isFormDirty} setFormDirty={setFormDirty}>Ordens de Serviço</NavLink>
             <NavLink to="/orcamentos" icon={faFileInvoiceDollar} isDirty={isFormDirty} setFormDirty={setFormDirty}>Orçamentos</NavLink>
-            {usuario && usuario.id_usuario === 1 && (
+            {/* Corrigido para usar o perfil do usuário */}
+            {usuario && usuario.perfil === 'admin' && (
               <NavLink to="/painel-controle" icon={faCogs} isDirty={isFormDirty} setFormDirty={setFormDirty}>Painel de Controle</NavLink>
             )}
           </ul>
         </nav>
       </div>
       <main className="sysmtec-main">
-<Outlet context={{ isFormDirty, setFormDirty }} />
+        <Outlet context={{ isFormDirty, setFormDirty }} />
       </main>
+      <Chat /> {/* Adiciona o chat ao layout */}
     </div>
   );
 };

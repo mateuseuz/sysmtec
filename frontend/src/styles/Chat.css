@@ -1,0 +1,137 @@
+/* General Chat Container */
+.chat-container {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  width: 370px;
+  max-width: 90vw;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.4s ease-in-out;
+  z-index: 1000;
+  transform: translateY(0);
+}
+
+.chat-container.closed {
+  transform: translateY(calc(100% - 50px)); /* Mostra apenas o cabeçalho */
+}
+
+/* Chat Header */
+.chat-header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 9px 9px 0 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px; /* Altura fixa para o cabeçalho */
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.chat-header .toggle-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.chat-header .toggle-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Chat Body */
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  height: 380px;
+}
+
+/* Messages Area */
+.messages-area {
+  flex-grow: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 18px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.message .user-name {
+    display: block;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    color: #007bff;
+}
+
+.message .timestamp {
+    display: block;
+    font-size: 0.7rem;
+    color: #999;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* My Messages */
+.message.mine {
+  background-color: #dcf8c6;
+  align-self: flex-end;
+  border-radius: 18px 18px 5px 18px;
+}
+
+.message.mine .user-name {
+    color: #62a83e;
+}
+
+/* Other's Messages */
+.message.other {
+  background-color: #e9e9eb;
+  align-self: flex-start;
+  border-radius: 18px 18px 18px 5px;
+}
+
+/* Message Form */
+.message-form {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.message-form input {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px 15px;
+  margin-right: 10px;
+}
+
+.message-form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.message-form button:hover {
+  background-color: #0056b3;
+}

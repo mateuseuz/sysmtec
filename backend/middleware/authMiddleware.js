@@ -27,11 +27,11 @@ const protect = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  // O usuário com id_usuario = 1 é considerado administrador
-  if (req.usuario && req.usuario.id_usuario === 1) {
+  // Verifica se o usuário tem o perfil 'admin'
+  if (req.usuario && req.usuario.perfil === 'admin') {
     next();
   } else {
-    res.status(403).json({ error: 'Acesso negado. Rota apenas para administradores.' });
+    res.status(403).json({ error: 'Acesso negado. Esta rota é restrita a administradores.' });
   }
 };
 
