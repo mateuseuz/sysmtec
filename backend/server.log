@@ -1,0 +1,13 @@
+Servidor rodando em http://localhost:5000
+❌ Erro ao conectar ao PostgreSQL: Error: connect ECONNREFUSED 127.0.0.1:5432
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '127.0.0.1',
+  port: 5432
+}
+Conta de teste Ethereal criada:
+Usuário: o3y3na3jeae7r66r@ethereal.email
+Senha: 7vZ1eUWqTeg3S2eVC9
+------------------------------------
