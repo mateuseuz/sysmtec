@@ -88,6 +88,9 @@ const apiClientes = {
 
   // Logs
   listarLogs: () => api.get('/logs'),
+
+  // Mensagens (Chat)
+  listarMensagens: () => api.get('/mensagens'),
 };
 
 export default apiClientes;

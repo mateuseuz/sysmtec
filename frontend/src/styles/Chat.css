@@ -12,6 +12,7 @@
   transition: transform 0.4s ease-in-out;
   z-index: 1000;
   transform: translateY(0);
+  font-family: inherit; /* Garante que a fonte do sistema seja usada */
 }
 
 .chat-container.closed {
@@ -20,7 +21,7 @@
 
 /* Chat Header */
 .chat-header {
-  background-color: #007bff;
+  background-color: #032f7e;
   color: white;
   padding: 10px 15px;
   border-radius: 9px 9px 0 0;
@@ -77,7 +78,7 @@
     font-weight: bold;
     font-size: 0.8rem;
     margin-bottom: 5px;
-    color: #007bff;
+    color: #032f7e;
 }
 
 .message .timestamp {
@@ -120,18 +121,20 @@
   border-radius: 20px;
   padding: 10px 15px;
   margin-right: 10px;
+  font-family: inherit;
 }
 
 .message-form button {
-  background-color: #007bff;
+  background-color: #032f7e;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-family: inherit;
 }
 
 .message-form button:hover {
-  background-color: #0056b3;
+  background-color: #022664; /* Tom mais escuro da cor primária */
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import { io } from 'socket.io-client'; // TEMPORARIAMENTE COMENTADO
+import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComments, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,7 @@ function Chat() {
   const [newMessage, setNewMessage] = useState('');
   const [isOpen, setIsOpen] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
+  const [socket, setSocket] = useState(null);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -21,10 +22,42 @@ function Chat() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario') || 'null');
-    if (user) {
-      setCurrentUser(user);
-    }
+    const token = localStorage.getItem('token');
 
+    if (user && token) {
+      setCurrentUser(user);
+
+      const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000', {
+        auth: {
+          token: token
+        }
+      });
+
+      setSocket(newSocket);
+
+      newSocket.on('connect', () => {
+        toast.success("Conectado ao chat!");
+      });
+
+      newSocket.on('mensagem_recebida', (mensagem) => {
+        setMessages((prevMessages) => [...prevMessages, mensagem]);
+      });
+
+      newSocket.on('disconnect', () => {
+        toast.warn("Desconectado do chat.");
+      });
+
+      newSocket.on('erro_chat', (error) => {
+        toast.error(`Erro no chat: ${error.message}`);
+      });
+
+      return () => {
+        newSocket.disconnect();
+      };
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchHistory = async () => {
       try {
         const history = await api.listarMensagens();
@@ -39,8 +72,10 @@ function Chat() {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    toast.info("O chat está temporariamente desabilitado para depuração.");
-    setNewMessage('');
+    if (socket && newMessage.trim()) {
+      socket.emit('nova_mensagem', newMessage.trim());
+      setNewMessage('');
+    }
   };
 
   const toggleChat = () => {
@@ -55,7 +90,7 @@ function Chat() {
   return (
     <div className={`chat-container ${isOpen ? 'open' : 'closed'}`}>
       <div className="chat-header" onClick={toggleChat}>
-        <h3>Chat Global (Depuração)</h3>
+        <h3>Chat Global</h3>
         <span className="toggle-icon">
           <FontAwesomeIcon icon={isOpen ? faTimes : faComments} />
         </span>
@@ -79,10 +114,10 @@ function Chat() {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Chat em depuração..."
-              disabled={true}
+              placeholder="Digite sua mensagem..."
+              disabled={!socket}
             />
-            <button type="submit" disabled={true}>Enviar</button>
+            <button type="submit" disabled={!socket}>Enviar</button>
           </form>
         </div>
       )}
