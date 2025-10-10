@@ -7,8 +7,10 @@ const visitaRoutes = require('./routes/visitaRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar rotas de usuário
 const authRoutes = require('./routes/authRoutes'); // Importar rotas de autenticação
 const logRoutes = require('./routes/logRoutes');
-const mensagemRoutes = require('./routes/mensagemRoutes'); // Importar rotas de mensagem
-const { initSocket } = require('./services/socketService'); // Importar o inicializador do socket
+const mensagemRoutes = require('./routes/mensagemRoutes');
+const permissaoRoutes = require('./routes/permissaoRoutes');
+const { initSocket } = require('./services/socketService');
+const { runMigrations } = require('./config/migrate'); // Importar o serviço de migração
 require('dotenv').config();
 
 const app = express();
@@ -23,9 +25,10 @@ app.use('/api/ordens-servico', ordemServicoRoutes);
 app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api/agenda', visitaRoutes);
 app.use('/api/usuarios', usuarioRoutes); // Usar rotas de usuário
-app.use('/api/auth', authRoutes); // Usar rotas de autenticação
-app.use('/api/mensagens', mensagemRoutes); // Usar rotas de mensagem
-app.use('/api', logRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/mensagens', mensagemRoutes);
+app.use('/api/permissoes', permissaoRoutes);
+app.use('/api/logs', logRoutes); // Rota específica para logs
 
 // Rota simples de teste
 app.get('/', (req, res) => {
@@ -70,6 +73,18 @@ initSocket(io);
 
 // --- Fim da Integração ---
 
-server.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    // Executa as migrações antes de iniciar o servidor
+    await runMigrations();
+    
+    server.listen(PORT, () => {
+      console.log(`Servidor rodando em http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Falha ao iniciar o servidor:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

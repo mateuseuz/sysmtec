@@ -1,5 +1,3 @@
+explicar código do estágio e uso das ferramentas/tecnologias
 
-modal para formulários
-
-- inserir diagramas e especificações no apendice
-- cardinalidade: sai da entidade (1,1) chega em Log (1,n)
+única mudança no workflow seria o 'comunicar associado'?

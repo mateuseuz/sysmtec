@@ -91,6 +91,11 @@ const apiClientes = {
 
   // Mensagens (Chat)
   listarMensagens: () => api.get('/mensagens'),
+
+  // Permissões
+  listarPermissoes: () => api.get('/permissoes'),
+  atualizarPermissao: (perfil, modulo, permissoes) => api.put(`/permissoes/${perfil}/${modulo}`, permissoes),
+  getMinhasPermissoes: () => api.get('/permissoes/me'),
 };
 
 export default apiClientes;

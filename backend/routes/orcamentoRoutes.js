@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const orcamentoController = require('../controllers/orcamentoController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, checkPermission } = require('../middleware/authMiddleware');
 
-router.post('/', protect, orcamentoController.createOrcamento);
-router.get('/', protect, orcamentoController.getOrcamentos);
-router.get('/:id', protect, orcamentoController.getOrcamentoById);
-router.put('/:id', protect, orcamentoController.updateOrcamento);
-router.delete('/:id', protect, orcamentoController.deleteOrcamento);
+const modulo = 'orcamentos';
+
+router.post('/', protect, checkPermission(modulo, 'pode_escrever'), orcamentoController.createOrcamento);
+router.get('/', protect, checkPermission(modulo, 'pode_ler'), orcamentoController.getOrcamentos);
+router.get('/:id', protect, checkPermission(modulo, 'pode_ler'), orcamentoController.getOrcamentoById);
+router.put('/:id', protect, checkPermission(modulo, 'pode_escrever'), orcamentoController.updateOrcamento);
+router.delete('/:id', protect, checkPermission(modulo, 'pode_deletar'), orcamentoController.deleteOrcamento);
 
 module.exports = router;

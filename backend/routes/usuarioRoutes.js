@@ -9,7 +9,9 @@ const {
   forgotPassword,
   resetPassword,
 } = require('../controllers/usuarioController');
-const { protect, isAdmin } = require('../middleware/authMiddleware');
+const { protect, checkPermission } = require('../middleware/authMiddleware');
+
+const modulo = 'usuarios';
 
 // Rotas Públicas (não precisam de autenticação)
 router.post('/esqueci-senha', forgotPassword);
@@ -18,17 +20,14 @@ router.post('/redefinir-senha/:token', resetPassword);
 // A partir daqui, todas as rotas são protegidas e requerem login
 router.use(protect);
 
-// A partir daqui, todas as rotas são apenas para administradores
-router.use(isAdmin);
-
-// Rotas de Admin
+// Rotas de Admin com verificação de permissão granular
 router.route('/')
-  .get(getAllUsuarios)
-  .post(adminCreateUsuario); // Rota para admin criar usuário
+  .get(checkPermission(modulo, 'pode_ler'), getAllUsuarios)
+  .post(checkPermission(modulo, 'pode_escrever'), adminCreateUsuario);
 
 router.route('/:id')
-  .get(getUsuarioById)
-  .put(updateUsuario)
-  .delete(deleteUsuario);
+  .get(checkPermission(modulo, 'pode_ler'), getUsuarioById)
+  .put(checkPermission(modulo, 'pode_escrever'), updateUsuario)
+  .delete(checkPermission(modulo, 'pode_deletar'), deleteUsuario);
 
 module.exports = router;

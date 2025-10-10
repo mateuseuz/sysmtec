@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComments, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import api from '../services/api';
 import '../styles/Chat.css';
 
@@ -11,7 +11,9 @@ function Chat() {
   const [newMessage, setNewMessage] = useState('');
   const [isOpen, setIsOpen] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  const [socket, setSocket] = useState(null);
+  const socket = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [canDelete, setCanDelete] = useState(false); // Novo estado para permissão
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -33,18 +35,25 @@ function Chat() {
         }
       });
 
-      setSocket(newSocket);
+      socket.current = newSocket;
 
       newSocket.on('connect', () => {
         toast.success("Conectado ao chat!");
+        setIsConnected(true);
       });
 
       newSocket.on('mensagem_recebida', (mensagem) => {
         setMessages((prevMessages) => [...prevMessages, mensagem]);
       });
 
+      newSocket.on('mensagem_apagada', ({ id_mensagem }) => {
+        setMessages((prevMessages) => prevMessages.filter(msg => msg.id_mensagem !== id_mensagem));
+        toast.info("Uma mensagem foi removida do chat.");
+      });
+
       newSocket.on('disconnect', () => {
         toast.warn("Desconectado do chat.");
+        setIsConnected(false);
       });
 
       newSocket.on('erro_chat', (error) => {
@@ -52,29 +61,53 @@ function Chat() {
       });
 
       return () => {
-        newSocket.disconnect();
+        if (socket.current) {
+          socket.current.disconnect();
+        }
+        setIsConnected(false);
       };
     }
   }, []);
 
   useEffect(() => {
-    const fetchHistory = async () => {
+    const fetchHistoryAndPermissions = async () => {
       try {
+        // Busca o histórico de mensagens
         const history = await api.listarMensagens();
         setMessages(history);
+
+        // Busca as permissões do usuário
+        const minhasPermissoes = await api.getMinhasPermissoes();
+        const chatPermission = minhasPermissoes.find(p => p.modulo_nome === 'chat');
+        if (chatPermission && chatPermission.pode_deletar) {
+          setCanDelete(true);
+        }
       } catch (error) {
-        toast.error('Erro ao carregar o histórico do chat.');
+        // Não mostrar erro de permissão se o usuário simplesmente não tiver acesso
+        if (!error.message.includes('Acesso negado')) {
+            toast.error(`Erro no chat: ${error.message}`);
+        }
       }
     };
     
-    fetchHistory();
-  }, []);
+    if (currentUser) {
+        fetchHistoryAndPermissions();
+    }
+  }, [currentUser]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (socket && newMessage.trim()) {
-      socket.emit('nova_mensagem', newMessage.trim());
+    if (socket.current && newMessage.trim()) {
+      socket.current.emit('nova_mensagem', newMessage.trim());
       setNewMessage('');
+    }
+  };
+
+  const handleDeleteMessage = (id_mensagem) => {
+    if (socket.current && canDelete) {
+      socket.current.emit('apagar_mensagem', id_mensagem);
+    } else {
+      toast.error('Você não tem permissão para apagar mensagens.');
     }
   };
 
@@ -102,7 +135,18 @@ function Chat() {
               <div 
                 key={msg.id_mensagem} 
                 className={`message ${msg.id_usuario === currentUser?.id_usuario ? 'mine' : 'other'}`}>
-                <span className="user-name">{msg.nome_usuario}</span>
+                <div className="message-header">
+                  <span className="user-name">{msg.nome_usuario}</span>
+                  {canDelete && (
+                    <button 
+                      className="delete-btn" 
+                      onClick={() => handleDeleteMessage(msg.id_mensagem)}
+                      aria-label="Apagar mensagem"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  )}
+                </div>
                 <p>{msg.texto}</p>
                 <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>
               </div>
@@ -115,9 +159,9 @@ function Chat() {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Digite sua mensagem..."
-              disabled={!socket}
+              disabled={!isConnected}
             />
-            <button type="submit" disabled={!socket}>Enviar</button>
+            <button type="submit" disabled={!isConnected}>Enviar</button>
           </form>
         </div>
       )}

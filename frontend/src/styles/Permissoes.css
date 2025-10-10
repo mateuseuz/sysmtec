@@ -1,0 +1,64 @@
+.permissoes-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.permissoes-container h2 {
+  color: #032f7e;
+  margin-bottom: 1rem;
+}
+
+.permissoes-table-container {
+  overflow-x: auto;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.permissoes-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.permissoes-table th,
+.permissoes-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.permissoes-table thead th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.permissoes-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.permissoes-table .perfil-header {
+  font-weight: bold;
+  color: #032f7e;
+  text-transform: capitalize;
+}
+
+.permissoes-table .modulo-cell {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.permissoes-table .permission-group {
+  text-align: center;
+}
+
+.permissoes-table .permission-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}

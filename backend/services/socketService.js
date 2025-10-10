@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Mensagem = require('../models/mensagemModel');
+const Permissao = require('../models/permissaoModel'); // Importar o modelo de permissão
 
 const initSocket = (io) => {
   // Middleware de autenticação do Socket.IO
@@ -53,6 +54,36 @@ const initSocket = (io) => {
 
     socket.on('disconnect', () => {
       console.log(`[Socket.IO] Usuário desconectado: ${socket.usuario.nome_usuario} (${socket.id})`);
+    });
+
+    // Handler para apagar mensagens, usando o sistema de permissões
+    socket.on('apagar_mensagem', async (id_mensagem) => {
+      try {
+        if (!socket.usuario || !socket.usuario.perfil) {
+          return socket.emit('erro_chat', { message: 'Usuário não autenticado corretamente.' });
+        }
+
+        const permissao = await Permissao.findByProfileAndModule(socket.usuario.perfil, 'chat');
+        
+        if (!permissao || !permissao.pode_deletar) {
+          return socket.emit('erro_chat', { message: 'Ação não permitida.' });
+        }
+
+        if (!id_mensagem) {
+          return socket.emit('erro_chat', { message: 'ID da mensagem não fornecido.' });
+        }
+
+        const mensagemApagada = await Mensagem.delete(id_mensagem);
+
+        if (mensagemApagada) {
+          io.emit('mensagem_apagada', { id_mensagem: mensagemApagada.id_mensagem });
+        } else {
+          socket.emit('erro_chat', { message: 'Mensagem não encontrada.' });
+        }
+      } catch (error) {
+        console.error('[Socket.IO] Erro ao apagar mensagem:', error);
+        socket.emit('erro_chat', { message: 'Erro ao apagar a mensagem.' });
+      }
     });
   });
 };

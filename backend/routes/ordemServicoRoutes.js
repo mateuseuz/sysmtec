@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const ordemServicoController = require('../controllers/ordemServicoController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, checkPermission } = require('../middleware/authMiddleware');
 
-router.post('/', protect, ordemServicoController.createOrdemServico);
-router.get('/', protect, ordemServicoController.getOrdensServico);
-router.get('/:id', protect, ordemServicoController.getOrdemServicoById);
-router.put('/:id', protect, ordemServicoController.updateOrdemServico);
-router.delete('/:id', protect, ordemServicoController.deleteOrdemServico);
+const modulo = 'ordensServico';
+
+router.post('/', protect, checkPermission(modulo, 'pode_escrever'), ordemServicoController.createOrdemServico);
+router.get('/', protect, checkPermission(modulo, 'pode_ler'), ordemServicoController.getOrdensServico);
+router.get('/:id', protect, checkPermission(modulo, 'pode_ler'), ordemServicoController.getOrdemServicoById);
+router.put('/:id', protect, checkPermission(modulo, 'pode_escrever'), ordemServicoController.updateOrdemServico);
+router.delete('/:id', protect, checkPermission(modulo, 'pode_deletar'), ordemServicoController.deleteOrdemServico);
 
 module.exports = router;

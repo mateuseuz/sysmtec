@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const clienteController = require('../controllers/clienteController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, checkPermission } = require('../middleware/authMiddleware');
 
-router.post('/', protect, clienteController.createCliente);
-router.get('/', protect, clienteController.getClientes);
-router.get('/search', protect, clienteController.searchClientes);
-router.get('/:id', protect, clienteController.getClienteById);
-router.put('/:id', protect, clienteController.updateCliente);
-router.delete('/:id', protect, clienteController.deleteCliente);
+const modulo = 'clientes';
+
+router.post('/', protect, checkPermission(modulo, 'pode_escrever'), clienteController.createCliente);
+router.get('/', protect, checkPermission(modulo, 'pode_ler'), clienteController.getClientes);
+router.get('/search', protect, checkPermission(modulo, 'pode_ler'), clienteController.searchClientes);
+router.get('/:id', protect, checkPermission(modulo, 'pode_ler'), clienteController.getClienteById);
+router.put('/:id', protect, checkPermission(modulo, 'pode_escrever'), clienteController.updateCliente);
+router.delete('/:id', protect, checkPermission(modulo, 'pode_deletar'), clienteController.deleteCliente);
 
 module.exports = router;

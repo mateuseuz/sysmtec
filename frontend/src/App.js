@@ -23,6 +23,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute'; // Importar a rota de admin
 import Layout from './components/Layout';
 import GerenciarUsuariosPage from './pages/admin/GerenciarUsuarios';
+import PermissoesPage from './pages/admin/Permissoes'; // Importar a página de permissões
 import DefinirSenhaPage from './pages/DefinirSenha';
 import EsqueciSenhaPage from './pages/EsqueciSenha';
 
@@ -81,6 +82,7 @@ function App() {
               <Route path="/painel-controle" element={<PainelControlePage />} />
               <Route path="/painel-controle/logs" element={<LogPage />} />
               <Route path="/painel-controle/usuarios" element={<GerenciarUsuariosPage />} />
+              <Route path="/painel-controle/permissoes" element={<PermissoesPage />} />
             </Route>
           </Route>
         </Route>

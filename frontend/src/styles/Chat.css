@@ -73,11 +73,16 @@
   line-height: 1.4;
 }
 
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .message .user-name {
-    display: block;
     font-weight: bold;
     font-size: 0.8rem;
-    margin-bottom: 5px;
     color: #032f7e;
 }
 
@@ -137,4 +142,21 @@
 
 .message-form button:hover {
   background-color: #022664; /* Tom mais escuro da cor primária */
+}
+
+/* Delete Button */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #a0a0a0;
+  cursor: pointer;
+  padding: 0 5px;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  transition: color 0.2s, opacity 0.2s;
+}
+
+.delete-btn:hover {
+  color: #ff4d4d;
+  opacity: 1;
 }

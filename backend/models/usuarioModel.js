@@ -24,7 +24,7 @@ const Usuario = {
 
   async findByUsername(nome_usuario) {
     const query = `
-      SELECT * FROM usuarios WHERE nome_usuario = $1;
+      SELECT id_usuario, nome_usuario, email, perfil, senha_hash FROM usuarios WHERE nome_usuario = $1;
     `;
     const values = [nome_usuario];
     const { rows } = await pool.query(query, values);

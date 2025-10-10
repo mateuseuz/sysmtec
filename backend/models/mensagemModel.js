@@ -49,6 +49,24 @@ const Mensagem = {
       console.error("Erro ao buscar mensagens:", error);
       throw new Error('Falha ao buscar o histórico de mensagens.');
     }
+  },
+
+  /**
+   * Apaga uma mensagem do banco de dados pelo ID.
+   * @param {number} id_mensagem - O ID da mensagem a ser apagada.
+   * @returns {Promise<object>} A mensagem que foi apagada.
+   */
+  async delete(id_mensagem) {
+    const query = 'DELETE FROM mensagens WHERE id_mensagem = $1 RETURNING id_mensagem';
+    const values = [id_mensagem];
+    
+    try {
+      const { rows } = await pool.query(query, values);
+      return rows[0]; // Retorna o objeto da mensagem apagada ou undefined se não encontrou
+    } catch (error) {
+      console.error("Erro ao apagar mensagem:", error);
+      throw new Error('Falha ao apagar a mensagem do banco de dados.');
+    }
   }
 };
 

@@ -26,10 +26,10 @@ function PainelControlePage() {
             </Link>
           </li>
           <li>
-            <div className="action-card" title="Em breve">
+            <Link to="/painel-controle/permissoes" className="action-card">
               <FontAwesomeIcon icon={faUserShield} className="icon" />
               <span>Gerenciar Permissões</span>
-            </div>
+            </Link>
           </li>
         </ul>
       </div>
