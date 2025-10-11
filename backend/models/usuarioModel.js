@@ -4,12 +4,19 @@ const Usuario = {
   // Modificado para ser usado por um administrador para criar um novo usuário.
   // O nome de usuário será o e-mail inicialmente.
   async create(email, perfil = 'usuario') {
+    // Garante que o nome_usuario não exceda o limite do banco de dados.
+    // Usa a parte local do e-mail como base, truncado para 20 caracteres.
+    let nomeUsuario = email.split('@')[0];
+    if (nomeUsuario.length > 20) {
+      nomeUsuario = nomeUsuario.substring(0, 20);
+    }
+
     const query = `
       INSERT INTO usuarios (nome_usuario, email, perfil)
       VALUES ($1, $2, $3)
       RETURNING id_usuario, nome_usuario, email, perfil;
     `;
-    const values = [email, email, perfil];
+    const values = [nomeUsuario, email, perfil];
     
     try {
       const { rows } = await pool.query(query, values);

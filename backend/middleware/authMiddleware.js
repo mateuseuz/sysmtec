@@ -34,6 +34,11 @@ const checkPermission = (modulo, permissao_requerida) => {
       return res.status(401).json({ error: 'Não autorizado, perfil de usuário não encontrado.' });
     }
 
+    // Admin tem acesso total, não precisa verificar permissões no banco.
+    if (req.usuario.perfil === 'admin') {
+      return next();
+    }
+
     try {
       const permissao = await Permissao.findByProfileAndModule(req.usuario.perfil, modulo);
 
@@ -48,4 +53,12 @@ const checkPermission = (modulo, permissao_requerida) => {
   };
 };
 
-module.exports = { protect, checkPermission };
+const isAdmin = (req, res, next) => {
+  if (req.usuario && req.usuario.perfil === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ error: 'Acesso negado. Rota apenas para administradores.' });
+  }
+};
+
+module.exports = { protect, checkPermission, isAdmin };

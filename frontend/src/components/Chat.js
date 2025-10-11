@@ -71,21 +71,32 @@ function Chat() {
 
   useEffect(() => {
     const fetchHistoryAndPermissions = async () => {
+      // Admin tem permissão para deletar por padrão, não precisa checar a API.
+      if (currentUser?.perfil === 'admin') {
+        setCanDelete(true);
+      }
+
       try {
-        // Busca o histórico de mensagens
-        const history = await api.listarMensagens();
+        const [history, minhasPermissoes] = await Promise.all([
+          api.listarMensagens(),
+          // Se não for admin, busca permissões. Se for, pode pular.
+          currentUser?.perfil !== 'admin' ? api.getMinhasPermissoes() : Promise.resolve([])
+        ]);
+
         setMessages(history);
 
-        // Busca as permissões do usuário
-        const minhasPermissoes = await api.getMinhasPermissoes();
-        const chatPermission = minhasPermissoes.find(p => p.modulo_nome === 'chat');
-        if (chatPermission && chatPermission.pode_deletar) {
-          setCanDelete(true);
+        // A lógica de permissão só é necessária se não for admin
+        if (currentUser?.perfil !== 'admin') {
+          const chatPermission = minhasPermissoes.find(p => p.modulo_nome === 'chat');
+          if (chatPermission && chatPermission.pode_deletar) {
+            setCanDelete(true);
+          }
         }
       } catch (error) {
-        // Não mostrar erro de permissão se o usuário simplesmente não tiver acesso
-        if (!error.message.includes('Acesso negado')) {
-            toast.error(`Erro no chat: ${error.message}`);
+        // Com Promise.all, o catch é acionado apenas uma vez.
+        // Apenas mostramos o erro se não for um erro de "Acesso negado".
+        if (error && error.message && !error.message.includes('Acesso negado')) {
+          toast.error(`Erro ao carregar dados do chat: ${error.message}`);
         }
       }
     };

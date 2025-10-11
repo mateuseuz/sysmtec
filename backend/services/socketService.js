@@ -63,10 +63,13 @@ const initSocket = (io) => {
           return socket.emit('erro_chat', { message: 'Usuário não autenticado corretamente.' });
         }
 
-        const permissao = await Permissao.findByProfileAndModule(socket.usuario.perfil, 'chat');
-        
-        if (!permissao || !permissao.pode_deletar) {
-          return socket.emit('erro_chat', { message: 'Ação não permitida.' });
+        // Admin tem permissão para apagar, não precisa verificar.
+        if (socket.usuario.perfil !== 'admin') {
+          const permissao = await Permissao.findByProfileAndModule(socket.usuario.perfil, 'chat');
+          
+          if (!permissao || !permissao.pode_deletar) {
+            return socket.emit('erro_chat', { message: 'Ação não permitida.' });
+          }
         }
 
         if (!id_mensagem) {
