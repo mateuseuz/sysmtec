@@ -12,11 +12,13 @@ const Usuario = {
     }
 
     const query = `
-      INSERT INTO usuarios (nome_usuario, email, perfil)
-      VALUES ($1, $2, $3)
+      INSERT INTO usuarios (nome_usuario, email, perfil, senha_hash)
+      VALUES ($1, $2, $3, $4)
       RETURNING id_usuario, nome_usuario, email, perfil;
     `;
-    const values = [nomeUsuario, email, perfil];
+    // Adiciona um placeholder para a senha_hash para satisfazer a restrição NOT NULL.
+    const placeholderSenha = 'aguardando_ativacao';
+    const values = [nomeUsuario, email, perfil, placeholderSenha];
     
     try {
       const { rows } = await pool.query(query, values);

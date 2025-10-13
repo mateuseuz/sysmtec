@@ -46,6 +46,7 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
               onChange={handleChange}
               required
               disabled={isEditing} // Não permite editar o e-mail
+              maxLength="50"
             />
           </div>
           <div className="form-group">
