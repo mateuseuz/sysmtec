@@ -13,10 +13,9 @@ const runMigrations = async () => {
     const res = await pool.query(checkTableQuery);
     const tableExists = res.rows[0].exists;
 
+    // Se a tabela não existir, cria primeiro
     if (!tableExists) {
-      console.log("Tabela 'permissoes' não encontrada. Criando e populando...");
-
-      // 2. Se não existir, criar a tabela
+      console.log("Tabela 'permissoes' não encontrada. Criando tabela...");
       const createTableQuery = `
         CREATE TABLE permissoes (
           id_permissao SERIAL PRIMARY KEY,
@@ -30,8 +29,12 @@ const runMigrations = async () => {
       `;
       await pool.query(createTableQuery);
       console.log("=> Tabela 'permissoes' criada com sucesso.");
+    }
 
-      // 3. Popular a tabela com dados iniciais
+    // Em seguida, verifica se a tabela está vazia. Se estiver, popula.
+    const countRes = await pool.query('SELECT COUNT(*) FROM permissoes;');
+    if (parseInt(countRes.rows[0].count, 10) === 0) {
+      console.log("Tabela 'permissoes' está vazia. Populando com dados iniciais...");
       const insertDataQuery = `
         INSERT INTO permissoes (perfil_nome, modulo_nome, pode_ler, pode_escrever, pode_deletar) VALUES
         ('admin', 'clientes', TRUE, TRUE, TRUE),
@@ -54,7 +57,7 @@ const runMigrations = async () => {
       console.log("=> Tabela 'permissoes' populada com dados iniciais.");
       console.log("Migração do banco de dados concluída com sucesso.");
     } else {
-      console.log("Tabela 'permissoes' já existe. Nenhuma migração necessária.");
+      console.log("Tabela 'permissoes' já contém dados. Nenhuma migração necessária.");
     }
   } catch (error) {
     console.error('❌ Erro durante a migração do banco de dados:', error);
