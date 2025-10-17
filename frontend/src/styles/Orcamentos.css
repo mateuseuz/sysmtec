@@ -85,11 +85,15 @@
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex; /* Para alinhar ícone e texto */
+  align-items: center;
+  gap: 0.5rem;
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
 }
 
 .export-pdf-button:hover {

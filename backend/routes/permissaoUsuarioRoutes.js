@@ -19,3 +19,4 @@ router.get('/:id_usuario', getPermissoesPorUsuario);
 router.put('/:id_usuario/:modulo_nome', checkPermission(modulo, 'pode_escrever'), updatePermissaoUsuario);
 
 module.exports = router;
+    

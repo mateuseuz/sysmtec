@@ -82,8 +82,8 @@ exports.getUsuarioById = async (req, res) => {
 // @access Privado/Admin
 exports.updateUsuario = async (req, res) => {
   try {
-    const { nome_usuario, perfil } = req.body;
-    const usuario = await Usuario.update(req.params.id, { nome_usuario, perfil });
+    const { nome_completo, perfil } = req.body;
+    const usuario = await Usuario.update(req.params.id, { nome_completo, perfil });
     if (usuario) {
       res.status(200).json(usuario);
     } else {
@@ -143,15 +143,19 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
-// @desc   Redefinir senha
+// @desc   Redefinir/Ativar senha e definir nome completo
 // @route  POST /api/usuarios/redefinir-senha/:token
 // @access Público
 exports.resetPassword = async (req, res) => {
     const { token } = req.params;
-    const { senha } = req.body;
+    const { senha, nome_completo } = req.body;
 
-    if (!senha) {
-        return res.status(400).json({ error: 'A nova senha é obrigatória.' });
+    if (!senha || !nome_completo) {
+        return res.status(400).json({ error: 'Senha e nome completo são obrigatórios.' });
+    }
+
+    if (nome_completo.trim().length < 3) {
+        return res.status(400).json({ error: 'O nome completo deve ter pelo menos 3 caracteres.' });
     }
 
     try {
@@ -164,12 +168,13 @@ exports.resetPassword = async (req, res) => {
 
         await Usuario.update(usuario.id_usuario, {
             senha_hash,
+            nome_completo,
             token_redefinir_senha: null,
             token_expiracao: null,
         });
 
-        res.status(200).json({ message: 'Senha redefinida com sucesso.' });
+        res.status(200).json({ message: 'Conta ativada e senha definida com sucesso.' });
     } catch (error) {
-        res.status(500).json({ error: 'Erro no servidor ao redefinir a senha.' });
+        res.status(500).json({ error: 'Erro no servidor ao ativar a conta.' });
     }
 };

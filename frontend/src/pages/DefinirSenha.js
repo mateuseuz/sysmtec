@@ -7,12 +7,17 @@ import '../styles/DefinirSenha.css';
 function DefinirSenhaPage() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const [nome_completo, setNomeCompleto] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!nome_completo.trim() || nome_completo.trim().length < 3) {
+      toast.error('Por favor, insira um nome completo válido.');
+      return;
+    }
     if (senha !== confirmarSenha) {
       toast.error('As senhas não coincidem.');
       return;
@@ -24,8 +29,8 @@ function DefinirSenhaPage() {
 
     setLoading(true);
     try {
-      const response = await api.redefinirSenha(token, senha);
-      toast.success(response.message || 'Senha definida com sucesso! Você já pode fazer login.');
+      const response = await api.redefinirSenha(token, { senha, nome_completo });
+      toast.success(response.message || 'Conta ativada com sucesso! Você já pode fazer login.');
       navigate('/login');
     } catch (error) {
       toast.error(`Erro ao definir a senha: ${error.message}`);
@@ -37,9 +42,19 @@ function DefinirSenhaPage() {
   return (
     <div className="definir-senha-page">
       <div className="definir-senha-container">
-        <h2>Definir Nova Senha</h2>
-        <p>Por favor, escolha uma nova senha para sua conta.</p>
+        <h2>Ative sua Conta</h2>
+        <p>Por favor, complete seu nome e escolha uma senha.</p>
         <form onSubmit={handleSubmit} className="definir-senha-form">
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Digite seu nome completo"
+              value={nome_completo}
+              onChange={(e) => setNomeCompleto(e.target.value)}
+              required
+              className="form-control"
+            />
+          </div>
           <div className="form-group">
             <input
               type="password"

@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
 import '../../styles/Permissoes.css';
+import '../../styles/Clientes.css'; // Importando o CSS com o estilo do botão
 
 function PermissoesPage() {
+  const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [permissoes, setPermissoes] = useState([]);
@@ -79,6 +84,9 @@ function PermissoesPage() {
 
   return (
     <div className="permissoes-container">
+      <button onClick={() => navigate(-1)} className="back-button">
+        <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      </button>
       <h2>Gerenciamento de Permissões por Usuário</h2>
       <p>Selecione um usuário para ver e editar suas permissões de acesso aos módulos do sistema.</p>
       
@@ -92,7 +100,7 @@ function PermissoesPage() {
           <option value="" disabled>-- Selecione --</option>
           {usuarios.map(u => (
             <option key={u.id_usuario} value={u.id_usuario}>
-              {u.nome_usuario} ({u.email})
+              {u.nome_completo} ({u.email})
             </option>
           ))}
         </select>
@@ -102,7 +110,7 @@ function PermissoesPage() {
         <p>Carregando permissões do usuário...</p>
       ) : selectedUser && (
         <div className="permissoes-table-container">
-          <h3>Permissões para: {selectedUser.nome_usuario}</h3>
+          <h3>Permissões para: {selectedUser.nome_completo}</h3>
           <table className="permissoes-table">
             <thead>
               <tr>

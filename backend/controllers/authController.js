@@ -5,14 +5,14 @@ require('dotenv').config();
 
 exports.login = async (req, res) => {
   try {
-    const { nome_usuario, senha } = req.body;
+    const { email, senha } = req.body;
 
-    if (!nome_usuario || !senha) {
-      return res.status(400).json({ error: 'Usuário e senha são obrigatórios.' });
+    if (!email || !senha) {
+      return res.status(400).json({ error: 'E-mail e senha são obrigatórios.' });
     }
 
-    // 1. Encontrar o usuário
-    const usuario = await Usuario.findByUsername(nome_usuario);
+    // 1. Encontrar o usuário pelo e-mail
+    const usuario = await Usuario.findByEmail(email);
     if (!usuario) {
       return res.status(401).json({ error: 'Credenciais inválidas.' }); // Usuário não encontrado
     }
@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { 
         id_usuario: usuario.id_usuario, 
-        nome_usuario: usuario.nome_usuario,
+        nome_completo: usuario.nome_completo,
         perfil: usuario.perfil // Adicionando o perfil do usuário ao token
       },
       process.env.JWT_SECRET || 'seu_segredo_jwt_padrao', // Use uma variável de ambiente!

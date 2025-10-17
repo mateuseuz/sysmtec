@@ -16,3 +16,12 @@ exports.getLogs = async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar logs.' });
   }
 };
+
+exports.clearLogs = async (req, res) => {
+  try {
+    await Log.deleteAll();
+    res.status(200).json({ message: 'Histórico de logs limpo com sucesso.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao limpar os logs.' });
+  }
+};

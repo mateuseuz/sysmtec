@@ -35,7 +35,7 @@ const Mensagem = {
         m.texto, 
         m.timestamp, 
         u.id_usuario,
-        u.nome_usuario 
+        u.nome_completo 
       FROM mensagens m
       JOIN usuarios u ON m.id_usuario = u.id_usuario
       ORDER BY m.timestamp ASC

@@ -76,6 +76,14 @@ body {
     0 0 8px rgba(200, 220, 255, 0.3);
 }
 
+.sysmtec-header .welcome-user {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
 .sysmtec-header h2 {
   font-size: 1.2rem;
   font-weight: normal;
@@ -223,9 +231,10 @@ body {
   font-weight: bold;
   font-size: 1rem;
   border: none;
+  cursor: pointer; /* Adicionado para indicar que é clicável */
   text-align: center;
   transition: all 0.3s ease;
-  font-family: inherit;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .add-client-link:hover,

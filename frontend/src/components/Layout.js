@@ -14,6 +14,7 @@ const Layout = () => {
       <div className="sysmtec-sidebar">
         <header className="sysmtec-header">
           <h1>SYSMTEC</h1>
+          {usuario && <p className="welcome-user">Olá, {usuario.nome_completo}</p>}
         </header>
         <nav>
           <ul>

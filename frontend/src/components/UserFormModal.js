@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import '../styles/UserFormModal.css';
 
 function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
-  const [formData, setFormData] = useState({ email: '', perfil: 'usuario' });
+  const [formData, setFormData] = useState({ email: '', perfil: 'usuario', nome_completo: '' });
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         email: initialData.email || '',
         perfil: initialData.perfil || 'usuario',
+        nome_completo: initialData.nome_completo || '',
       });
     } else {
-      setFormData({ email: '', perfil: 'usuario' });
+      setFormData({ email: '', perfil: 'usuario', nome_completo: '' });
     }
   }, [initialData, isOpen]);
 
@@ -26,7 +27,13 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    // Se não estiver editando, envia apenas email e perfil
+    if (!isEditing) {
+      const { nome_completo, ...createData } = formData;
+      onSubmit(createData);
+    } else {
+      onSubmit(formData);
+    }
   };
 
   const isEditing = initialData && initialData.id_usuario;
@@ -49,6 +56,19 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
               maxLength="50"
             />
           </div>
+          {isEditing && (
+            <div className="form-group">
+              <label htmlFor="nome_completo">Nome Completo</label>
+              <input
+                type="text"
+                id="nome_completo"
+                name="nome_completo"
+                value={formData.nome_completo}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
           <div className="form-group">
             <label htmlFor="perfil">Perfil</label>
             <select

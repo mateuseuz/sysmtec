@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import '../../styles/GerenciarUsuarios.css';
+import '../../styles/Clientes.css'; // Importando o CSS com o estilo do botão
 import UserFormModal from '../../components/UserFormModal';
 import ConfirmationModal from '../../components/ConfirmationModal';
 
 function GerenciarUsuariosPage() {
+  const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -90,6 +95,9 @@ function GerenciarUsuariosPage() {
   return (
     <>
       <div className="gerenciar-usuarios-container">
+        <button onClick={() => navigate(-1)} className="back-button">
+          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+        </button>
         <div className="header-container">
           <h2>Gerenciar Usuários</h2>
           <button onClick={handleOpenCreateModal} className="btn-new-user">
@@ -100,7 +108,7 @@ function GerenciarUsuariosPage() {
         <table className="usuarios-table">
           <thead>
             <tr>
-              <th>Nome de Usuário</th>
+              <th>Nome Completo</th>
               <th>Email</th>
               <th>Perfil</th>
               <th>Ações</th>
@@ -110,7 +118,7 @@ function GerenciarUsuariosPage() {
             {usuarios.length > 0 ? (
               usuarios.map((usuario) => (
                 <tr key={usuario.id_usuario}>
-                  <td>{usuario.nome_usuario}</td>
+                  <td>{usuario.nome_completo}</td>
                   <td>{usuario.email}</td>
                   <td>{usuario.perfil}</td>
                   <td className="action-buttons">

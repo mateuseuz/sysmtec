@@ -7,19 +7,19 @@ import '../styles/Login.css';
 // import logo from '../assets/logo-mtec.png'; 
 
 function LoginPage() {
-  const [nome_usuario, setNomeUsuario] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nome_usuario || !senha) {
-      toast.error('Por favor, preencha o usuário e a senha.');
+    if (!email || !senha) {
+      toast.error('Por favor, preencha o e-mail e a senha.');
       return;
     }
 
     try {
-      const response = await api.login({ nome_usuario, senha });
+      const response = await api.login({ email, senha });
       localStorage.setItem('token', response.token); // Salva o token
       // Opcional: salvar dados do usuário também
       localStorage.setItem('usuario', JSON.stringify(response.usuario));
@@ -44,11 +44,11 @@ function LoginPage() {
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <input
-                type="text"
+                type="email"
                 className="form-control"
-                placeholder="Insira seu usuário..."
-                value={nome_usuario}
-                onChange={(e) => setNomeUsuario(e.target.value)}
+                placeholder="Insira seu e-mail..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group">

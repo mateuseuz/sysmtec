@@ -1,43 +1,26 @@
 const pool = require('../config/database');
 
 const Usuario = {
-  // Modificado para ser usado por um administrador para criar um novo usuário.
-  // O nome de usuário será o e-mail inicialmente.
+  // Cria um novo usuário apenas com e-mail e perfil.
+  // O nome completo e a senha serão definidos pelo usuário na ativação.
   async create(email, perfil = 'usuario') {
-    // Garante que o nome_usuario não exceda o limite do banco de dados.
-    // Usa a parte local do e-mail como base, truncado para 20 caracteres.
-    let nomeUsuario = email.split('@')[0];
-    if (nomeUsuario.length > 20) {
-      nomeUsuario = nomeUsuario.substring(0, 20);
-    }
-
     const query = `
-      INSERT INTO usuarios (nome_usuario, email, perfil, senha_hash)
-      VALUES ($1, $2, $3, $4)
-      RETURNING id_usuario, nome_usuario, email, perfil;
+      INSERT INTO usuarios (email, perfil)
+      VALUES ($1, $2)
+      RETURNING id_usuario, email, perfil;
     `;
-    // Adiciona um placeholder para a senha_hash para satisfazer a restrição NOT NULL.
-    const placeholderSenha = 'aguardando_ativacao';
-    const values = [nomeUsuario, email, perfil, placeholderSenha];
+    // A senha_hash e o nome_completo podem ser nulos inicialmente.
+    const values = [email, perfil];
     
     try {
       const { rows } = await pool.query(query, values);
       return rows[0];
     } catch (error) {
-      if (error.code === '23505') {
-        throw new Error('E-mail ou nome de usuário já está em uso.');
+      if (error.code === '23505') { // violação de chave única
+        throw new Error('Este e-mail já está em uso.');
       }
       throw error;
     }
-  },
-
-  async findByUsername(nome_usuario) {
-    const query = `
-      SELECT id_usuario, nome_usuario, email, perfil, senha_hash FROM usuarios WHERE nome_usuario = $1;
-    `;
-    const values = [nome_usuario];
-    const { rows } = await pool.query(query, values);
-    return rows[0];
   },
 
   async findByEmail(email) {
@@ -51,7 +34,7 @@ const Usuario = {
 
   async findById(id) {
     const query = `
-      SELECT id_usuario, nome_usuario, email, perfil FROM usuarios WHERE id_usuario = $1;
+      SELECT id_usuario, nome_completo, email, perfil FROM usuarios WHERE id_usuario = $1;
     `;
     const values = [id];
     const { rows } = await pool.query(query, values);
@@ -69,7 +52,7 @@ const Usuario = {
 
   async findAll() {
     const query = `
-      SELECT id_usuario, nome_usuario, email, perfil FROM usuarios ORDER BY nome_usuario;
+      SELECT id_usuario, nome_completo, email, perfil FROM usuarios ORDER BY nome_completo;
     `;
     const { rows } = await pool.query(query);
     return rows;
@@ -93,7 +76,7 @@ const Usuario = {
       UPDATE usuarios
       SET ${setClause}
       WHERE id_usuario = $1
-      RETURNING id_usuario, nome_usuario, email, perfil;
+      RETURNING id_usuario, nome_completo, email, perfil;
     `;
 
     const { rows } = await pool.query(query, [id, ...values]);

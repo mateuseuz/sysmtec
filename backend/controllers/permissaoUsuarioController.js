@@ -6,24 +6,38 @@ const PermissaoUsuario = require('../models/permissaoUsuarioModel');
 exports.getPermissoesPorUsuario = async (req, res) => {
   try {
     const { id_usuario } = req.params;
-    let permissoes = await PermissaoUsuario.findByUserId(id_usuario);
+    
+    // Lista de módulos com permissões configuráveis (exclui módulos de admin)
+    const todosOsModulos = [
+      'clientes', 'orcamentos', 'ordensServico', 'visitas', 'chat'
+    ];
 
-    // Se o usuário não tiver permissões (usuário antigo), gera um conjunto padrão
-    if (permissoes.length === 0) {
-      const modulos = [
-        'clientes', 'orcamentos', 'ordensServico', 'visitas', 
-        'usuarios', 'permissoes', 'chat', 'logs'
-      ];
-      permissoes = modulos.map(modulo => ({
-        id_usuario: parseInt(id_usuario, 10),
-        modulo_nome: modulo,
-        pode_ler: false,
-        pode_escrever: false,
-        pode_deletar: false,
-      }));
-    }
+    // Busca as permissões que o usuário já tem no banco de dados
+    const permissoesSalvas = await PermissaoUsuario.findByUserId(id_usuario);
+    
+    // Mapeia as permissões salvas para fácil acesso
+    const permissoesMap = new Map(
+      permissoesSalvas.map(p => [p.modulo_nome, p])
+    );
 
-    res.status(200).json(permissoes);
+    // Mescla a lista completa de módulos com as permissões salvas
+    const permissoesCompletas = todosOsModulos.map(modulo => {
+      if (permissoesMap.has(modulo)) {
+        // Se a permissão existe, retorna ela
+        return permissoesMap.get(modulo);
+      } else {
+        // Se não existe, cria uma permissão padrão (tudo false)
+        return {
+          id_usuario: parseInt(id_usuario, 10),
+          modulo_nome: modulo,
+          pode_ler: false,
+          pode_escrever: false,
+          pode_deletar: false,
+        };
+      }
+    });
+
+    res.status(200).json(permissoesCompletas);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar permissões do usuário.' });
   }

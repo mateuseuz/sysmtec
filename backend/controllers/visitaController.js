@@ -4,7 +4,7 @@ const { createLog } = require('./logController');
 exports.createAgendamento = async (req, res) => {
   try {
     const novoAgendamento = await Visita.create(req.body);
-    await createLog(req.usuario.nome_usuario, 'Criação', `Agendamento "${req.body.titulo}"`);
+    await createLog(req.usuario.nome_completo, 'Criação', `Agendamento "${req.body.titulo}"`);
     res.status(201).json(novoAgendamento);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -35,7 +35,7 @@ exports.getAgendamentoById = async (req, res) => {
 exports.updateAgendamento = async (req, res) => {
   try {
     const agendamentoAtualizado = await Visita.update(req.params.id, req.body);
-    await createLog(req.usuario.nome_usuario, 'Atualização', `Agendamento "${req.body.titulo}"`);
+    await createLog(req.usuario.nome_completo, 'Atualização', `Agendamento "${req.body.titulo}"`);
     res.status(200).json(agendamentoAtualizado);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -50,7 +50,7 @@ exports.deleteAgendamento = async (req, res) => {
       return res.status(404).json({ error: 'Agendamento não encontrado' });
     }
     await Visita.delete(id_visita);
-    await createLog(req.usuario.nome_usuario, 'Exclusão', `Agendamento "${visita.titulo}"`);
+    await createLog(req.usuario.nome_completo, 'Exclusão', `Agendamento "${visita.titulo}"`);
     res.status(200).json({ message: 'Agendamento deletado com sucesso' });
   } catch (error) {
     res.status(400).json({ error: error.message });
