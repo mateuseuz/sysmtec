@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Mensagem = require('../models/mensagemModel');
-const Permissao = require('../models/permissaoModel'); // Importar o modelo de permissão
+const PermissaoUsuario = require('../models/permissaoUsuarioModel'); // Mudar para o novo modelo
 
 const initSocket = (io) => {
   // Middleware de autenticação do Socket.IO
@@ -65,7 +65,8 @@ const initSocket = (io) => {
 
         // Admin tem permissão para apagar, não precisa verificar.
         if (socket.usuario.perfil !== 'admin') {
-          const permissao = await Permissao.findByProfileAndModule(socket.usuario.perfil, 'chat');
+          // Mudar para a nova lógica de permissão por usuário
+          const permissao = await PermissaoUsuario.findByUserIdAndModule(socket.usuario.id_usuario, 'chat');
           
           if (!permissao || !permissao.pode_deletar) {
             return socket.emit('erro_chat', { message: 'Ação não permitida.' });

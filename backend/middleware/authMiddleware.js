@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Permissao = require('../models/permissaoModel');
+const PermissaoUsuario = require('../models/permissaoUsuarioModel'); // Mudar para o novo modelo
 require('dotenv').config();
 
 const protect = (req, res, next) => {
@@ -40,7 +40,8 @@ const checkPermission = (modulo, permissao_requerida) => {
     }
 
     try {
-      const permissao = await Permissao.findByProfileAndModule(req.usuario.perfil, modulo);
+      // Mudar para a nova lógica de permissão por usuário
+      const permissao = await PermissaoUsuario.findByUserIdAndModule(req.usuario.id_usuario, modulo);
 
       if (permissao && permissao[permissao_requerida]) {
         next(); // Usuário tem a permissão

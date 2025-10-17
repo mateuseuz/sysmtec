@@ -8,7 +8,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes'); // Importar rotas de us
 const authRoutes = require('./routes/authRoutes'); // Importar rotas de autenticação
 const logRoutes = require('./routes/logRoutes');
 const mensagemRoutes = require('./routes/mensagemRoutes');
-const permissaoRoutes = require('./routes/permissaoRoutes');
+const permissaoUsuarioRoutes = require('./routes/permissaoUsuarioRoutes'); // Novas rotas
 const { initSocket } = require('./services/socketService');
 const { runMigrations } = require('./config/migrate'); // Importar o serviço de migração
 require('dotenv').config();
@@ -27,7 +27,7 @@ app.use('/api/agenda', visitaRoutes);
 app.use('/api/usuarios', usuarioRoutes); // Usar rotas de usuário
 app.use('/api/auth', authRoutes);
 app.use('/api/mensagens', mensagemRoutes);
-app.use('/api/permissoes', permissaoRoutes);
+app.use('/api/permissoes-usuario', permissaoUsuarioRoutes); // Novo, permissões por usuário
 app.use('/api/logs', logRoutes); // Rota específica para logs
 
 // Rota simples de teste
