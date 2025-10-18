@@ -4,6 +4,6 @@ const logController = require('../controllers/logController');
 const { protect, isAdmin } = require('../middleware/authMiddleware');
 
 router.get('/', protect, isAdmin, logController.getLogs);
-router.delete('/', protect, isAdmin, logController.clearLogs);
+router.delete('/clear', protect, isAdmin, logController.clearLogs);
 
 module.exports = router;

@@ -27,13 +27,13 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Se não estiver editando, envia apenas email e perfil
-    if (!isEditing) {
-      const { nome_completo, ...createData } = formData;
-      onSubmit(createData);
-    } else {
-      onSubmit(formData);
+    // Garante que o perfil não seja enviado ao editar.
+    // Ao criar, o backend já assume 'usuario' como padrão.
+    const dataToSend = { ...formData };
+    if (isEditing) {
+      delete dataToSend.perfil;
     }
+    onSubmit(dataToSend);
   };
 
   const isEditing = initialData && initialData.id_usuario;
@@ -69,19 +69,7 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
               />
             </div>
           )}
-          <div className="form-group">
-            <label htmlFor="perfil">Perfil</label>
-            <select
-              id="perfil"
-              name="perfil"
-              value={formData.perfil}
-              onChange={handleChange}
-              required
-            >
-              <option value="usuario">Usuário</option>
-              <option value="admin">Administrador</option>
-            </select>
-          </div>
+          {/* O campo Perfil foi removido do formulário */}
           <div className="modal-actions">
             <button type="button" onClick={onClose} className="btn-cancel">Cancelar</button>
             <button type="submit" className="btn-save">Salvar</button>

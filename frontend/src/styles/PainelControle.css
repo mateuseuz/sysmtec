@@ -1,3 +1,14 @@
+.painel-controle-container {
+  padding: 2rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.painel-controle-container h2 {
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
 .admin-options {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -52,4 +63,15 @@
 .action-card span {
   font-size: 1rem;
   font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

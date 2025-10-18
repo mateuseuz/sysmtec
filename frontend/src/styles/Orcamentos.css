@@ -78,8 +78,7 @@
   margin-bottom: 20px;
 }
 
-.export-pdf-button {
-  background-color: #4CAF50; /* Verde */
+.btn-primary, .btn-danger {
   color: white;
   border: none;
   padding: 10px 20px;
@@ -96,6 +95,18 @@
   font-weight: bold;
 }
 
-.export-pdf-button:hover {
+.btn-primary {
+  background-color: #4CAF50; /* Verde */
+}
+
+.btn-primary:hover {
   background-color: #45a049;
+}
+
+.btn-danger {
+  background-color: #f44336; /* Vermelho */
+}
+
+.btn-danger:hover {
+  background-color: #d32f2f;
 }

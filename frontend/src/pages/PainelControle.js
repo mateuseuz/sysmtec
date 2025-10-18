@@ -6,9 +6,8 @@ import '../styles/PainelControle.css';
 
 function PainelControlePage() {
   return (
-    <>
+    <div className="painel-controle-container">
       <h2>Painel de Controle</h2>
-      <p>Bem-vindo ao painel de controle. Utilize as opções abaixo para gerenciar o sistema.</p>
 
       <div className="admin-options">
         <h3>Opções de Administrador</h3>
@@ -33,7 +32,7 @@ function PainelControlePage() {
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 }
 

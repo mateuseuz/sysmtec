@@ -1,82 +1,96 @@
 .permissoes-container {
   padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .permissoes-container h2 {
-  color: #032f7e;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
 }
 
-.permissoes-table-container {
-  overflow-x: auto;
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
-.permissoes-table {
+.user-permission-select {
+  flex-grow: 1;
+  max-width: 600px; /* Limita a largura máxima */
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: white;
+  margin-left: 2rem; /* Adiciona espaço entre o título e o select */
+}
+
+/* Estilos da tabela principal, reutilizados de GerenciarUsuarios.css */
+.usuarios-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.permissoes-table th,
-.permissoes-table td {
-  padding: 12px 15px;
+.usuarios-table th, .usuarios-table td {
+  padding: 1rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-.permissoes-table thead th {
-  background-color: #f2f2f2;
+.usuarios-table th {
+  background-color: #f8f9fa;
   font-weight: 600;
-  color: #333;
-  text-transform: uppercase;
-  font-size: 0.85rem;
 }
 
-.permissoes-table tbody tr:hover {
-  background-color: #f5f5f5;
+.usuarios-table tbody tr:hover {
+  background-color: #f1f1f1;
 }
 
-.permissoes-table .perfil-header {
-  font-weight: bold;
-  color: #032f7e;
-  text-transform: capitalize;
+.usuarios-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.permissoes-table .modulo-cell {
+/* Estilos específicos para a tabela de permissões */
+.usuarios-table .modulo-cell {
   font-weight: 500;
   text-transform: capitalize;
 }
 
-.permissoes-table .permission-group {
+.usuarios-table .permission-group {
   text-align: center;
 }
 
-.permissoes-table .permission-group input[type="checkbox"] {
+.usuarios-table .permission-group input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
 }
 
-/* Estilo para o botão Voltar (reutilizado de GerenciarUsuarios.css) */
-.btn-voltar {
-  background-color: #6c757d; /* Cinza */
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
+.admin-notice {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
   font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-  display: inline-block;
-  transition: background-color 0.3s ease;
+  color: #495057;
+  text-align: center;
 }
 
-.btn-voltar:hover {
-  background-color: #5a6268;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

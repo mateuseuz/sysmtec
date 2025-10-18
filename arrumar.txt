@@ -1,3 +1,5 @@
 explicar código do estágio e uso das ferramentas/tecnologias
 
-única mudança no workflow seria o 'comunicar associado'?
+- padronizar telas do painel de controle
+- corrigir para SYSMTEC no e-mail
+

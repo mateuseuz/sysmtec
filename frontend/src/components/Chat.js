@@ -143,11 +143,11 @@ function Chat() {
         <div className="chat-body">
           <div className="messages-area">
             {messages.map((msg) => (
-              <div 
-                key={msg.id_mensagem} 
-                className={`message ${msg.id_usuario === currentUser?.id_usuario ? 'mine' : 'other'}`}>
-                <div className="message-header">
-                  <span className="user-name">{msg.nome_usuario}</span>
+              <div key={msg.id_mensagem} className={`message-wrapper ${msg.id_usuario === currentUser?.id_usuario ? 'mine' : 'other'}`}>
+                <span className="user-name">{msg.nome_usuario}</span>
+                <div className="message">
+                  <p>{msg.texto}</p>
+                  <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>
                   {canDelete && (
                     <button 
                       className="delete-btn" 
@@ -158,8 +158,6 @@ function Chat() {
                     </button>
                   )}
                 </div>
-                <p>{msg.texto}</p>
-                <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>
               </div>
             ))}
             <div ref={messagesEndRef} />

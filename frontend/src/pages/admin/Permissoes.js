@@ -87,17 +87,15 @@ function PermissoesPage() {
       <button onClick={() => navigate(-1)} className="back-button">
         <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
       </button>
-      <h2>Gerenciamento de Permissões por Usuário</h2>
-      <p>Selecione um usuário para ver e editar suas permissões de acesso aos módulos do sistema.</p>
-      
-      <div className="form-group">
-        <label htmlFor="user-select">Selecione um Usuário</label>
+
+      <div className="header-container">
+        <h2>Gerenciar Permissões</h2>
         <select 
-          id="user-select" 
           onChange={(e) => handleUserSelect(parseInt(e.target.value, 10))}
           defaultValue=""
+          className="user-permission-select"
         >
-          <option value="" disabled>-- Selecione --</option>
+          <option value="" disabled>Selecione um usuário para configurar suas permissões de acesso</option>
           {usuarios.map(u => (
             <option key={u.id_usuario} value={u.id_usuario}>
               {u.nome_completo} ({u.email})
@@ -109,9 +107,8 @@ function PermissoesPage() {
       {loadingPermissoes ? (
         <p>Carregando permissões do usuário...</p>
       ) : selectedUser && (
-        <div className="permissoes-table-container">
-          <h3>Permissões para: {selectedUser.nome_completo}</h3>
-          <table className="permissoes-table">
+        <>
+          <table className="usuarios-table">
             <thead>
               <tr>
                 <th>Módulo</th>
@@ -157,7 +154,7 @@ function PermissoesPage() {
               O perfil "admin" tem acesso total a todos os módulos. As permissões não podem ser editadas.
             </p>
           )}
-        </div>
+        </>
       )}
     </div>
   );

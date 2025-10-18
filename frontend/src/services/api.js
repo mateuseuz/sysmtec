@@ -88,7 +88,7 @@ const apiClientes = {
 
   // Logs
   listarLogs: () => api.get('/logs'),
-  limparLogs: () => api.delete('/logs'),
+  limparLogs: () => api.delete('/logs/clear'),
 
   // Mensagens (Chat)
   listarMensagens: () => api.get('/mensagens'),

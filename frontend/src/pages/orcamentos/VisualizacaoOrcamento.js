@@ -181,7 +181,7 @@ const VisualizacaoOrcamento = () => {
         <button onClick={() => navigate('/orcamentos')} className="back-button">
           <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
         </button>
-        <button onClick={handleExportPDF} className="export-pdf-button">
+          <button onClick={handleExportPDF} className="btn-primary">
           <FontAwesomeIcon icon={faFilePdf} /> EXPORTAR PARA PDF
         </button>
       </div>

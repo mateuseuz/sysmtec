@@ -26,7 +26,7 @@ exports.adminCreateUsuario = async (req, res) => {
 
     const activationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/ativar-conta/${activationToken}`;
     const emailHtml = `
-      <h1>Bem-vindo(a) ao SysMTEC!</h1>
+      <h1>Bem-vindo(a) ao SYSMTEC!</h1>
       <p>Sua conta foi criada. Por favor, clique no link abaixo para definir sua senha e ativar sua conta:</p>
       <a href="${activationUrl}" style="padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px;">Definir Minha Senha</a>
       <p>Se você não solicitou esta conta, por favor, ignore este e-mail.</p>
@@ -34,7 +34,7 @@ exports.adminCreateUsuario = async (req, res) => {
 
     await sendEmail({
       to: novoUsuario.email,
-      subject: 'Ative sua conta SysMTEC',
+      subject: 'Ative sua conta no SYSMTEC',
       text: `Bem-vindo! Ative sua conta aqui: ${activationUrl}`,
       html: emailHtml,
     });

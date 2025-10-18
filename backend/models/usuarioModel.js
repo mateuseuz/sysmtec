@@ -52,7 +52,7 @@ const Usuario = {
 
   async findAll() {
     const query = `
-      SELECT id_usuario, nome_completo, email, perfil FROM usuarios ORDER BY nome_completo;
+      SELECT id_usuario, nome_completo, email, perfil FROM usuarios WHERE perfil <> 'admin' ORDER BY nome_completo;
     `;
     const { rows } = await pool.query(query);
     return rows;

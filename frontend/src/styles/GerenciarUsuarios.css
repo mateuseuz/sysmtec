@@ -66,25 +66,22 @@
 
 .action-buttons .btn-edit,
 .action-buttons .btn-delete {
+  background-color: transparent;
+  color: var(--text-dark);
+  padding: 0.4rem;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
   cursor: pointer;
-  color: white;
-  transition: opacity 0.3s ease;
-}
-
-.action-buttons .btn-edit {
-  background-color: #17a2b8; /* ciano */
-}
-
-.action-buttons .btn-delete {
-  background-color: #dc3545; /* vermelho */
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .action-buttons .btn-edit:hover,
 .action-buttons .btn-delete:hover {
-  opacity: 0.8;
+  background-color: rgba(0,0,0,0.05);
+  color: #0056b3;
 }
 
 .status {

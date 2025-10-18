@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import api from '../services/api';
 import ConfirmationModal from '../components/ConfirmationModal';
-import '../styles/Clientes.css';
 import '../styles/Orcamentos.css'; // Para o estilo do botão
+import '../styles/Log.css';
 
 function LogPage() {
   const navigate = useNavigate();
@@ -50,44 +50,43 @@ function LogPage() {
   };
 
   return (
-    <>
-      <div className="form-actions">
-        <button onClick={() => navigate('/painel-controle')} className="back-button">
-          <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
-        </button>
-        <button onClick={() => setIsModalOpen(true)} className="export-pdf-button">
+    <div className="logs-container">
+      <button onClick={() => navigate('/painel-controle')} className="back-button">
+        <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
+      </button>
+      <div className="header-container">
+        <h2>Visualizar Logs</h2>
+        <button onClick={() => setIsModalOpen(true)} className="btn-danger">
           <FontAwesomeIcon icon={faTrash} /> LIMPAR LOGS
         </button>
       </div>
 
-      <div className="clientes-table-container">
-        <table className="clientes-table">
-          <thead>
-            <tr>
-              <th>Autor</th>
-              <th>Ação</th>
-              <th>Alvo</th>
-              <th>Data e Hora</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.length > 0 ? (
-              logs.map((log) => (
-                <tr key={log.id_log}>
-                  <td>{log.autor}</td>
-                  <td>{log.acao}</td>
-                  <td>{log.alvo}</td>
-                  <td>{new Date(log.data).toLocaleString('pt-BR')}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Nenhum log encontrado.</td>
+      <table className="usuarios-table">
+        <thead>
+          <tr>
+            <th>Autor</th>
+            <th>Ação</th>
+            <th>Alvo</th>
+            <th>Data e Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          {logs.length > 0 ? (
+            logs.map((log) => (
+              <tr key={log.id_log}>
+                <td>{log.autor}</td>
+                <td>{log.acao}</td>
+                <td>{log.alvo}</td>
+                <td>{new Date(log.data).toLocaleString('pt-BR')}</td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Nenhum log encontrado.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
       <ConfirmationModal
         isOpen={isModalOpen}
@@ -96,7 +95,7 @@ function LogPage() {
         title="Confirmar Limpeza de Logs"
         message="Você tem certeza que deseja apagar permanentemente todo o histórico de logs? Esta ação não pode ser desfeita."
       />
-    </>
+    </div>
   );
 }
 

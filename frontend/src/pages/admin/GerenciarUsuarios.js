@@ -2,10 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPencilAlt, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import '../../styles/GerenciarUsuarios.css';
 import '../../styles/Clientes.css'; // Importando o CSS com o estilo do botão
+import '../../styles/Orcamentos.css';
 import UserFormModal from '../../components/UserFormModal';
 import ConfirmationModal from '../../components/ConfirmationModal';
 
@@ -100,8 +101,8 @@ function GerenciarUsuariosPage() {
         </button>
         <div className="header-container">
           <h2>Gerenciar Usuários</h2>
-          <button onClick={handleOpenCreateModal} className="btn-new-user">
-            + Novo Usuário
+          <button onClick={handleOpenCreateModal} className="btn-primary">
+            <FontAwesomeIcon icon={faPlus} /> NOVO USUÁRIO
           </button>
         </div>
 
@@ -110,7 +111,6 @@ function GerenciarUsuariosPage() {
             <tr>
               <th>Nome Completo</th>
               <th>Email</th>
-              <th>Perfil</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -120,16 +120,19 @@ function GerenciarUsuariosPage() {
                 <tr key={usuario.id_usuario}>
                   <td>{usuario.nome_completo}</td>
                   <td>{usuario.email}</td>
-                  <td>{usuario.perfil}</td>
                   <td className="action-buttons">
-                    <button onClick={() => handleOpenEditModal(usuario)} className="btn-edit">Editar</button>
-                    <button onClick={() => handleOpenDeleteModal(usuario.id_usuario)} className="btn-delete">Excluir</button>
+                    <button onClick={() => handleOpenEditModal(usuario)} className="btn-edit" title="Editar usuário">
+                      <FontAwesomeIcon icon={faPencilAlt} />
+                    </button>
+                    <button onClick={() => handleOpenDeleteModal(usuario.id_usuario)} className="btn-delete" title="Excluir usuário">
+                      <FontAwesomeIcon icon={faTrashAlt} />
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="4">Nenhum usuário encontrado.</td>
+                <td colSpan="3">Nenhum usuário encontrado.</td>
               </tr>
             )}
           </tbody>

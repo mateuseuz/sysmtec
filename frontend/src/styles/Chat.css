@@ -64,51 +64,62 @@
   flex-direction: column;
 }
 
-.message {
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
+  max-width: 80%;
+}
+
+.message-wrapper.mine {
+  align-self: flex-end;
+}
+
+.message-wrapper.other {
+  align-self: flex-start;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 4px;
+  padding: 0 10px;
+}
+
+.message-wrapper.mine .user-name {
+  text-align: right;
+}
+
+.message {
   padding: 10px 15px;
   border-radius: 18px;
-  max-width: 80%;
   word-wrap: break-word;
   line-height: 1.4;
-}
-
-.message-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
-}
-
-.message .user-name {
-    font-weight: bold;
-    font-size: 0.8rem;
-    color: #032f7e;
+  gap: 10px;
 }
 
 .message .timestamp {
-    display: block;
-    font-size: 0.7rem;
-    color: #999;
-    text-align: right;
-    margin-top: 5px;
+  font-size: 0.7rem;
+  color: #999;
+  align-self: flex-end;
 }
 
 /* My Messages */
-.message.mine {
+.message-wrapper.mine .message {
   background-color: #dcf8c6;
-  align-self: flex-end;
   border-radius: 18px 18px 5px 18px;
 }
 
-.message.mine .user-name {
-    color: #62a83e;
+.message-wrapper.mine .user-name {
+  color: #62a83e;
 }
 
 /* Other's Messages */
-.message.other {
+.message-wrapper.other .message {
   background-color: #e9e9eb;
-  align-self: flex-start;
   border-radius: 18px 18px 18px 5px;
 }
 
