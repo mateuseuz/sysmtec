@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Mensagem = require('../models/mensagemModel');
-const PermissaoUsuario = require('../models/permissaoUsuarioModel'); // Mudar para o novo modelo
+const Usuario = require('../models/usuarioModel'); // Importar o modelo de usuário
+const PermissaoUsuario = require('../models/permissaoUsuarioModel');
 
 const initSocket = (io) => {
   // Middleware de autenticação do Socket.IO
@@ -33,17 +34,21 @@ const initSocket = (io) => {
       try {
         // 1. Salvar a mensagem no banco de dados
         const novaMensagem = await Mensagem.create(socket.usuario.id_usuario, texto.trim());
+        
+        // 2. Buscar o nome de usuário atualizado do banco de dados
+        const usuario = await Usuario.findById(socket.usuario.id_usuario);
+        const nomeUsuario = usuario ? usuario.nome_completo : 'Usuário desconhecido';
 
-        // 2. Preparar o objeto da mensagem para enviar aos clientes (incluindo o nome de usuário)
+        // 3. Preparar o objeto da mensagem com o nome de usuário do banco
         const mensagemParaClientes = {
           id_mensagem: novaMensagem.id_mensagem,
           texto: novaMensagem.texto,
           timestamp: novaMensagem.timestamp,
           id_usuario: socket.usuario.id_usuario,
-          nome_usuario: socket.usuario.nome_usuario,
+          nome_usuario: nomeUsuario,
         };
 
-        // 3. Transmitir a mensagem para todos os clientes conectados
+        // 4. Transmitir a mensagem para todos os clientes conectados
         io.emit('mensagem_recebida', mensagemParaClientes);
 
       } catch (error) {

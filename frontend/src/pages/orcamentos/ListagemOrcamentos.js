@@ -12,8 +12,32 @@ function ListagemOrcamentos() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrcamentoId, setSelectedOrcamentoId] = useState(null);
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('usuario'));
+
+    const fetchPermissions = async () => {
+      // Se o usuário for admin, concede todas as permissões e evita a chamada da API
+      if (user && user.perfil === 'admin') {
+        setPermissions({ pode_ler: true, pode_escrever: true, pode_deletar: true });
+        return;
+      }
+      
+      // Para outros usuários, busca as permissões específicas
+      try {
+        const response = await api.getMinhasPermissoes();
+        const orcamentosPermissions = response.find(p => p.modulo_nome === 'orcamentos');
+        setPermissions(orcamentosPermissions || { pode_ler: false, pode_escrever: false, pode_deletar: false });
+      } catch (error) {
+        // Exibe o toast apenas se o erro não for de "Acesso negado"
+        if (error.response && error.response.status !== 403 && error.response.status !== 401) {
+          toast.error('Erro ao carregar permissões.');
+        }
+      }
+    };
+
+    fetchPermissions();
     carregarOrcamentos();
   }, []);
 
@@ -61,11 +85,13 @@ function ListagemOrcamentos() {
 
   return (
     <>
-      <div className="clientes-header">
-        <Link to="/orcamentos/novo" className="add-client-link">
-          <FontAwesomeIcon icon={faPlus} /> CADASTRAR ORÇAMENTO
-        </Link>
-      </div>
+      {permissions.pode_escrever && (
+        <div className="clientes-header">
+          <Link to="/orcamentos/novo" className="add-client-link">
+            <FontAwesomeIcon icon={faPlus} /> CADASTRAR ORÇAMENTO
+          </Link>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="loading-container">
@@ -99,27 +125,33 @@ function ListagemOrcamentos() {
                     }).format(orcamento.valor_total)}
                   </td>
                   <td className="actions-cell">
-                    <Link
-                      to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
-                      className="view-button"
-                      title="Visualizar orçamento"
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </Link>
-                    <Link
-                      to={`/orcamentos/editar/${orcamento.id_orcamento}`}
-                      className="edit-button"
-                      title="Editar orçamento"
-                    >
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </Link>
-                    <button
-                      onClick={() => handleExcluir(orcamento.id_orcamento)}
-                      className="delete-button"
-                      title="Excluir orçamento"
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
+                    {permissions.pode_ler && (
+                      <Link
+                        to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
+                        className="view-button"
+                        title="Visualizar orçamento"
+                      >
+                        <FontAwesomeIcon icon={faEye} />
+                      </Link>
+                    )}
+                    {permissions.pode_escrever && (
+                      <Link
+                        to={`/orcamentos/editar/${orcamento.id_orcamento}`}
+                        className="edit-button"
+                        title="Editar orçamento"
+                      >
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                      </Link>
+                    )}
+                    {permissions.pode_deletar && (
+                      <button
+                        onClick={() => handleExcluir(orcamento.id_orcamento)}
+                        className="delete-button"
+                        title="Excluir orçamento"
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -13,7 +13,8 @@ function Chat() {
   const [currentUser, setCurrentUser] = useState(null);
   const socket = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [canDelete, setCanDelete] = useState(false); // Novo estado para permissão
+  const [canDelete, setCanDelete] = useState(false);
+  const [hasChatPermission, setHasChatPermission] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -29,10 +30,31 @@ function Chat() {
     if (user && token) {
       setCurrentUser(user);
 
-      const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000', {
-        auth: {
-          token: token
+      const checkPermissions = async () => {
+        if (user.perfil === 'admin') {
+          setHasChatPermission(true);
+          setCanDelete(true);
+          return;
         }
+
+        try {
+          const minhasPermissoes = await api.getMinhasPermissoes();
+          const chatPermission = minhasPermissoes.find(p => p.modulo_nome === 'chat');
+          if (chatPermission && (chatPermission.pode_ler || chatPermission.pode_escrever || chatPermission.pode_deletar)) {
+            setHasChatPermission(true);
+            setCanDelete(chatPermission.pode_deletar);
+          }
+        } catch (error) {
+          if (error.response && error.response.status !== 403 && error.response.status !== 401) {
+            toast.error(`Erro ao verificar permissões do chat: ${error.message}`);
+          }
+        }
+      };
+      
+      checkPermissions();
+
+      const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000', {
+        auth: { token }
       });
 
       socket.current = newSocket;
@@ -42,12 +64,9 @@ function Chat() {
         setIsConnected(true);
       });
 
-      newSocket.on('mensagem_recebida', (mensagem) => {
-        setMessages((prevMessages) => [...prevMessages, mensagem]);
-      });
-
+      newSocket.on('mensagem_recebida', (mensagem) => setMessages(prev => [...prev, mensagem]));
       newSocket.on('mensagem_apagada', ({ id_mensagem }) => {
-        setMessages((prevMessages) => prevMessages.filter(msg => msg.id_mensagem !== id_mensagem));
+        setMessages(prev => prev.filter(msg => msg.id_mensagem !== id_mensagem));
         toast.info("Uma mensagem foi removida do chat.");
       });
 
@@ -56,9 +75,7 @@ function Chat() {
         setIsConnected(false);
       });
 
-      newSocket.on('erro_chat', (error) => {
-        toast.error(`Erro no chat: ${error.message}`);
-      });
+      newSocket.on('erro_chat', (error) => toast.error(`Erro no chat: ${error.message}`));
 
       return () => {
         if (socket.current) {
@@ -70,41 +87,20 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    const fetchHistoryAndPermissions = async () => {
-      // Admin tem permissão para deletar por padrão, não precisa checar a API.
-      if (currentUser?.perfil === 'admin') {
-        setCanDelete(true);
-      }
-
-      try {
-        const [history, minhasPermissoes] = await Promise.all([
-          api.listarMensagens(),
-          // Se não for admin, busca permissões. Se for, pode pular.
-          currentUser?.perfil !== 'admin' ? api.getMinhasPermissoes() : Promise.resolve([])
-        ]);
-
-        setMessages(history);
-
-        // A lógica de permissão só é necessária se não for admin
-        if (currentUser?.perfil !== 'admin') {
-          const chatPermission = minhasPermissoes.find(p => p.modulo_nome === 'chat');
-          if (chatPermission && chatPermission.pode_deletar) {
-            setCanDelete(true);
+    const fetchHistory = async () => {
+      if (hasChatPermission) {
+        try {
+          const history = await api.listarMensagens();
+          setMessages(history);
+        } catch (error) {
+          if (error && error.message && !error.message.includes('Acesso negado')) {
+            toast.error(`Erro ao carregar histórico do chat: ${error.message}`);
           }
-        }
-      } catch (error) {
-        // Com Promise.all, o catch é acionado apenas uma vez.
-        // Apenas mostramos o erro se não for um erro de "Acesso negado".
-        if (error && error.message && !error.message.includes('Acesso negado')) {
-          toast.error(`Erro ao carregar dados do chat: ${error.message}`);
         }
       }
     };
-    
-    if (currentUser) {
-        fetchHistoryAndPermissions();
-    }
-  }, [currentUser]);
+    fetchHistory();
+  }, [hasChatPermission]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -126,9 +122,24 @@ function Chat() {
     setIsOpen(!isOpen);
   };
   
+  const formatUserName = (fullName) => {
+    if (!fullName) return '';
+    const nameParts = fullName.trim().split(' ');
+    if (nameParts.length < 2) {
+      return fullName;
+    }
+    const firstName = nameParts[0];
+    const lastNameInitial = nameParts[nameParts.length - 1].charAt(0);
+    return `${firstName} ${lastNameInitial}.`;
+  };
+
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return '';
     return new Date(timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  if (!hasChatPermission) {
+    return null;
   }
 
   return (
@@ -144,7 +155,7 @@ function Chat() {
           <div className="messages-area">
             {messages.map((msg) => (
               <div key={msg.id_mensagem} className={`message-wrapper ${msg.id_usuario === currentUser?.id_usuario ? 'mine' : 'other'}`}>
-                <span className="user-name">{msg.nome_usuario}</span>
+                <span className="user-name">{formatUserName(msg.nome_usuario)}</span>
                 <div className="message">
                   <p>{msg.texto}</p>
                   <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>

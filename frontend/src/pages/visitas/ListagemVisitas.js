@@ -16,6 +16,7 @@ function ListagemVisitas() {
   const [isLoading, setIsLoading] = useState(true);
   const [popover, setPopover] = useState({ visible: false, x: 0, y: 0, event: null });
   const [visitaToDelete, setVisitaToDelete] = useState(null);
+  const [permissions, setPermissions] = useState({});
 
   const carregarVisitas = async () => {
     setIsLoading(true);
@@ -30,6 +31,29 @@ function ListagemVisitas() {
   };
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('usuario'));
+
+    const fetchPermissions = async () => {
+      // Se o usuário for admin, concede todas as permissões e evita a chamada da API
+      if (user && user.perfil === 'admin') {
+        setPermissions({ pode_ler: true, pode_escrever: true, pode_deletar: true });
+        return;
+      }
+      
+      // Para outros usuários, busca as permissões específicas
+      try {
+        const response = await api.getMinhasPermissoes();
+        const visitasPermissions = response.find(p => p.modulo_nome === 'visitas');
+        setPermissions(visitasPermissions || { pode_ler: false, pode_escrever: false, pode_deletar: false });
+      } catch (error) {
+        // Exibe o toast apenas se o erro não for de "Acesso negado"
+        if (error.response && error.response.status !== 403 && error.response.status !== 401) {
+          toast.error('Erro ao carregar permissões.');
+        }
+      }
+    };
+
+    fetchPermissions();
     carregarVisitas();
   }, []);
 
@@ -79,9 +103,11 @@ function ListagemVisitas() {
 
   return (
     <div onClick={closePopover}>
-      <div className="agenda-header">
-        <Link to="/agenda/novo" className="add-client-link"><FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA</Link>
-      </div>
+      {permissions.pode_escrever && (
+        <div className="agenda-header">
+          <Link to="/agenda/novo" className="add-client-link"><FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA</Link>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="loading-container"><div className="spinner"></div><p>Carregando...</p></div>
@@ -105,9 +131,15 @@ function ListagemVisitas() {
           style={{ top: popover.y, left: popover.x }}
           onClick={(e) => e.stopPropagation()}
         >
-          <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faEye} /></Link>
-          <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faPencilAlt} /></Link>
-          <button onClick={() => handleDelete(popover.event.id)} className="popover-icon popover-button"><FontAwesomeIcon icon={faTrashAlt} /></button>
+          {permissions.pode_ler && (
+            <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faEye} /></Link>
+          )}
+          {permissions.pode_escrever && (
+            <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faPencilAlt} /></Link>
+          )}
+          {permissions.pode_deletar && (
+            <button onClick={() => handleDelete(popover.event.id)} className="popover-icon popover-button"><FontAwesomeIcon icon={faTrashAlt} /></button>
+          )}
         </div>
       )}
 

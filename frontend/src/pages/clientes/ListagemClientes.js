@@ -13,8 +13,32 @@ function ListagemClientes() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState(null);
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('usuario'));
+
+    const fetchPermissions = async () => {
+      // Se o usuário for admin, concede todas as permissões e evita a chamada da API
+      if (user && user.perfil === 'admin') {
+        setPermissions({ pode_ler: true, pode_escrever: true, pode_deletar: true });
+        return;
+      }
+      
+      // Para outros usuários, busca as permissões específicas
+      try {
+        const response = await api.getMinhasPermissoes();
+        const clientesPermissions = response.find(p => p.modulo_nome === 'clientes');
+        setPermissions(clientesPermissions || { pode_ler: false, pode_escrever: false, pode_deletar: false });
+      } catch (error) {
+        // Exibe o toast apenas se o erro não for de "Acesso negado"
+        if (error.response && error.response.status !== 403 && error.response.status !== 401) {
+          toast.error('Erro ao carregar permissões.');
+        }
+      }
+    };
+
+    fetchPermissions();
     carregarClientes();
   }, []);
 
@@ -70,11 +94,13 @@ function ListagemClientes() {
 
   return (
     <>
-      <div className="clientes-header">
-        <Link to="/clientes/novo" className="add-client-link">
-          <FontAwesomeIcon icon={faPlus} /> CADASTRAR CLIENTE
-        </Link>
-      </div>
+      {permissions.pode_escrever && (
+        <div className="clientes-header">
+          <Link to="/clientes/novo" className="add-client-link">
+            <FontAwesomeIcon icon={faPlus} /> CADASTRAR CLIENTE
+          </Link>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="loading-container">
@@ -105,27 +131,33 @@ function ListagemClientes() {
                   <td>{formatCPForCNPJ(cliente.cpf_cnpj) || '-'}</td>
                   <td>{formatCelular(cliente.celular) || '-'}</td>
                   <td className="actions-cell">
-                    <Link
-                      to={`/clientes/visualizar/${cliente.id_cliente}`}
-                      className="view-button"
-                      title="Visualizar cliente"
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </Link>
-                    <Link 
-                      to={`/clientes/editar/${cliente.id_cliente}`} 
-                      className="edit-button"
-                      title="Editar cliente"
-                    >
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </Link>
-                    <button 
-                      onClick={() => handleExcluir(cliente.id_cliente)}
-                      className="delete-button"
-                      title="Excluir cliente"
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
+                    {permissions.pode_ler && (
+                      <Link
+                        to={`/clientes/visualizar/${cliente.id_cliente}`}
+                        className="view-button"
+                        title="Visualizar cliente"
+                      >
+                        <FontAwesomeIcon icon={faEye} />
+                      </Link>
+                    )}
+                    {permissions.pode_escrever && (
+                      <Link
+                        to={`/clientes/editar/${cliente.id_cliente}`}
+                        className="edit-button"
+                        title="Editar cliente"
+                      >
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                      </Link>
+                    )}
+                    {permissions.pode_deletar && (
+                      <button
+                        onClick={() => handleExcluir(cliente.id_cliente)}
+                        className="delete-button"
+                        title="Excluir cliente"
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

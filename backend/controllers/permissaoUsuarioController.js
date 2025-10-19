@@ -70,3 +70,36 @@ exports.updatePermissaoUsuario = async (req, res) => {
     res.status(500).json({ error: 'Erro ao atualizar permissão do usuário.' });
   }
 };
+
+// @desc   Obter as próprias permissões
+// @route  GET /api/permissoes/me
+// @access Privado
+exports.getMinhasPermissoes = async (req, res) => {
+  try {
+    // O id do usuário logado é extraído do token JWT pelo middleware `protect`
+    const id_usuario = req.usuario.id_usuario;
+
+    const todosOsModulos = ['clientes', 'orcamentos', 'ordensServico', 'visitas', 'chat'];
+    const permissoesSalvas = await PermissaoUsuario.findByUserId(id_usuario);
+    
+    const permissoesMap = new Map(permissoesSalvas.map(p => [p.modulo_nome, p]));
+
+    const permissoesCompletas = todosOsModulos.map(modulo => {
+      if (permissoesMap.has(modulo)) {
+        return permissoesMap.get(modulo);
+      } else {
+        return {
+          id_usuario: id_usuario,
+          modulo_nome: modulo,
+          pode_ler: false,
+          pode_escrever: false,
+          pode_deletar: false,
+        };
+      }
+    });
+
+    res.status(200).json(permissoesCompletas);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar as permissões do usuário.' });
+  }
+};
