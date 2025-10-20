@@ -61,21 +61,12 @@ const initSocket = (io) => {
       console.log(`[Socket.IO] Usuário desconectado: ${socket.usuario.nome_usuario} (${socket.id})`);
     });
 
-    // Handler para apagar mensagens, usando o sistema de permissões
+    // Handler para apagar mensagens (sem verificação de permissão)
     socket.on('apagar_mensagem', async (id_mensagem) => {
       try {
-        if (!socket.usuario || !socket.usuario.perfil) {
-          return socket.emit('erro_chat', { message: 'Usuário não autenticado corretamente.' });
-        }
-
-        // Admin tem permissão para apagar, não precisa verificar.
-        if (socket.usuario.perfil !== 'admin') {
-          // Mudar para a nova lógica de permissão por usuário
-          const permissao = await PermissaoUsuario.findByUserIdAndModule(socket.usuario.id_usuario, 'chat');
-          
-          if (!permissao || !permissao.pode_deletar) {
-            return socket.emit('erro_chat', { message: 'Ação não permitida.' });
-          }
+        // Apenas verifica se o usuário está autenticado
+        if (!socket.usuario) {
+          return socket.emit('erro_chat', { message: 'Usuário não autenticado.' });
         }
 
         if (!id_mensagem) {

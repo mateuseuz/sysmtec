@@ -83,7 +83,7 @@ function PermissoesPage() {
   }
 
   return (
-    <div className="permissoes-container">
+    <div className="gerenciar-usuarios-container">
       <button onClick={() => navigate(-1)} className="back-button">
         <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
       </button>
@@ -95,7 +95,7 @@ function PermissoesPage() {
           defaultValue=""
           className="user-permission-select"
         >
-          <option value="" disabled>Selecione um usuário para configurar suas permissões de acesso</option>
+          <option value="" disabled>Selecione um usuário...</option>
           {usuarios.map(u => (
             <option key={u.id_usuario} value={u.id_usuario}>
               {u.nome_completo} ({u.email})

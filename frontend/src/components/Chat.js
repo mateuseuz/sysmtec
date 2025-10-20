@@ -13,8 +13,6 @@ function Chat() {
   const [currentUser, setCurrentUser] = useState(null);
   const socket = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [canDelete, setCanDelete] = useState(false);
-  const [hasChatPermission, setHasChatPermission] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -23,35 +21,13 @@ function Chat() {
 
   useEffect(scrollToBottom, [messages]);
 
+  // Effect to setup socket connection and user
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario') || 'null');
     const token = localStorage.getItem('token');
 
     if (user && token) {
       setCurrentUser(user);
-
-      const checkPermissions = async () => {
-        if (user.perfil === 'admin') {
-          setHasChatPermission(true);
-          setCanDelete(true);
-          return;
-        }
-
-        try {
-          const minhasPermissoes = await api.getMinhasPermissoes();
-          const chatPermission = minhasPermissoes.find(p => p.modulo_nome === 'chat');
-          if (chatPermission && (chatPermission.pode_ler || chatPermission.pode_escrever || chatPermission.pode_deletar)) {
-            setHasChatPermission(true);
-            setCanDelete(chatPermission.pode_deletar);
-          }
-        } catch (error) {
-          if (error.response && error.response.status !== 403 && error.response.status !== 401) {
-            toast.error(`Erro ao verificar permissões do chat: ${error.message}`);
-          }
-        }
-      };
-      
-      checkPermissions();
 
       const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000', {
         auth: { token }
@@ -86,21 +62,23 @@ function Chat() {
     }
   }, []);
 
+  // Effect to fetch message history once the user is set
   useEffect(() => {
     const fetchHistory = async () => {
-      if (hasChatPermission) {
-        try {
-          const history = await api.listarMensagens();
-          setMessages(history);
-        } catch (error) {
-          if (error && error.message && !error.message.includes('Acesso negado')) {
-            toast.error(`Erro ao carregar histórico do chat: ${error.message}`);
-          }
+      try {
+        const history = await api.listarMensagens();
+        setMessages(history);
+      } catch (error) {
+        if (error && error.message && !error.message.includes('Acesso negado')) {
+          toast.error(`Erro ao carregar histórico do chat: ${error.message}`);
         }
       }
     };
-    fetchHistory();
-  }, [hasChatPermission]);
+    
+    if (currentUser) {
+      fetchHistory();
+    }
+  }, [currentUser]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -110,11 +88,10 @@ function Chat() {
     }
   };
 
+  // All users can delete messages
   const handleDeleteMessage = (id_mensagem) => {
-    if (socket.current && canDelete) {
+    if (socket.current) {
       socket.current.emit('apagar_mensagem', id_mensagem);
-    } else {
-      toast.error('Você não tem permissão para apagar mensagens.');
     }
   };
 
@@ -137,8 +114,9 @@ function Chat() {
     if (!timestamp) return '';
     return new Date(timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
-
-  if (!hasChatPermission) {
+  
+  // The chat is only rendered for logged-in users.
+  if (!currentUser) {
     return null;
   }
 
@@ -159,15 +137,13 @@ function Chat() {
                 <div className="message">
                   <p>{msg.texto}</p>
                   <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>
-                  {canDelete && (
-                    <button 
-                      className="delete-btn" 
-                      onClick={() => handleDeleteMessage(msg.id_mensagem)}
-                      aria-label="Apagar mensagem"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  )}
+                  <button 
+                    className="delete-btn" 
+                    onClick={() => handleDeleteMessage(msg.id_mensagem)}
+                    aria-label="Apagar mensagem"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
                 </div>
               </div>
             ))}

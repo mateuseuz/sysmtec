@@ -9,7 +9,7 @@ exports.getPermissoesPorUsuario = async (req, res) => {
     
     // Lista de módulos com permissões configuráveis (exclui módulos de admin)
     const todosOsModulos = [
-      'clientes', 'orcamentos', 'ordensServico', 'visitas', 'chat'
+      'clientes', 'orcamentos', 'ordensServico', 'visitas'
     ];
 
     // Busca as permissões que o usuário já tem no banco de dados
@@ -49,25 +49,32 @@ exports.getPermissoesPorUsuario = async (req, res) => {
 exports.updatePermissaoUsuario = async (req, res) => {
   try {
     const { id_usuario, modulo_nome } = req.params;
-    const { pode_ler, pode_escrever, pode_deletar } = req.body;
+    const { ativo } = req.body; // Recebe um único valor booleano
 
-    // Validação básica
-    if (typeof pode_ler !== 'boolean' || typeof pode_escrever !== 'boolean' || typeof pode_deletar !== 'boolean') {
-      return res.status(400).json({ error: 'Valores de permissão inválidos.' });
+    // Validação
+    if (typeof ativo !== 'boolean') {
+      return res.status(400).json({ error: "O valor de 'ativo' deve ser um booleano." });
     }
 
-    // Primeiro, tenta atualizar a permissão
-    const permissaoAtualizada = await PermissaoUsuario.update(id_usuario, modulo_nome, { pode_ler, pode_escrever, pode_deletar });
+    // Define todas as permissões com base no valor de 'ativo'
+    const permissoes = {
+      pode_ler: ativo,
+      pode_escrever: ativo,
+      pode_deletar: ativo,
+    };
 
-    // Se nenhuma linha foi afetada (porque não existia), cria a permissão
+    // Tenta atualizar a permissão existente
+    const permissaoAtualizada = await PermissaoUsuario.update(id_usuario, modulo_nome, permissoes);
+
+    // Se a permissão não existir, cria uma nova
     if (!permissaoAtualizada) {
-      const novaPermissao = await PermissaoUsuario.create(id_usuario, modulo_nome, { pode_ler, pode_escrever, pode_deletar });
+      const novaPermissao = await PermissaoUsuario.create(id_usuario, modulo_nome, permissoes);
       return res.status(201).json(novaPermissao);
     }
 
     res.status(200).json(permissaoAtualizada);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao atualizar permissão do usuário.' });
+    res.status(500).json({ error: 'Erro ao atualizar a permissão do usuário.' });
   }
 };
 
