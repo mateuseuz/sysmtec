@@ -5,10 +5,10 @@ const { protect, checkPermission } = require('../middleware/authMiddleware');
 
 const modulo = 'orcamentos';
 
-router.post('/', protect, checkPermission(modulo, 'pode_escrever'), orcamentoController.createOrcamento);
-router.get('/', protect, checkPermission(modulo, 'pode_ler'), orcamentoController.getOrcamentos);
-router.get('/:id', protect, checkPermission(modulo, 'pode_ler'), orcamentoController.getOrcamentoById);
-router.put('/:id', protect, checkPermission(modulo, 'pode_escrever'), orcamentoController.updateOrcamento);
-router.delete('/:id', protect, checkPermission(modulo, 'pode_deletar'), orcamentoController.deleteOrcamento);
+router.post('/', protect, checkPermission(modulo), orcamentoController.createOrcamento);
+router.get('/', protect, checkPermission(modulo), orcamentoController.getOrcamentos);
+router.get('/:id', protect, checkPermission(modulo), orcamentoController.getOrcamentoById);
+router.put('/:id', protect, checkPermission(modulo), orcamentoController.updateOrcamento);
+router.delete('/:id', protect, checkPermission(modulo), orcamentoController.deleteOrcamento);
 
 module.exports = router;

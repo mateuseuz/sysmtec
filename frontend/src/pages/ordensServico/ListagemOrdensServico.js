@@ -18,19 +18,16 @@ function ListagemOrdensServico() {
     const user = JSON.parse(localStorage.getItem('usuario'));
 
     const fetchPermissions = async () => {
-      // Se o usuário for admin, concede todas as permissões e evita a chamada da API
       if (user && user.perfil === 'admin') {
-        setPermissions({ pode_ler: true, pode_escrever: true, pode_deletar: true });
+        setPermissions({ ativo: true });
         return;
       }
       
-      // Para outros usuários, busca as permissões específicas
       try {
         const response = await api.getMinhasPermissoes();
         const ordensPermissions = response.find(p => p.modulo_nome === 'ordensServico');
-        setPermissions(ordensPermissions || { pode_ler: false, pode_escrever: false, pode_deletar: false });
+        setPermissions(ordensPermissions || { ativo: false });
       } catch (error) {
-        // Exibe o toast apenas se o erro não for de "Acesso negado"
         if (error.response && error.response.status !== 403 && error.response.status !== 401) {
           toast.error('Erro ao carregar permissões.');
         }
@@ -73,7 +70,7 @@ function ListagemOrdensServico() {
 
   return (
     <>
-      {permissions.pode_escrever && (
+      {permissions.ativo && (
         <div className="clientes-header">
           <Link to="/ordens-servico/novo" className="add-client-link">
             <FontAwesomeIcon icon={faPlus} /> CADASTRAR ORDEM DE SERVIÇO
@@ -106,32 +103,30 @@ function ListagemOrdensServico() {
                   <td>{os.nome}</td>
                   <td>{os.nome_cliente}</td>
                   <td className="actions-cell">
-                    {permissions.pode_ler && (
-                      <Link
-                        to={`/ordens-servico/visualizar/${os.id_ordem_servico}`}
-                        className="view-button"
-                        title="Visualizar ordem de serviço"
-                      >
-                        <FontAwesomeIcon icon={faEye} />
-                      </Link>
-                    )}
-                    {permissions.pode_escrever && (
-                      <Link
-                        to={`/ordens-servico/editar/${os.id_ordem_servico}`}
-                        className="edit-button"
-                        title="Editar ordem de serviço"
-                      >
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                      </Link>
-                    )}
-                    {permissions.pode_deletar && (
-                      <button
-                        onClick={() => handleExcluir(os.id_ordem_servico)}
-                        className="delete-button"
-                        title="Excluir ordem de serviço"
-                      >
-                        <FontAwesomeIcon icon={faTrashAlt} />
-                      </button>
+                    {permissions.ativo && (
+                      <>
+                        <Link
+                          to={`/ordens-servico/visualizar/${os.id_ordem_servico}`}
+                          className="view-button"
+                          title="Visualizar ordem de serviço"
+                        >
+                          <FontAwesomeIcon icon={faEye} />
+                        </Link>
+                        <Link
+                          to={`/ordens-servico/editar/${os.id_ordem_servico}`}
+                          className="edit-button"
+                          title="Editar ordem de serviço"
+                        >
+                          <FontAwesomeIcon icon={faPencilAlt} />
+                        </Link>
+                        <button
+                          onClick={() => handleExcluir(os.id_ordem_servico)}
+                          className="delete-button"
+                          title="Excluir ordem de serviço"
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} />
+                        </button>
+                      </>
                     )}
                   </td>
                 </tr>

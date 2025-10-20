@@ -18,19 +18,16 @@ function ListagemOrcamentos() {
     const user = JSON.parse(localStorage.getItem('usuario'));
 
     const fetchPermissions = async () => {
-      // Se o usuário for admin, concede todas as permissões e evita a chamada da API
       if (user && user.perfil === 'admin') {
-        setPermissions({ pode_ler: true, pode_escrever: true, pode_deletar: true });
+        setPermissions({ ativo: true });
         return;
       }
       
-      // Para outros usuários, busca as permissões específicas
       try {
         const response = await api.getMinhasPermissoes();
         const orcamentosPermissions = response.find(p => p.modulo_nome === 'orcamentos');
-        setPermissions(orcamentosPermissions || { pode_ler: false, pode_escrever: false, pode_deletar: false });
+        setPermissions(orcamentosPermissions || { ativo: false });
       } catch (error) {
-        // Exibe o toast apenas se o erro não for de "Acesso negado"
         if (error.response && error.response.status !== 403 && error.response.status !== 401) {
           toast.error('Erro ao carregar permissões.');
         }
@@ -85,7 +82,7 @@ function ListagemOrcamentos() {
 
   return (
     <>
-      {permissions.pode_escrever && (
+      {permissions.ativo && (
         <div className="clientes-header">
           <Link to="/orcamentos/novo" className="add-client-link">
             <FontAwesomeIcon icon={faPlus} /> CADASTRAR ORÇAMENTO
@@ -125,32 +122,30 @@ function ListagemOrcamentos() {
                     }).format(orcamento.valor_total)}
                   </td>
                   <td className="actions-cell">
-                    {permissions.pode_ler && (
-                      <Link
-                        to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
-                        className="view-button"
-                        title="Visualizar orçamento"
-                      >
-                        <FontAwesomeIcon icon={faEye} />
-                      </Link>
-                    )}
-                    {permissions.pode_escrever && (
-                      <Link
-                        to={`/orcamentos/editar/${orcamento.id_orcamento}`}
-                        className="edit-button"
-                        title="Editar orçamento"
-                      >
-                        <FontAwesomeIcon icon={faPencilAlt} />
-                      </Link>
-                    )}
-                    {permissions.pode_deletar && (
-                      <button
-                        onClick={() => handleExcluir(orcamento.id_orcamento)}
-                        className="delete-button"
-                        title="Excluir orçamento"
-                      >
-                        <FontAwesomeIcon icon={faTrashAlt} />
-                      </button>
+                    {permissions.ativo && (
+                      <>
+                        <Link
+                          to={`/orcamentos/visualizar/${orcamento.id_orcamento}`}
+                          className="view-button"
+                          title="Visualizar orçamento"
+                        >
+                          <FontAwesomeIcon icon={faEye} />
+                        </Link>
+                        <Link
+                          to={`/orcamentos/editar/${orcamento.id_orcamento}`}
+                          className="edit-button"
+                          title="Editar orçamento"
+                        >
+                          <FontAwesomeIcon icon={faPencilAlt} />
+                        </Link>
+                        <button
+                          onClick={() => handleExcluir(orcamento.id_orcamento)}
+                          className="delete-button"
+                          title="Excluir orçamento"
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} />
+                        </button>
+                      </>
                     )}
                   </td>
                 </tr>

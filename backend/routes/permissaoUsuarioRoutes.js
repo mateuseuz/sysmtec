@@ -17,13 +17,13 @@ router.use(protect);
 router.get('/me', getMinhasPermissoes);
 
 // As rotas abaixo exigem permissão para gerenciar o módulo 'permissoes'
-router.use(checkPermission(modulo, 'pode_ler')); 
+router.use(checkPermission(modulo)); 
 
 // Rota para obter todas as permissões de um usuário específico
 router.get('/:id_usuario', getPermissoesPorUsuario);
 
 // Rota para atualizar a permissão de um usuário para um módulo específico
-router.put('/:id_usuario/:modulo_nome', checkPermission(modulo, 'pode_escrever'), updatePermissaoUsuario);
+router.put('/:id_usuario/:modulo_nome', checkPermission(modulo), updatePermissaoUsuario);
 
 module.exports = router;
     

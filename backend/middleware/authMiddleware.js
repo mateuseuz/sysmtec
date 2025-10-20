@@ -23,12 +23,11 @@ const protect = (req, res, next) => {
 };
 
 /**
- * Gera um middleware que verifica se o usuário logado tem uma permissão específica.
+ * Gera um middleware que verifica se o usuário logado tem acesso a um módulo.
  * @param {string} modulo - O nome do módulo a ser verificado (ex: 'clientes').
- * @param {string} permissao_requerida - A permissão necessária (ex: 'pode_ler', 'pode_escrever', 'pode_deletar').
  * @returns {function} O middleware de verificação.
  */
-const checkPermission = (modulo, permissao_requerida) => {
+const checkPermission = (modulo) => {
   return async (req, res, next) => {
     if (!req.usuario || !req.usuario.perfil) {
       return res.status(401).json({ error: 'Não autorizado, perfil de usuário não encontrado.' });
@@ -40,10 +39,10 @@ const checkPermission = (modulo, permissao_requerida) => {
     }
 
     try {
-      // Mudar para a nova lógica de permissão por usuário
       const permissao = await PermissaoUsuario.findByUserIdAndModule(req.usuario.id_usuario, modulo);
 
-      if (permissao && permissao[permissao_requerida]) {
+      // A permissão é concedida se o registro existir e 'ativo' for verdadeiro.
+      if (permissao && permissao.ativo) {
         next(); // Usuário tem a permissão
       } else {
         res.status(403).json({ error: 'Acesso negado. Você não tem permissão para esta ação.' });

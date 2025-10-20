@@ -5,11 +5,11 @@ const { protect, checkPermission } = require('../middleware/authMiddleware');
 
 const modulo = 'clientes';
 
-router.post('/', protect, checkPermission(modulo, 'pode_escrever'), clienteController.createCliente);
-router.get('/', protect, checkPermission(modulo, 'pode_ler'), clienteController.getClientes);
-router.get('/search', protect, checkPermission(modulo, 'pode_ler'), clienteController.searchClientes);
-router.get('/:id', protect, checkPermission(modulo, 'pode_ler'), clienteController.getClienteById);
-router.put('/:id', protect, checkPermission(modulo, 'pode_escrever'), clienteController.updateCliente);
-router.delete('/:id', protect, checkPermission(modulo, 'pode_deletar'), clienteController.deleteCliente);
+router.post('/', protect, checkPermission(modulo), clienteController.createCliente);
+router.get('/', protect, checkPermission(modulo), clienteController.getClientes);
+router.get('/search', protect, checkPermission(modulo), clienteController.searchClientes);
+router.get('/:id', protect, checkPermission(modulo), clienteController.getClienteById);
+router.put('/:id', protect, checkPermission(modulo), clienteController.updateCliente);
+router.delete('/:id', protect, checkPermission(modulo), clienteController.deleteCliente);
 
 module.exports = router;

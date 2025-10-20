@@ -26,16 +26,16 @@ const PermissaoUsuario = {
    * Cria um novo registro de permissão para um usuário e módulo.
    * @param {number} id_usuario - O ID do usuário.
    * @param {string} modulo_nome - O nome do módulo.
-   * @param {object} permissions - { pode_ler, pode_escrever, pode_deletar }.
+   * @param {object} permissions - { ativo }.
    * @returns {Promise<object>} O novo registro de permissão.
    */
-  async create(id_usuario, modulo_nome, { pode_ler = false, pode_escrever = false, pode_deletar = false }) {
+  async create(id_usuario, modulo_nome, { ativo = false }) {
     const query = `
-      INSERT INTO permissoes_usuario (id_usuario, modulo_nome, pode_ler, pode_escrever, pode_deletar)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO permissoes_usuario (id_usuario, modulo_nome, ativo)
+      VALUES ($1, $2, $3)
       RETURNING *;
     `;
-    const values = [id_usuario, modulo_nome, pode_ler, pode_escrever, pode_deletar];
+    const values = [id_usuario, modulo_nome, ativo];
     try {
       const { rows } = await pool.query(query, values);
       return rows[0];
@@ -49,17 +49,17 @@ const PermissaoUsuario = {
    * Atualiza as permissões de um usuário para um módulo.
    * @param {number} id_usuario - O ID do usuário.
    * @param {string} modulo_nome - O nome do módulo.
-   * @param {object} permissions - { pode_ler, pode_escrever, pode_deletar }.
+   * @param {object} permissions - { ativo }.
    * @returns {Promise<object>} A permissão atualizada.
    */
-  async update(id_usuario, modulo_nome, { pode_ler, pode_escrever, pode_deletar }) {
+  async update(id_usuario, modulo_nome, { ativo }) {
     const query = `
       UPDATE permissoes_usuario
-      SET pode_ler = $3, pode_escrever = $4, pode_deletar = $5
+      SET ativo = $3
       WHERE id_usuario = $1 AND modulo_nome = $2
       RETURNING *;
     `;
-    const values = [id_usuario, modulo_nome, pode_ler, pode_escrever, pode_deletar];
+    const values = [id_usuario, modulo_nome, ativo];
     try {
       const { rows } = await pool.query(query, values);
       return rows[0];
@@ -98,8 +98,8 @@ const PermissaoUsuario = {
 
     const queries = modulos.map(modulo => {
       return {
-        text: `INSERT INTO permissoes_usuario (id_usuario, modulo_nome, pode_ler, pode_escrever, pode_deletar)
-               VALUES ($1, $2, false, false, false)
+        text: `INSERT INTO permissoes_usuario (id_usuario, modulo_nome, ativo)
+               VALUES ($1, $2, false)
                ON CONFLICT (id_usuario, modulo_nome) DO NOTHING;`, // Evita erros se a permissão já existir
         values: [id_usuario, modulo]
       };

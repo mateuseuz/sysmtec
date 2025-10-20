@@ -30,9 +30,7 @@ const migrateUserPermissions = async () => {
         id_permissao_usuario SERIAL PRIMARY KEY,
         id_usuario INTEGER NOT NULL REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
         modulo_nome VARCHAR(50) NOT NULL,
-        pode_ler BOOLEAN DEFAULT FALSE NOT NULL,
-        pode_escrever BOOLEAN DEFAULT FALSE NOT NULL,
-        pode_deletar BOOLEAN DEFAULT FALSE NOT NULL,
+        ativo BOOLEAN DEFAULT FALSE NOT NULL,
         UNIQUE (id_usuario, modulo_nome)
       );
     `;
