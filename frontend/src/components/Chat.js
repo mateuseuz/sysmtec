@@ -36,7 +36,6 @@ function Chat() {
       socket.current = newSocket;
 
       newSocket.on('connect', () => {
-        toast.success("Conectado ao chat!");
         setIsConnected(true);
       });
 

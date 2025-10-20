@@ -98,7 +98,7 @@ const apiClientes = {
   atualizarPermissao: (perfil, modulo, permissoes) => api.put(`/permissoes/${perfil}/${modulo}`, permissoes),
   
   // Permissões por Usuário (Novo)
-  getMinhasPermissoes: () => api.get('/permissoes/me'), // Este endpoint ainda pode ser útil
+  getMinhasPermissoes: () => api.get('/permissoes-usuario/me'),
   getPermissoesPorUsuario: (id_usuario) => api.get(`/permissoes-usuario/${id_usuario}`),
   updatePermissaoUsuario: (id_usuario, modulo_nome, permissoes) => api.put(`/permissoes-usuario/${id_usuario}/${modulo_nome}`, permissoes),
 };
