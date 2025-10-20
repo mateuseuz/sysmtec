@@ -27,7 +27,7 @@ app.use('/api/agenda', visitaRoutes);
 app.use('/api/usuarios', usuarioRoutes); // Usar rotas de usuário
 app.use('/api/auth', authRoutes);
 app.use('/api/mensagens', mensagemRoutes);
-app.use('/api/permissoes-usuario', permissaoUsuarioRoutes); // Novo, permissões por usuário
+app.use('/api/permissoes', permissaoUsuarioRoutes);
 app.use('/api/logs', logRoutes); // Rota específica para logs
 
 // Rota simples de teste

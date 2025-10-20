@@ -50,26 +50,26 @@ function PermissoesPage() {
     }
   };
 
-  const handleToggleChange = async (modulo_nome, ativo) => {
+  const handleToggleChange = async (modulo_nome, novoEstado) => {
     if (!selectedUser) return;
 
     // Otimistic UI update
     const updatedPermissoes = permissoes.map(p => 
       p.modulo_nome === modulo_nome 
-        ? { ...p, pode_ler: ativo, pode_escrever: ativo, pode_deletar: ativo } 
+        ? { ...p, ativo: novoEstado } 
         : p
     );
     setPermissoes(updatedPermissoes);
 
     try {
-      await api.updatePermissaoUsuario(selectedUser.id_usuario, modulo_nome, { ativo });
+      await api.updatePermissaoUsuario(selectedUser.id_usuario, modulo_nome, { ativo: novoEstado });
       toast.success('Permissão atualizada com sucesso!');
     } catch (error) {
       toast.error(`Erro ao salvar: ${error.message}`);
       // Reverte em caso de erro
       const originalPermissoes = permissoes.map(p => 
         p.modulo_nome === modulo_nome 
-          ? { ...p, pode_ler: !ativo, pode_escrever: !ativo, pode_deletar: !ativo } 
+          ? { ...p, ativo: !novoEstado } 
           : p
       );
       setPermissoes(originalPermissoes);
@@ -114,14 +114,14 @@ function PermissoesPage() {
               </tr>
             </thead>
             <tbody>
-              {permissoes.map(({ modulo_nome, pode_ler }) => (
+              {permissoes.map(({ modulo_nome, ativo }) => (
                 <tr key={`${selectedUser.id_usuario}-${modulo_nome}`}>
                   <td className="modulo-cell">{modulo_nome}</td>
                   <td className="permission-group">
                     <label className="switch">
                       <input 
                         type="checkbox"
-                        checked={pode_ler} // Acesso total é representado por 'pode_ler'
+                        checked={ativo}
                         onChange={(e) => handleToggleChange(modulo_nome, e.target.checked)}
                         disabled={selectedUser.perfil === 'admin'}
                       />

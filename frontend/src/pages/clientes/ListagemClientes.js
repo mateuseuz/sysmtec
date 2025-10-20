@@ -26,7 +26,9 @@ function ListagemClientes() {
       
       try {
         const response = await api.getMinhasPermissoes();
+        console.log('API Response:', response);
         const clientesPermissions = response.find(p => p.modulo_nome === 'clientes');
+        console.log('Permissions for clientes:', clientesPermissions);
         setPermissions(clientesPermissions || { ativo: false });
       } catch (error) {
         if (error.response && error.response.status !== 403 && error.response.status !== 401) {
