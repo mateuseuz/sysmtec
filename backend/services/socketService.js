@@ -64,9 +64,9 @@ const initSocket = (io) => {
     // Handler para apagar mensagens (sem verificação de permissão)
     socket.on('apagar_mensagem', async (id_mensagem) => {
       try {
-        // Apenas verifica se o usuário está autenticado
-        if (!socket.usuario) {
-          return socket.emit('erro_chat', { message: 'Usuário não autenticado.' });
+        // Verifica se o usuário é administrador
+        if (!socket.usuario || socket.usuario.perfil !== 'admin') {
+          return socket.emit('erro_chat', { message: 'Acesso negado. Você não tem permissão para apagar mensagens.' });
         }
 
         if (!id_mensagem) {

@@ -123,7 +123,7 @@ function Chat() {
   return (
     <div className={`chat-container ${isOpen ? 'open' : 'closed'}`}>
       <div className="chat-header" onClick={toggleChat}>
-        <h3>Chat Global</h3>
+        <h3>Chat</h3>
         <span className="toggle-icon">
           <FontAwesomeIcon icon={isOpen ? faTimes : faComments} />
         </span>
@@ -137,13 +137,15 @@ function Chat() {
                 <div className="message">
                   <p>{msg.texto}</p>
                   <span className="timestamp">{formatTimestamp(msg.timestamp)}</span>
-                  <button 
-                    className="delete-btn" 
-                    onClick={() => handleDeleteMessage(msg.id_mensagem)}
-                    aria-label="Apagar mensagem"
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
+                  {currentUser?.perfil === 'admin' && (
+                    <button 
+                      className="delete-btn" 
+                      onClick={() => handleDeleteMessage(msg.id_mensagem)}
+                      aria-label="Apagar mensagem"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

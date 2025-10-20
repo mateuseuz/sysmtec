@@ -50,30 +50,28 @@ function PermissoesPage() {
     }
   };
 
-  // Atualiza a permissão quando um checkbox é clicado
-  const handleCheckboxChange = async (modulo_nome, permissao, checked) => {
+  const handleToggleChange = async (modulo_nome, ativo) => {
     if (!selectedUser) return;
 
-    const originalPermissoes = [...permissoes];
-    
-    const updatedPermissoes = permissoes.map(p => {
-      if (p.modulo_nome === modulo_nome) {
-        return { ...p, [permissao]: checked };
-      }
-      return p;
-    });
+    // Otimistic UI update
+    const updatedPermissoes = permissoes.map(p => 
+      p.modulo_nome === modulo_nome 
+        ? { ...p, pode_ler: ativo, pode_escrever: ativo, pode_deletar: ativo } 
+        : p
+    );
     setPermissoes(updatedPermissoes);
 
     try {
-      const permissaoParaAtualizar = updatedPermissoes.find(p => p.modulo_nome === modulo_nome);
-      await api.updatePermissaoUsuario(selectedUser.id_usuario, modulo_nome, {
-        pode_ler: permissaoParaAtualizar.pode_ler,
-        pode_escrever: permissaoParaAtualizar.pode_escrever,
-        pode_deletar: permissaoParaAtualizar.pode_deletar,
-      });
+      await api.updatePermissaoUsuario(selectedUser.id_usuario, modulo_nome, { ativo });
       toast.success('Permissão atualizada com sucesso!');
     } catch (error) {
       toast.error(`Erro ao salvar: ${error.message}`);
+      // Reverte em caso de erro
+      const originalPermissoes = permissoes.map(p => 
+        p.modulo_nome === modulo_nome 
+          ? { ...p, pode_ler: !ativo, pode_escrever: !ativo, pode_deletar: !ativo } 
+          : p
+      );
       setPermissoes(originalPermissoes);
     }
   };
@@ -83,7 +81,7 @@ function PermissoesPage() {
   }
 
   return (
-    <div className="gerenciar-usuarios-container">
+    <div className="permissoes-container">
       <button onClick={() => navigate(-1)} className="back-button">
         <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
       </button>
@@ -95,7 +93,7 @@ function PermissoesPage() {
           defaultValue=""
           className="user-permission-select"
         >
-          <option value="" disabled>Selecione um usuário...</option>
+          <option value="" disabled>Selecione um usuário para configurar suas permissões de acesso</option>
           {usuarios.map(u => (
             <option key={u.id_usuario} value={u.id_usuario}>
               {u.nome_completo} ({u.email})
@@ -112,38 +110,23 @@ function PermissoesPage() {
             <thead>
               <tr>
                 <th>Módulo</th>
-                <th className="permission-group">Ler</th>
-                <th className="permission-group">Escrever</th>
-                <th className="permission-group">Deletar</th>
+                <th className="permission-group">Ativo</th>
               </tr>
             </thead>
             <tbody>
-              {permissoes.map(({ modulo_nome, pode_ler, pode_escrever, pode_deletar }) => (
+              {permissoes.map(({ modulo_nome, pode_ler }) => (
                 <tr key={`${selectedUser.id_usuario}-${modulo_nome}`}>
                   <td className="modulo-cell">{modulo_nome}</td>
                   <td className="permission-group">
-                    <input 
-                      type="checkbox"
-                      checked={pode_ler}
-                      onChange={(e) => handleCheckboxChange(modulo_nome, 'pode_ler', e.target.checked)}
-                      disabled={selectedUser.perfil === 'admin'}
-                    />
-                  </td>
-                  <td className="permission-group">
-                    <input 
-                      type="checkbox"
-                      checked={pode_escrever}
-                      onChange={(e) => handleCheckboxChange(modulo_nome, 'pode_escrever', e.target.checked)}
-                      disabled={selectedUser.perfil === 'admin'}
-                    />
-                  </td>
-                  <td className="permission-group">
-                    <input 
-                      type="checkbox"
-                      checked={pode_deletar}
-                      onChange={(e) => handleCheckboxChange(modulo_nome, 'pode_deletar', e.target.checked)}
-                      disabled={selectedUser.perfil === 'admin'}
-                    />
+                    <label className="switch">
+                      <input 
+                        type="checkbox"
+                        checked={pode_ler} // Acesso total é representado por 'pode_ler'
+                        onChange={(e) => handleToggleChange(modulo_nome, e.target.checked)}
+                        disabled={selectedUser.perfil === 'admin'}
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </td>
                 </tr>
               ))}

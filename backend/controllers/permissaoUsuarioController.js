@@ -7,29 +7,25 @@ exports.getPermissoesPorUsuario = async (req, res) => {
   try {
     const { id_usuario } = req.params;
     
-    // Lista de módulos com permissões configuráveis (exclui módulos de admin)
-    const todosOsModulos = [
-      'clientes', 'orcamentos', 'ordensServico', 'visitas'
-    ];
+    // Módulos e seus nomes de exibição corretos
+    const modulosConfiguraveis = {
+      'clientes': 'Clientes',
+      'orcamentos': 'Orçamentos',
+      'ordensServico': 'Ordens de Serviço',
+      'visitas': 'Visitas'
+    };
 
-    // Busca as permissões que o usuário já tem no banco de dados
     const permissoesSalvas = await PermissaoUsuario.findByUserId(id_usuario);
-    
-    // Mapeia as permissões salvas para fácil acesso
-    const permissoesMap = new Map(
-      permissoesSalvas.map(p => [p.modulo_nome, p])
-    );
+    const permissoesMap = new Map(permissoesSalvas.map(p => [p.modulo_nome, p]));
 
-    // Mescla a lista completa de módulos com as permissões salvas
-    const permissoesCompletas = todosOsModulos.map(modulo => {
-      if (permissoesMap.has(modulo)) {
-        // Se a permissão existe, retorna ela
-        return permissoesMap.get(modulo);
+    const permissoesCompletas = Object.keys(modulosConfiguraveis).map(moduloKey => {
+      const permissaoExistente = permissoesMap.get(moduloKey);
+      if (permissaoExistente) {
+        return { ...permissaoExistente, modulo_nome: modulosConfiguraveis[moduloKey] };
       } else {
-        // Se não existe, cria uma permissão padrão (tudo false)
         return {
           id_usuario: parseInt(id_usuario, 10),
-          modulo_nome: modulo,
+          modulo_nome: modulosConfiguraveis[moduloKey],
           pode_ler: false,
           pode_escrever: false,
           pode_deletar: false,
@@ -83,10 +79,10 @@ exports.updatePermissaoUsuario = async (req, res) => {
 // @access Privado
 exports.getMinhasPermissoes = async (req, res) => {
   try {
-    // O id do usuário logado é extraído do token JWT pelo middleware `protect`
     const id_usuario = req.usuario.id_usuario;
 
-    const todosOsModulos = ['clientes', 'orcamentos', 'ordensServico', 'visitas', 'chat'];
+    // A lista de módulos aqui deve corresponder à lógica de acesso geral
+    const todosOsModulos = ['clientes', 'orcamentos', 'ordensServico', 'visitas']; 
     const permissoesSalvas = await PermissaoUsuario.findByUserId(id_usuario);
     
     const permissoesMap = new Map(permissoesSalvas.map(p => [p.modulo_nome, p]));
@@ -104,6 +100,16 @@ exports.getMinhasPermissoes = async (req, res) => {
         };
       }
     });
+
+    // O chat não tem permissões configuráveis, então damos acesso total de leitura por padrão.
+    permissoesCompletas.push({
+        id_usuario: id_usuario,
+        modulo_nome: 'chat',
+        pode_ler: true,
+        pode_escrever: true,
+        pode_deletar: req.usuario.perfil === 'admin', 
+    });
+
 
     res.status(200).json(permissoesCompletas);
   } catch (error) {
