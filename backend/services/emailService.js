@@ -61,7 +61,7 @@ const sendEmail = async ({ to, subject, text, html }) => {
 
   try {
     const info = await transporter.sendMail({
-      from: `"SysMTEC" <${process.env.EMAIL_FROM || 'no-reply@sysmtec.com'}>`,
+      from: `"SYSMTEC" <${process.env.EMAIL_FROM || 'no-reply@sysmtec.com'}>`,
       to,
       subject,
       text,

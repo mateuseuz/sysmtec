@@ -15,7 +15,7 @@ function PainelControlePage() {
           <li>
             <Link to="/painel-controle/logs" className="action-card">
               <FontAwesomeIcon icon={faHistory} className="icon" />
-              <span>Visualizar Logs</span>
+              <span>Consultar Logs</span>
             </Link>
           </li>
           <li>

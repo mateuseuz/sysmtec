@@ -55,7 +55,7 @@ function LogPage() {
         <FontAwesomeIcon icon={faArrowLeft} /> VOLTAR
       </button>
       <div className="header-container">
-        <h2>Visualizar Logs</h2>
+        <h2>Consultar Logs</h2>
         <button onClick={() => setIsModalOpen(true)} className="btn-danger">
           <FontAwesomeIcon icon={faTrash} /> LIMPAR LOGS
         </button>

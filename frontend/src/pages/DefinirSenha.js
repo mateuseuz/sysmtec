@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
-import '../styles/DefinirSenha.css';
+import '../styles/GerenciarUsuarios.css';
+import '../styles/Clientes.css';
+import '../styles/Orcamentos.css';
 
 function DefinirSenhaPage() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [nome_completo, setNomeCompleto] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const isActivation = location.pathname.includes('/ativar-conta');
+  const pageTitle = isActivation ? 'Ative sua Conta' : 'Redefina sua Senha';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!nome_completo.trim() || nome_completo.trim().length < 3) {
-      toast.error('Por favor, insira um nome completo válido.');
+      toast.error('Por favor, insira um nome completo válido (mínimo 3 caracteres).');
       return;
     }
     if (senha !== confirmarSenha) {
@@ -30,56 +37,68 @@ function DefinirSenhaPage() {
     setLoading(true);
     try {
       const response = await api.redefinirSenha(token, { senha, nome_completo });
-      toast.success(response.message || 'Conta ativada com sucesso! Você já pode fazer login.');
+      toast.success(response.message || 'Operação realizada com sucesso! Você já pode fazer login.');
       navigate('/login');
     } catch (error) {
-      toast.error(`Erro ao definir a senha: ${error.message}`);
+      toast.error(`Erro ao processar a solicitação: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="definir-senha-page">
-      <div className="definir-senha-container">
-        <h2>Ative sua Conta</h2>
-        <p>Por favor, complete seu nome e escolha uma senha.</p>
-        <form onSubmit={handleSubmit} className="definir-senha-form">
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Digite seu nome completo"
-              value={nome_completo}
-              onChange={(e) => setNomeCompleto(e.target.value)}
-              required
-              className="form-control"
-            />
+    <div className="sysmtec-container-public">
+      <header className="sysmtec-header">
+        <h1>SYSMTEC</h1>
+      </header>
+      <main className="sysmtec-main-public">
+        <div className="gerenciar-usuarios-container" style={{ maxWidth: '600px', margin: 'auto' }}>
+          <div className="header-container" style={{ marginBottom: '2rem', textAlign: 'center', justifyContent: 'center' }}>
+            <h2>{pageTitle}</h2>
           </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Digite a nova senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              required
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Confirme a nova senha"
-              value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
-              required
-              className="form-control"
-            />
-          </div>
-          <button type="submit" className="btn-submit" disabled={loading}>
-            {loading ? 'Salvando...' : 'Salvar Nova Senha'}
-          </button>
-        </form>
-      </div>
+
+          <form onSubmit={handleSubmit} className="cliente-form" style={{ maxWidth: '100%' }}>
+            <div className="form-group">
+              <label htmlFor="nome_completo">Nome completo</label>
+              <input
+                id="nome_completo"
+                type="text"
+                placeholder="Digite seu nome completo"
+                value={nome_completo}
+                onChange={(e) => setNomeCompleto(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="senha">Nova senha</label>
+              <input
+                id="senha"
+                type="password"
+                placeholder="Digite a nova senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="confirmarSenha">Confirme a nova senha</label>
+              <input
+                id="confirmarSenha"
+                type="password"
+                placeholder="Repita a senha"
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group" style={{ textAlign: 'center' }}>
+              <button type="submit" className="btn-primary" disabled={loading} style={{ minWidth: '50px' }}>
+                {loading ? 'Salvando...' : 'Salvar'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
   );
 }

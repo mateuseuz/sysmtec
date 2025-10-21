@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
-import '../styles/EsqueciSenha.css'; // Vamos criar este estilo
+import '../styles/GerenciarUsuarios.css';
+import '../styles/Clientes.css';
+import '../styles/Orcamentos.css';
 
 function EsqueciSenhaPage() {
   const [email, setEmail] = useState('');
@@ -15,7 +17,7 @@ function EsqueciSenhaPage() {
     try {
       const response = await api.esqueciSenha(email);
       toast.success(response.message || 'Pedido de redefinição de senha enviado com sucesso.');
-      setSubmitted(true); // Mostra a mensagem de confirmação
+      setSubmitted(true);
     } catch (error) {
       toast.error(`Erro ao enviar o pedido: ${error.message}`);
     } finally {
@@ -24,39 +26,58 @@ function EsqueciSenhaPage() {
   };
 
   return (
-    <div className="esqueci-senha-page">
-      <div className="esqueci-senha-container">
-        <h2>Esqueceu sua Senha?</h2>
-        {submitted ? (
-          <div className="confirmation-message">
-            <p>Se um usuário com o e-mail fornecido existir em nosso sistema, um link para redefinição de senha foi enviado.</p>
-            <p>Por favor, verifique sua caixa de entrada (e a pasta de spam).</p>
-            <Link to="/login" className="btn-back-to-login">Voltar para o Login</Link>
+    <div className="sysmtec-container-public">
+      <header className="sysmtec-header">
+        <h1>SYSMTEC</h1>
+      </header>
+      <main className="sysmtec-main-public">
+        <div className="gerenciar-usuarios-container" style={{ maxWidth: '600px', margin: 'auto' }}>
+          <div className="header-container" style={{ marginBottom: '2rem', textAlign: 'center', justifyContent: 'center' }}>
+            <h2>Esqueceu sua Senha?</h2>
           </div>
-        ) : (
-          <>
-            <p>Não se preocupe. Insira seu e-mail abaixo e enviaremos um link para você redefinir sua senha.</p>
-            <form onSubmit={handleSubmit} className="esqueci-senha-form">
-              <div className="form-group">
-                <input
-                  type="email"
-                  placeholder="Digite seu e-mail"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="form-control"
-                />
-              </div>
-              <button type="submit" className="btn-submit" disabled={loading}>
-                {loading ? 'Enviando...' : 'Enviar Link de Redefinição'}
-              </button>
-            </form>
-            <div className="back-to-login-link">
-              <Link to="/login">Lembrou a senha? Voltar para o Login</Link>
+
+          {submitted ? (
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>
+                Se um usuário com o e-mail fornecido existir em nosso sistema, um link para redefinição de senha foi enviado.
+              </p>
+              <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>
+                Por favor, verifique sua caixa de entrada (e a pasta de spam).
+              </p>
+              <Link to="/login" className="btn-primary" style={{ minWidth: '100px' }}>
+                Voltar para o Login
+              </Link>
             </div>
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              <p style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.1rem' }}>
+                Não se preocupe. Insira seu e-mail abaixo e enviaremos um link para você redefinir sua senha.
+              </p>
+              <form onSubmit={handleSubmit} className="cliente-form" style={{ maxWidth: '100%' }}>
+                <div className="form-group">
+                  <label htmlFor="email">E-mail</label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="Digite seu e-mail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
+                  <Link to="/login" className="btn-secondary">
+                    Voltar
+                  </Link>
+                  <button type="submit" className="btn-primary" disabled={loading} style={{ minWidth: '100px' }}>
+                    {loading ? 'Enviando...' : 'Enviar Link'}
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
@@ -17,6 +17,7 @@ function ListagemVisitas() {
   const [popover, setPopover] = useState({ visible: false, x: 0, y: 0, event: null });
   const [visitaToDelete, setVisitaToDelete] = useState(null);
   const [permissions, setPermissions] = useState({});
+  const toastShownRef = useRef(false); // Controle para toast único
 
   const carregarVisitas = async () => {
     setIsLoading(true);
@@ -32,26 +33,43 @@ function ListagemVisitas() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
-
-    const fetchPermissions = async () => {
+    const fetchAndLoad = async () => {
+      let hasPermission = false;
+      
       if (user && user.perfil === 'admin') {
         setPermissions({ ativo: true });
-        return;
-      }
-      
-      try {
-        const response = await api.getMinhasPermissoes();
-        const visitasPermissions = response.find(p => p.modulo_nome === 'visitas');
-        setPermissions(visitasPermissions || { ativo: false });
-      } catch (error) {
-        if (error.response && error.response.status !== 403 && error.response.status !== 401) {
-          toast.error('Erro ao carregar permissões.');
+        hasPermission = true;
+      } else {
+        try {
+          const response = await api.getMinhasPermissoes();
+          const visitasPermissions = response.find(p => p.modulo_nome === 'visitas');
+          
+          if (visitasPermissions && visitasPermissions.ativo) {
+            setPermissions(visitasPermissions);
+            hasPermission = true;
+          } else {
+            setPermissions({ ativo: false });
+          }
+        } catch (error) {
+          if (error.response && error.response.status !== 403 && error.response.status !== 401) {
+            toast.error('Erro ao carregar permissões.');
+          }
         }
+      }
+
+      if (hasPermission) {
+        carregarVisitas();
+      } else {
+        // Só mostra o toast se ainda não foi mostrado
+        if (!toastShownRef.current) {
+          toast.error('Você não tem permissão para acessar este módulo.');
+          toastShownRef.current = true;
+        }
+        setIsLoading(false);
       }
     };
 
-    fetchPermissions();
-    carregarVisitas();
+    fetchAndLoad();
   }, []);
 
   const calendarEvents = useMemo(() => {
@@ -76,7 +94,12 @@ function ListagemVisitas() {
   };
 
   const closePopover = () => {
-    setPopover({ visible: false, x: 0, y: 0, event: null });
+    setPopover({
+      visible: false,
+      x: 0,
+      y: 0,
+      event: null
+    });
   };
 
   const handleDelete = (id) => {
@@ -102,12 +125,17 @@ function ListagemVisitas() {
     <div onClick={closePopover}>
       {permissions.ativo && (
         <div className="agenda-header">
-          <Link to="/agenda/novo" className="add-client-link"><FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA</Link>
+          <Link to="/agenda/novo" className="add-client-link">
+            <FontAwesomeIcon icon={faPlus} /> CADASTRAR VISITA
+          </Link>
         </div>
       )}
 
       {isLoading ? (
-        <div className="loading-container"><div className="spinner"></div><p>Carregando...</p></div>
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Carregando...</p>
+        </div>
       ) : (
         <div className="calendar-container">
           <FullCalendar
@@ -116,21 +144,36 @@ function ListagemVisitas() {
             events={calendarEvents}
             eventClick={handleEventClick}
             locale="pt-br"
-            buttonText={{ today: 'Hoje' }}
-            eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+            buttonText={{
+              today: 'Hoje'
+            }}
+            eventTimeFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            }}
           />
         </div>
       )}
 
       {popover.visible && permissions.ativo && (
-        <div
-          className="calendar-popover"
+        <div 
+          className="calendar-popover" 
           style={{ top: popover.y, left: popover.x }}
           onClick={(e) => e.stopPropagation()}
         >
-          <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faEye} /></Link>
-          <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon"><FontAwesomeIcon icon={faPencilAlt} /></Link>
-          <button onClick={() => handleDelete(popover.event.id)} className="popover-icon popover-button"><FontAwesomeIcon icon={faTrashAlt} /></button>
+          <Link to={`/agenda/visualizar/${popover.event.id}`} className="popover-icon">
+            <FontAwesomeIcon icon={faEye} />
+          </Link>
+          <Link to={`/agenda/editar/${popover.event.id}`} className="popover-icon">
+            <FontAwesomeIcon icon={faPencilAlt} />
+          </Link>
+          <button 
+            onClick={() => handleDelete(popover.event.id)} 
+            className="popover-icon popover-button"
+          >
+            <FontAwesomeIcon icon={faTrashAlt} />
+          </button>
         </div>
       )}
 

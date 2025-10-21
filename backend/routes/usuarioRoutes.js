@@ -26,6 +26,8 @@ router.route('/')
   .post(checkPermission(modulo, 'pode_escrever'), adminCreateUsuario);
 
 router.route('/:id')
-  .get(checkPermission(modulo, 'pode_ler'), getUsuarioById);
+  .get(checkPermission(modulo, 'pode_ler'), getUsuarioById)
+  .put(checkPermission(modulo, 'pode_escrever'), updateUsuario)
+  .delete(checkPermission(modulo, 'pode_deletar'), deleteUsuario);
 
 module.exports = router;

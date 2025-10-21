@@ -1,5 +1,15 @@
 explicar código do estágio e uso das ferramentas/tecnologias
 
-- padronizar telas do painel de controle
-- corrigir para SYSMTEC no e-mail
+o que fazer agora:
+- otimizar código
+- espec caso de uso consultar logs de operações (mudar diagramas e métodos)
+- espec caso de uso gerenciar contas de usuários
+- espec caso de uso gerenciar permissões de usuários
 
+o que validar antes da entrega:
+- FAQ e identificação da empresa não teve - visão do produto
+- funcionalidades não desenvolvidas, como custo na ordem de serv, coisas a mais no orçamento - especificação suplementar
+
+o que fazer depois:
+- histórico de conversas
+- gerenciar informações pessoais

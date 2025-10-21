@@ -2,6 +2,7 @@ const Usuario = require('../models/usuarioModel');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { sendEmail } = require('../services/emailService');
+const getEmailTemplate = require('../utils/emailTemplate');
 
 const saltRounds = 10;
 
@@ -25,12 +26,12 @@ exports.adminCreateUsuario = async (req, res) => {
     });
 
     const activationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/ativar-conta/${activationToken}`;
-    const emailHtml = `
-      <h1>Bem-vindo(a) ao SYSMTEC!</h1>
-      <p>Sua conta foi criada. Por favor, clique no link abaixo para definir sua senha e ativar sua conta:</p>
-      <a href="${activationUrl}" style="padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px;">Definir Minha Senha</a>
-      <p>Se você não solicitou esta conta, por favor, ignore este e-mail.</p>
-    `;
+    const emailHtml = getEmailTemplate({
+      title: 'Bem-vindo(a) ao SYSMTEC!',
+      content: '<p>Sua conta foi criada com sucesso. Para começar a usar o sistema, por favor, clique no botão abaixo para definir sua senha e ativar sua conta.</p>',
+      buttonLink: activationUrl,
+      buttonText: 'Definir Minha Senha',
+    });
 
     await sendEmail({
       to: novoUsuario.email,
@@ -128,7 +129,12 @@ exports.forgotPassword = async (req, res) => {
         });
 
         const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/redefinir-senha/${resetToken}`;
-        const emailHtml = `<p>Para redefinir sua senha, clique no link: <a href="${resetUrl}">Redefinir Senha</a></p>`;
+        const emailHtml = getEmailTemplate({
+            title: 'Redefinição de Senha',
+            content: `<p>Recebemos uma solicitação para redefinir a senha da sua conta. Se você fez esta solicitação, clique no botão abaixo para escolher uma nova senha.</p><p>Se você não solicitou uma redefinição de senha, pode ignorar este e-mail com segurança.</p>`,
+            buttonLink: resetUrl,
+            buttonText: 'Redefinir Minha Senha',
+        });
 
         await sendEmail({
             to: usuario.email,

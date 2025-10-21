@@ -18,27 +18,42 @@ function ListagemClientes() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
 
-    const fetchPermissions = async () => {
+    const checkPermissionsAndLoad = async () => {
+      let userPermissions = { ativo: false };
+      let hasPermission = false;
+
       if (user && user.perfil === 'admin') {
-        setPermissions({ ativo: true });
-        return;
-      }
-      
-      try {
-        const response = await api.getMinhasPermissoes();
-        console.log('API Response:', response);
-        const clientesPermissions = response.find(p => p.modulo_nome === 'clientes');
-        console.log('Permissions for clientes:', clientesPermissions);
-        setPermissions(clientesPermissions || { ativo: false });
-      } catch (error) {
-        if (error.response && error.response.status !== 403 && error.response.status !== 401) {
-          toast.error('Erro ao carregar permissões.');
+        userPermissions = { ativo: true };
+        hasPermission = true;
+      } else {
+        try {
+          const response = await api.getMinhasPermissoes();
+          const permission = response.find(p => p.modulo_nome === 'clientes');
+          if (permission && permission.ativo) {
+            userPermissions = permission;
+            hasPermission = true;
+          }
+        } catch (error) {
+          // O interceptor da API já trata erros de autenticação (401)
+          // e exibe um toast genérico para outros erros de rede.
+          // Não precisamos exibir outro toast aqui para evitar duplicação.
+          setIsLoading(false);
+          return; // Interrompe a execução se as permissões não puderem ser carregadas
         }
+      }
+
+      setPermissions(userPermissions);
+
+      if (hasPermission) {
+        carregarClientes();
+      } else {
+        // Se a verificação de permissão foi bem-sucedida, mas o usuário não tem permissão
+        toast.error('Você não tem permissão para acessar este módulo.');
+        setIsLoading(false);
       }
     };
 
-    fetchPermissions();
-    carregarClientes();
+    checkPermissionsAndLoad();
   }, []);
 
   const carregarClientes = async () => {
