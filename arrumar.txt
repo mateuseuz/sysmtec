@@ -1,10 +1,12 @@
-explicar código do estágio e uso das ferramentas/tecnologias
+preparar:
+- justificar uso das ferramentas/tecnologias
 
 o que fazer agora:
-- otimizar código
-- espec caso de uso consultar logs de operações (mudar diagramas e métodos)
-- espec caso de uso gerenciar contas de usuários
-- espec caso de uso gerenciar permissões de usuários
+- otimizar e comentar código
+- diag classe
+- espec caso de uso consultar logs de operações // diagrama de sequencia
+- espec caso de uso gerenciar contas de usuários // diagrama de sequencia 
+- espec caso de uso gerenciar permissões de usuários // diagrama de sequencia
 
 o que validar antes da entrega:
 - FAQ e identificação da empresa não teve - visão do produto
