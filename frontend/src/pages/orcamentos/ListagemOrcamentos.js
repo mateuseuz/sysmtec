@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
@@ -13,6 +13,7 @@ function ListagemOrcamentos() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrcamentoId, setSelectedOrcamentoId] = useState(null);
   const [permissions, setPermissions] = useState({});
+  const toastShownRef = useRef(false);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario'));
@@ -47,7 +48,10 @@ function ListagemOrcamentos() {
         carregarOrcamentos();
       } else {
         // Se a verificação de permissão foi bem-sucedida, mas o usuário não tem permissão
-        toast.error('Você não tem permissão para acessar este módulo.');
+        if (!toastShownRef.current) {
+            toast.error('Você não tem permissão para acessar este módulo.');
+            toastShownRef.current = true;
+        }
         setIsLoading(false);
       }
     };
