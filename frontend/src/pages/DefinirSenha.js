@@ -20,31 +20,35 @@ function DefinirSenhaPage() {
   const pageTitle = isActivation ? 'Ative sua Conta' : 'Redefina sua Senha';
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!nome_completo.trim() || nome_completo.trim().length < 3) {
-      toast.error('Por favor, insira um nome completo válido (mínimo 3 caracteres).');
-      return;
-    }
-    if (senha !== confirmarSenha) {
-      toast.error('As senhas não coincidem.');
-      return;
-    }
-    if (senha.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres.');
-      return;
+  e.preventDefault();
+
+  if (senha !== confirmarSenha) {
+    toast.error('As senhas não coincidem.');
+    return;
+  }
+  if (senha.length < 6) {
+    toast.error('A senha deve ter pelo menos 6 caracteres.');
+    return;
+  }
+
+  setLoading(true);
+  try {
+    let response;
+    if (isActivation) {
+      response = await api.ativarConta(token, { senha });
+    } else {
+      response = await api.redefinirSenha(token, { senha });
     }
 
-    setLoading(true);
-    try {
-      const response = await api.redefinirSenha(token, { senha, nome_completo });
-      toast.success(response.message || 'Operação realizada com sucesso! Você já pode fazer login.');
-      navigate('/login');
-    } catch (error) {
-      toast.error(`Erro ao processar a solicitação: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+    toast.success(response.message || 'Operação realizada com sucesso!');
+    navigate('/login');
+  } catch (error) {
+    toast.error(`Erro ao processar a solicitação: ${error.message}`);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="sysmtec-container-public">
@@ -58,17 +62,19 @@ function DefinirSenhaPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="cliente-form" style={{ maxWidth: '100%' }}>
-            <div className="form-group">
-              <label htmlFor="nome_completo">Nome completo</label>
-              <input
-                id="nome_completo"
-                type="text"
-                placeholder="Digite seu nome completo"
-                value={nome_completo}
-                onChange={(e) => setNomeCompleto(e.target.value)}
-                required
-              />
-            </div>
+            {isActivation && (
+              <div className="form-group">
+                <label htmlFor="nome_completo">Nome completo</label>
+                <input
+                  id="nome_completo"
+                  type="text"
+                  placeholder="Digite seu nome completo"
+                  value={nome_completo}
+                  onChange={(e) => setNomeCompleto(e.target.value)}
+                  required
+                />
+              </div>
+            )}
             <div className="form-group">
               <label htmlFor="senha">Nova senha</label>
               <input

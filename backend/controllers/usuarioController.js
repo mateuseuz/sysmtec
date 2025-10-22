@@ -6,9 +6,11 @@ const getEmailTemplate = require('../utils/emailTemplate');
 
 const saltRounds = 10;
 
-// @desc   Administrador cria um novo usuário
-// @route  POST /api/usuarios/admin-create
-// @access Privado/Admin
+// ------------------------
+// ADMIN
+// ------------------------
+
+// Administrador cria um novo usuário
 exports.adminCreateUsuario = async (req, res) => {
   const { email, perfil } = req.body;
 
@@ -22,13 +24,13 @@ exports.adminCreateUsuario = async (req, res) => {
 
     await Usuario.update(novoUsuario.id_usuario, {
       token_redefinir_senha: activationToken,
-      token_expiracao: new Date(Date.now() + 3600000), // 1 hora a partir de agora
+      token_expiracao: new Date(Date.now() + 3600000), // 1 hora
     });
 
     const activationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/ativar-conta/${activationToken}`;
     const emailHtml = getEmailTemplate({
       title: 'Bem-vindo(a) ao SYSMTEC!',
-      content: '<p>Sua conta foi criada com sucesso. Para começar a usar o sistema, por favor, clique no botão abaixo para definir sua senha e ativar sua conta.</p>',
+      content: '<p>Sua conta foi criada com sucesso. Clique no botão abaixo para definir sua senha.</p>',
       buttonLink: activationUrl,
       buttonText: 'Definir Minha Senha',
     });
@@ -50,9 +52,7 @@ exports.adminCreateUsuario = async (req, res) => {
   }
 };
 
-// @desc   Obter todos os usuários
-// @route  GET /api/usuarios
-// @access Privado/Admin
+// Obter todos os usuários
 exports.getAllUsuarios = async (req, res) => {
   try {
     const usuarios = await Usuario.findAll();
@@ -62,9 +62,7 @@ exports.getAllUsuarios = async (req, res) => {
   }
 };
 
-// @desc   Obter usuário por ID
-// @route  GET /api/usuarios/:id
-// @access Privado/Admin
+// Obter usuário por ID
 exports.getUsuarioById = async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
@@ -78,9 +76,7 @@ exports.getUsuarioById = async (req, res) => {
   }
 };
 
-// @desc   Atualizar usuário
-// @route  PUT /api/usuarios/:id
-// @access Privado/Admin
+// Atualizar usuário
 exports.updateUsuario = async (req, res) => {
   try {
     const { nome_completo, perfil } = req.body;
@@ -95,9 +91,7 @@ exports.updateUsuario = async (req, res) => {
   }
 };
 
-// @desc   Deletar usuário
-// @route  DELETE /api/usuarios/:id
-// @access Privado/Admin
+// Deletar usuário
 exports.deleteUsuario = async (req, res) => {
   try {
     const usuario = await Usuario.delete(req.params.id);
@@ -111,76 +105,98 @@ exports.deleteUsuario = async (req, res) => {
   }
 };
 
-// @desc   Esqueci a senha
-// @route  POST /api/usuarios/esqueci-senha
-// @access Público
+// ------------------------
+// SENHA / ATIVAÇÃO
+// ------------------------
+
+// Esqueci a senha
 exports.forgotPassword = async (req, res) => {
-    const { email } = req.body;
-    try {
-        const usuario = await Usuario.findByEmail(email);
-        if (!usuario) {
-            return res.status(200).json({ message: 'Se um usuário com este e-mail existir, um link de redefinição de senha será enviado.' });
-        }
-
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        await Usuario.update(usuario.id_usuario, {
-            token_redefinir_senha: resetToken,
-            token_expiracao: new Date(Date.now() + 3600000), // 1 hora
-        });
-
-        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/redefinir-senha/${resetToken}`;
-        const emailHtml = getEmailTemplate({
-            title: 'Redefinição de Senha',
-            content: `<p>Recebemos uma solicitação para redefinir a senha da sua conta. Se você fez esta solicitação, clique no botão abaixo para escolher uma nova senha.</p><p>Se você não solicitou uma redefinição de senha, pode ignorar este e-mail com segurança.</p>`,
-            buttonLink: resetUrl,
-            buttonText: 'Redefinir Minha Senha',
-        });
-
-        await sendEmail({
-            to: usuario.email,
-            subject: 'Redefinição de Senha',
-            text: `Use este link para redefinir sua senha: ${resetUrl}`,
-            html: emailHtml,
-        });
-
-        res.status(200).json({ message: 'E-mail de redefinição de senha enviado.' });
-    } catch (error) {
-        res.status(500).json({ error: 'Erro no servidor ao processar o pedido.' });
+  const { email } = req.body;
+  try {
+    const usuario = await Usuario.findByEmail(email);
+    if (!usuario) {
+      return res.status(200).json({ message: 'Se um usuário com este e-mail existir, um link de redefinição de senha será enviado.' });
     }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    await Usuario.update(usuario.id_usuario, {
+      token_redefinir_senha: resetToken,
+      token_expiracao: new Date(Date.now() + 3600000),
+    });
+
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/redefinir-senha/${resetToken}`;
+    const emailHtml = getEmailTemplate({
+      title: 'Redefinição de Senha',
+      content: '<p>Clique no botão abaixo para redefinir sua senha.</p>',
+      buttonLink: resetUrl,
+      buttonText: 'Redefinir Minha Senha',
+    });
+
+    await sendEmail({
+      to: usuario.email,
+      subject: 'Redefinição de Senha',
+      text: `Use este link para redefinir sua senha: ${resetUrl}`,
+      html: emailHtml,
+    });
+
+    res.status(200).json({ message: 'E-mail de redefinição de senha enviado.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro no servidor ao processar o pedido.' });
+  }
 };
 
-// @desc   Redefinir/Ativar senha e definir nome completo
-// @route  POST /api/usuarios/redefinir-senha/:token
-// @access Público
-exports.resetPassword = async (req, res) => {
-    const { token } = req.params;
-    const { senha, nome_completo } = req.body;
+// Redefinir senha
+exports.redefinirSenha = async (req, res) => {
+  const { token } = req.params;
+  const { senha } = req.body;
 
-    if (!senha || !nome_completo) {
-        return res.status(400).json({ error: 'Senha e nome completo são obrigatórios.' });
+  if (!senha) {
+    return res.status(400).json({ error: 'A senha é obrigatória.' });
+  }
+
+  try {
+    const usuario = await Usuario.findByToken(token);
+    if (!usuario) {
+      return res.status(400).json({ error: 'Token inválido ou expirado.' });
     }
 
-    if (nome_completo.trim().length < 3) {
-        return res.status(400).json({ error: 'O nome completo deve ter pelo menos 3 caracteres.' });
+    const senha_hash = await bcrypt.hash(senha, saltRounds);
+    await Usuario.update(usuario.id_usuario, {
+      senha_hash,
+      token_redefinir_senha: null,
+      token_expiracao: null,
+    });
+
+    res.status(200).json({ message: 'Senha redefinida com sucesso.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro no servidor ao redefinir senha.' });
+  }
+};
+
+// Ativar conta (apenas definir senha)
+exports.ativarConta = async (req, res) => {
+  const { token } = req.params;
+  const { senha } = req.body;
+
+  if (!senha) {
+    return res.status(400).json({ error: 'A senha é obrigatória.' });
+  }
+
+  try {
+    const usuario = await Usuario.findByToken(token);
+    if (!usuario) {
+      return res.status(400).json({ error: 'Token inválido ou expirado.' });
     }
 
-    try {
-        const usuario = await Usuario.findByToken(token);
-        if (!usuario) {
-            return res.status(400).json({ error: 'Token inválido ou expirado.' });
-        }
+    const senha_hash = await bcrypt.hash(senha, saltRounds);
+    await Usuario.update(usuario.id_usuario, {
+      senha_hash,
+      token_redefinir_senha: null,
+      token_expiracao: null,
+    });
 
-        const senha_hash = await bcrypt.hash(senha, saltRounds);
-
-        await Usuario.update(usuario.id_usuario, {
-            senha_hash,
-            nome_completo,
-            token_redefinir_senha: null,
-            token_expiracao: null,
-        });
-
-        res.status(200).json({ message: 'Conta ativada e senha definida com sucesso.' });
-    } catch (error) {
-        res.status(500).json({ error: 'Erro no servidor ao ativar a conta.' });
-    }
+    res.status(200).json({ message: 'Conta ativada e senha definida com sucesso.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro no servidor ao ativar conta.' });
+  }
 };

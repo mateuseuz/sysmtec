@@ -84,7 +84,8 @@ const apiClientes = {
   atualizarUsuario: (id, userData) => api.put(`/usuarios/${id}`, userData),
   deletarUsuario: (id) => api.delete(`/usuarios/${id}`),
   esqueciSenha: (email) => api.post('/usuarios/esqueci-senha', { email }),
-  redefinirSenha: (token, data) => api.post(`/usuarios/redefinir-senha/${token}`, data),
+redefinirSenha: (token, data) => api.post(`/usuarios/redefinir-senha/${token}`, data),
+ativarConta: (token, data) => api.post(`/usuarios/ativar-conta/${token}`, data),
 
   // Logs
   listarLogs: () => api.get('/logs'),

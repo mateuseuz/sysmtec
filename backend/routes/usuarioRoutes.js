@@ -7,20 +7,22 @@ const {
   updateUsuario,
   deleteUsuario,
   forgotPassword,
-  resetPassword,
+  redefinirSenha,
+  ativarConta,
 } = require('../controllers/usuarioController');
 const { protect, checkPermission } = require('../middleware/authMiddleware');
 
 const modulo = 'usuarios';
 
-// Rotas Públicas (não precisam de autenticação)
+// Rotas Públicas
 router.post('/esqueci-senha', forgotPassword);
-router.post('/redefinir-senha/:token', resetPassword);
+router.post('/redefinir-senha/:token', redefinirSenha);
+router.post('/ativar-conta/:token', ativarConta);
 
-// A partir daqui, todas as rotas são protegidas e requerem login
+// Protege todas as rotas abaixo
 router.use(protect);
 
-// Rotas de Admin com verificação de permissão granular
+// Rotas Admin
 router.route('/')
   .get(checkPermission(modulo, 'pode_ler'), getAllUsuarios)
   .post(checkPermission(modulo, 'pode_escrever'), adminCreateUsuario);
