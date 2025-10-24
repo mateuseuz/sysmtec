@@ -22,6 +22,7 @@ function GerenciarUsuariosPage() {
   // State para os dados dos modais
   const [editingUser, setEditingUser] = useState(null);
   const [deletingUserId, setDeletingUserId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchUsuarios = useCallback(async () => {
     try {
@@ -62,6 +63,7 @@ function GerenciarUsuariosPage() {
   };
 
   const handleFormSubmit = async (formData) => {
+    setIsSubmitting(true);
     try {
       if (editingUser) {
         await api.atualizarUsuario(editingUser.id_usuario, formData);
@@ -74,6 +76,8 @@ function GerenciarUsuariosPage() {
       fetchUsuarios();
     } catch (error) {
       toast.error(`Erro ao salvar usuário: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -144,6 +148,7 @@ function GerenciarUsuariosPage() {
         onClose={handleCloseModals}
         onSubmit={handleFormSubmit}
         initialData={editingUser}
+        isSubmitting={isSubmitting}
       />
 
       <ConfirmationModal

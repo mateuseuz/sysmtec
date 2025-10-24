@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/UserFormModal.css';
 
-function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
+function UserFormModal({ isOpen, onClose, onSubmit, initialData, isSubmitting }) {
   const [formData, setFormData] = useState({ email: '', perfil: 'usuario', nome_completo: '' });
 
   useEffect(() => {
@@ -72,7 +72,9 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData }) {
           {/* O campo Perfil foi removido do formulário */}
           <div className="modal-actions">
             <button type="button" onClick={onClose} className="btn-cancel">Cancelar</button>
-            <button type="submit" className="btn-save">Salvar</button>
+            <button type="submit" className="btn-save" disabled={isSubmitting}>
+              {isSubmitting && !isEditing ? 'Enviando...' : 'Salvar'}
+            </button>
           </div>
         </form>
       </div>
