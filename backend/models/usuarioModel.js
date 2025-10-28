@@ -84,12 +84,25 @@ const Usuario = {
   },
 
   async delete(id) {
-    const query = `
-      DELETE FROM usuarios WHERE id_usuario = $1 RETURNING *;
-    `;
-    const values = [id];
-    const { rows } = await pool.query(query, values);
-    return rows[0];
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      // Primeiro, deleta as permissões associadas ao usuário
+      await client.query('DELETE FROM permissoes_usuario WHERE id_usuario = $1', [id]);
+      
+      // Depois, deleta o usuário
+      const deleteUserQuery = 'DELETE FROM usuarios WHERE id_usuario = $1 RETURNING *;';
+      const { rows } = await client.query(deleteUserQuery, [id]);
+
+      await client.query('COMMIT');
+      return rows[0];
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 };
 

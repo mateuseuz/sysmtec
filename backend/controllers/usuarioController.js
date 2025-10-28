@@ -94,16 +94,21 @@ exports.updateUsuario = async (req, res) => {
 // Deletar usuário
 exports.deleteUsuario = async (req, res) => {
   try {
+    console.log('Tentando deletar ID:', req.params.id);
     const usuario = await Usuario.delete(req.params.id);
+    console.log('Resultado delete:', usuario);
+
     if (usuario) {
       res.status(200).json({ message: 'Usuário deletado com sucesso.' });
     } else {
       res.status(404).json({ error: 'Usuário não encontrado.' });
     }
   } catch (error) {
+    console.error('Erro ao deletar:', error);
     res.status(500).json({ error: 'Erro ao deletar usuário.' });
   }
 };
+
 
 // ------------------------
 // SENHA / ATIVAÇÃO
@@ -176,7 +181,7 @@ exports.redefinirSenha = async (req, res) => {
 // Ativar conta (apenas definir senha)
 exports.ativarConta = async (req, res) => {
   const { token } = req.params;
-  const { senha } = req.body;
+  const { senha, nome_completo } = req.body;
 
   if (!senha) {
     return res.status(400).json({ error: 'A senha é obrigatória.' });
@@ -191,6 +196,7 @@ exports.ativarConta = async (req, res) => {
     const senha_hash = await bcrypt.hash(senha, saltRounds);
     await Usuario.update(usuario.id_usuario, {
       senha_hash,
+      nome_completo,
       token_redefinir_senha: null,
       token_expiracao: null,
     });

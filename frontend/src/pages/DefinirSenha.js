@@ -35,7 +35,7 @@ function DefinirSenhaPage() {
   try {
     let response;
     if (isActivation) {
-      response = await api.ativarConta(token, { senha });
+      response = await api.ativarConta(token, { nome_completo, senha });
     } else {
       response = await api.redefinirSenha(token, { senha });
     }
