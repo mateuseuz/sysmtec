@@ -26,7 +26,7 @@ function LoginPage() {
       toast.success('Login realizado com sucesso!');
       navigate('/agenda'); // Redireciona para a página principal
     } catch (error) {
-      toast.error(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
+      toast.error(error.response?.data?.error || 'Erro ao fazer login. Verifique suas credenciais.');
     }
   };
 
