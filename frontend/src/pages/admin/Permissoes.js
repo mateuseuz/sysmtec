@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
-import '../../styles/Permissoes.css';
-import '../../styles/Clientes.css'; // Importando o CSS com o estilo do botão
+import '../../styles/Admin.css';
 
 function PermissoesPage() {
   const navigate = useNavigate();

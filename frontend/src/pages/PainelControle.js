@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHistory, faUsersCog, faUserShield } from '@fortawesome/free-solid-svg-icons';
-import '../styles/PainelControle.css';
+import '../styles/Admin.css';
 
 function PainelControlePage() {
   return (

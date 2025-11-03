@@ -4,9 +4,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPencilAlt, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api';
-import '../../styles/GerenciarUsuarios.css';
-import '../../styles/Clientes.css'; // Importando o CSS com o estilo do botão
-import '../../styles/Orcamentos.css';
+import '../../styles/Admin.css';
 import UserFormModal from '../../components/UserFormModal';
 import ConfirmationModal from '../../components/ConfirmationModal';
 

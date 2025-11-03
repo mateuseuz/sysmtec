@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './styles/Global.css';
 import ListagemClientes from './pages/clientes/ListagemClientes';
 import CadastroCliente from './pages/clientes/CadastroCliente';
 import EdicaoCliente from './pages/clientes/EdicaoCliente';
@@ -25,8 +26,7 @@ import AdminRoute from './components/AdminRoute'; // Importar a rota de admin
 import Layout from './components/Layout';
 import GerenciarUsuariosPage from './pages/admin/GerenciarUsuarios';
 import PermissoesPage from './pages/admin/Permissoes'; // Importar a página de permissões
-import DefinirSenhaPage from './pages/DefinirSenha';
-import EsqueciSenhaPage from './pages/EsqueciSenha';
+import AuthPage from './pages/AuthPage';
 
 const RedirectTo = () => {
   const token = localStorage.getItem('token');
@@ -50,9 +50,9 @@ function App() {
       />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/esqueci-senha" element={<EsqueciSenhaPage />} />
-        <Route path="/ativar-conta/:token" element={<DefinirSenhaPage />} />
-        <Route path="/redefinir-senha/:token" element={<DefinirSenhaPage />} />
+        <Route path="/esqueci-senha" element={<AuthPage />} />
+        <Route path="/ativar-conta/:token" element={<AuthPage />} />
+        <Route path="/redefinir-senha/:token" element={<AuthPage />} />
         <Route path="/" element={<RedirectTo />} />
         
         {/* Rotas Protegidas */}

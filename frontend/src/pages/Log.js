@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import api from '../services/api';
 import ConfirmationModal from '../components/ConfirmationModal';
-import '../styles/Orcamentos.css'; // Para o estilo do botão
-import '../styles/Log.css';
+import '../styles/Admin.css';
 
 function LogPage() {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-/* Estilos para a página de Orçamentos */
+/* Estilos específicos para a página de Orçamentos */
 .autocomplete-container {
   position: relative;
 }
@@ -66,47 +66,9 @@
   background-color: #0056b3;
 }
 
-.cliente-form label {
-  font-weight: bold;
-  font-size: 1em;
-}
-
 .form-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-}
-
-.btn-primary, .btn-danger {
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-flex; /* Para alinhar ícone e texto */
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-}
-
-.btn-primary {
-  background-color: #4CAF50; /* Verde */
-}
-
-.btn-primary:hover {
-  background-color: #45a049;
-}
-
-.btn-danger {
-  background-color: #f44336; /* Vermelho */
-}
-
-.btn-danger:hover {
-  background-color: #d32f2f;
 }
