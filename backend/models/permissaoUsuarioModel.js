@@ -2,10 +2,8 @@ const pool = require('../config/database');
 
 const PermissaoUsuario = {
   /**
-   * Busca a permissão de um usuário para um módulo específico.
-   * @param {number} id_usuario - O ID do usuário.
-   * @param {string} modulo_nome - O nome do módulo.
-   * @returns {Promise<object|null>} O objeto de permissão ou nulo.
+   * Procura a permissão de um usuário em um módulo.
+   * Exemplo: ver se o usuário 5 tem acesso ao módulo "clientes".
    */
   async findByUserIdAndModule(id_usuario, modulo_nome) {
     const query = `
@@ -15,7 +13,7 @@ const PermissaoUsuario = {
     const values = [id_usuario, modulo_nome];
     try {
       const { rows } = await pool.query(query, values);
-      return rows[0];
+      return rows[0]; // Retorna a permissão, se existir
     } catch (error) {
       console.error('Erro ao buscar permissão de usuário:', error);
       throw new Error('Falha ao buscar permissão de usuário.');
@@ -23,11 +21,8 @@ const PermissaoUsuario = {
   },
 
   /**
-   * Cria um novo registro de permissão para um usuário e módulo.
-   * @param {number} id_usuario - O ID do usuário.
-   * @param {string} modulo_nome - O nome do módulo.
-   * @param {object} permissions - { ativo }.
-   * @returns {Promise<object>} O novo registro de permissão.
+   * Cria uma nova permissão para um usuário em um módulo.
+   * Exemplo: dar permissão "false" por padrão ao criar um novo usuário.
    */
   async create(id_usuario, modulo_nome, { ativo = false }) {
     const query = `
@@ -38,7 +33,7 @@ const PermissaoUsuario = {
     const values = [id_usuario, modulo_nome, ativo];
     try {
       const { rows } = await pool.query(query, values);
-      return rows[0];
+      return rows[0]; // Retorna a nova permissão criada
     } catch (error) {
       console.error('Erro ao criar permissão de usuário:', error);
       throw new Error('Falha ao criar permissão de usuário.');
@@ -46,11 +41,8 @@ const PermissaoUsuario = {
   },
 
   /**
-   * Atualiza as permissões de um usuário para um módulo.
-   * @param {number} id_usuario - O ID do usuário.
-   * @param {string} modulo_nome - O nome do módulo.
-   * @param {object} permissions - { ativo }.
-   * @returns {Promise<object>} A permissão atualizada.
+   * Atualiza a permissão de um usuário em um módulo.
+   * Exemplo: mudar "ativo" de false para true.
    */
   async update(id_usuario, modulo_nome, { ativo }) {
     const query = `
@@ -62,7 +54,7 @@ const PermissaoUsuario = {
     const values = [id_usuario, modulo_nome, ativo];
     try {
       const { rows } = await pool.query(query, values);
-      return rows[0];
+      return rows[0]; // Retorna a permissão atualizada
     } catch (error) {
       console.error('Erro ao atualizar permissão de usuário:', error);
       throw new Error('Falha ao atualizar permissão de usuário.');
@@ -70,16 +62,15 @@ const PermissaoUsuario = {
   },
   
   /**
-   * Busca todas as permissões de um usuário específico.
-   * @param {number} id_usuario - O ID do usuário.
-   * @returns {Promise<Array<object>>} Uma lista de todas as permissões do usuário.
+   * Mostra todas as permissões de um usuário.
+   * Exemplo: listar o que o usuário pode ou não acessar.
    */
   async findByUserId(id_usuario) {
     const query = 'SELECT * FROM permissoes_usuario WHERE id_usuario = $1;';
     const values = [id_usuario];
     try {
       const { rows } = await pool.query(query, values);
-      return rows;
+      return rows; // Retorna todas as permissões desse usuário
     } catch (error) {
       console.error('Erro ao buscar todas as permissões do usuário:', error);
       throw new Error('Falha ao buscar permissões do usuário.');
@@ -87,8 +78,8 @@ const PermissaoUsuario = {
   },
 
   /**
-   * Cria um conjunto padrão de permissões para um novo usuário.
-   * @param {number} id_usuario - O ID do novo usuário.
+   * Cria permissões padrão (todas falsas) quando um novo usuário é cadastrado.
+   * Assim, ele começa sem acesso até alguém liberar.
    */
   async createDefaultPermissions(id_usuario) {
     const modulos = [
@@ -100,13 +91,12 @@ const PermissaoUsuario = {
       return {
         text: `INSERT INTO permissoes_usuario (id_usuario, modulo_nome, ativo)
                VALUES ($1, $2, false)
-               ON CONFLICT (id_usuario, modulo_nome) DO NOTHING;`, // Evita erros se a permissão já existir
+               ON CONFLICT (id_usuario, modulo_nome) DO NOTHING;`,
         values: [id_usuario, modulo]
       };
     });
 
     try {
-      // Executa todas as inserções
       for (const query of queries) {
         await pool.query(query.text, query.values);
       }

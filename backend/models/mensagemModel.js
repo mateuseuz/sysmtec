@@ -3,9 +3,9 @@ const pool = require('../config/database');
 const Mensagem = {
   /**
    * Cria uma nova mensagem no banco de dados.
-   * @param {number} id_usuario - O ID do usuário que enviou a mensagem.
-   * @param {string} texto - O conteúdo da mensagem.
-   * @returns {Promise<object>} A mensagem criada.
+   * @param {number} id_usuario
+   * @param {string} texto
+   * @returns {Promise<object>}
    */
   async create(id_usuario, texto) {
     const query = `
@@ -39,7 +39,7 @@ const Mensagem = {
       FROM mensagens m
       JOIN usuarios u ON m.id_usuario = u.id_usuario
       ORDER BY m.timestamp ASC
-      LIMIT 100; -- Limita a um número razoável de mensagens recentes
+      LIMIT 100; -- Limite de mensagens recentes
     `;
     
     try {

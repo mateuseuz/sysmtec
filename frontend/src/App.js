@@ -18,14 +18,14 @@ import ListagemVisitas from './pages/visitas/ListagemVisitas';
 import CadastroVisita from './pages/visitas/CadastroVisita';
 import EdicaoVisita from './pages/visitas/EdicaoVisita';
 import VisualizacaoVisita from './pages/visitas/VisualizacaoVisita';
-import LoginPage from './pages/Login'; // Importar a página de login
+import LoginPage from './pages/Login';
 import LogPage from './pages/Log';
 import PainelControlePage from './pages/PainelControle';
 import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute'; // Importar a rota de admin
+import AdminRoute from './components/AdminRoute';
 import Layout from './components/Layout';
 import GerenciarUsuariosPage from './pages/admin/GerenciarUsuarios';
-import PermissoesPage from './pages/admin/Permissoes'; // Importar a página de permissões
+import PermissoesPage from './pages/admin/Permissoes';
 import AuthPage from './pages/AuthPage';
 
 const RedirectTo = () => {

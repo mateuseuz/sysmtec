@@ -34,7 +34,7 @@ exports.getOrdemServicoById = async (req, res) => {
   try {
     const ordemServico = await OrdemServico.getById(req.params.id);
     if (!ordemServico) {
-      return res.status(404).json({ error: 'Ordem de serviço não encontrada' });
+      return res.status(404).json({ error: 'Ordem de serviço não encontrada.' });
     }
     res.status(200).json(ordemServico);
   } catch (error) {
@@ -47,11 +47,11 @@ exports.deleteOrdemServico = async (req, res) => {
     const id_ordem_servico = req.params.id;
     const ordemServico = await OrdemServico.getById(id_ordem_servico);
     if (!ordemServico) {
-      return res.status(404).json({ error: 'Ordem de serviço não encontrada' });
+      return res.status(404).json({ error: 'Ordem de serviço não encontrada.' });
     }
     await OrdemServico.delete(id_ordem_servico);
     await createLog(req.usuario.nome_completo, 'Exclusão', `Ordem de Serviço "${ordemServico.nome}"`);
-    res.status(200).json({ message: 'Ordem de serviço deletada com sucesso' });
+    res.status(200).json({ message: 'Ordem de serviço deletada com sucesso.' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -15,7 +15,7 @@ exports.adminCreateUsuario = async (req, res) => {
   const { email, perfil } = req.body;
 
   if (!email) {
-    return res.status(400).json({ error: 'O e-mail é obrigatório.' });
+    return res.status(400).json({ error: 'E-mail é obrigatório.' });
   }
 
   try {
@@ -108,7 +108,7 @@ exports.deleteUsuario = async (req, res) => {
     res.status(500).json({ error: 'Erro ao deletar usuário.' });
   }
 };
-
+  
 
 // ------------------------
 // SENHA / ATIVAÇÃO

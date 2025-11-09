@@ -2,7 +2,6 @@ const pool = require('../config/database');
 
 const Usuario = {
   // Cria um novo usuário apenas com e-mail e perfil.
-  // O nome completo e a senha serão definidos pelo usuário na ativação.
   async create(email, perfil = 'usuario') {
     const query = `
       INSERT INTO usuarios (email, perfil)

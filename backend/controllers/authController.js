@@ -14,13 +14,13 @@ exports.login = async (req, res) => {
     // 1. Encontrar o usuário pelo e-mail
     const usuario = await Usuario.findByEmail(email);
     if (!usuario) {
-      return res.status(400).json({ error: 'Credenciais inválidas.' }); // Usuário não encontrado
+      return res.status(400).json({ error: 'Credenciais inválidas. E-mail não encontrado.' });
     }
 
     // 2. Comparar a senha
     const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
     if (!senhaValida) {
-      return res.status(400).json({ error: 'Credenciais inválidas.' }); // Senha incorreta
+      return res.status(400).json({ error: 'Credenciais inválidas. A senha está incorreta.' });
     }
 
     // 3. Gerar o Token JWT
@@ -28,9 +28,9 @@ exports.login = async (req, res) => {
       { 
         id_usuario: usuario.id_usuario, 
         nome_completo: usuario.nome_completo,
-        perfil: usuario.perfil // Adicionando o perfil do usuário ao token
+        perfil: usuario.perfil
       },
-      process.env.JWT_SECRET || 'seu_segredo_jwt_padrao', // Use uma variável de ambiente!
+      process.env.JWT_SECRET || 'seu_segredo_jwt_padrao',
       { expiresIn: '1h' } // Token expira em 1 hora
     );
 

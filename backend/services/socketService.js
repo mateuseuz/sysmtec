@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Mensagem = require('../models/mensagemModel');
-const Usuario = require('../models/usuarioModel'); // Importar o modelo de usuário
+const Usuario = require('../models/usuarioModel');
 const PermissaoUsuario = require('../models/permissaoUsuarioModel');
 
 const initSocket = (io) => {
@@ -15,7 +15,7 @@ const initSocket = (io) => {
       if (err) {
         return next(new Error('Authentication error: Invalid token.'));
       }
-      socket.usuario = decoded; // Anexa os dados do usuário ao objeto do socket
+      socket.usuario = decoded;
       next();
     });
   });
@@ -48,7 +48,7 @@ const initSocket = (io) => {
           nome_usuario: nomeUsuario,
         };
 
-        // 4. Transmitir a mensagem para todos os clientes conectados
+        // 4. Transmitir a mensagem para todos os  conectados
         io.emit('mensagem_recebida', mensagemParaClientes);
 
       } catch (error) {
@@ -64,7 +64,6 @@ const initSocket = (io) => {
     // Handler para apagar mensagens (sem verificação de permissão)
     socket.on('apagar_mensagem', async (id_mensagem) => {
       try {
-        // Verifica se o usuário é administrador
         if (!socket.usuario || socket.usuario.perfil !== 'admin') {
           return socket.emit('erro_chat', { message: 'Acesso negado. Você não tem permissão para apagar mensagens.' });
         }

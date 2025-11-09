@@ -51,7 +51,7 @@ const Visita = {
   async delete(id) {
     const { rowCount } = await pool.query('DELETE FROM visitas WHERE id_agendamento = $1', [id]);
     if (rowCount === 0) {
-      throw new Error('Agendamento não encontrado');
+      throw new Error('Agendamento não encontrado.');
     }
     return true;
   }

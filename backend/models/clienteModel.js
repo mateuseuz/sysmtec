@@ -32,16 +32,15 @@ const Cliente = {
       };
     } catch (error) {
       if (error.code === '23505') {
-        throw new Error('CPF/CNPJ já cadastrado');
+        throw new Error('CPF/CNPJ já cadastrado.');
       }
       throw error;
     }
   },
 
   async update(id_cliente, nome, cpf_cnpj, endereco, email, celular, observacoes) {
-    // Validação básica
     if (!nome || nome.length > 50) {
-      throw new Error('Nome é obrigatório e deve ter até 50 caracteres');
+      throw new Error('Nome é obrigatório e deve ter até 50 caracteres.');
     }
 
     // Query dinâmica
@@ -58,10 +57,10 @@ const Cliente = {
     };
 
     addField('nome', nome);
-    addField('cpf_cnpj', cpf_cnpj); // Já validado
+    addField('cpf_cnpj', cpf_cnpj);
     addField('endereco', endereco);
     addField('email', email);
-    addField('celular', celular); // Já validado
+    addField('celular', celular);
     addField('observacoes', observacoes);
 
     values.push(id_cliente);
@@ -74,7 +73,7 @@ const Cliente = {
 
     try {
       const { rows } = await pool.query(query, values);
-      if (rows.length === 0) throw new Error('Cliente não encontrado');
+      if (rows.length === 0) throw new Error('Cliente não encontrado.');
       
       return {
         ...rows[0],
@@ -83,7 +82,7 @@ const Cliente = {
       };
     } catch (error) {
       if (error.code === '23505') {
-        throw new Error('CPF/CNPJ já cadastrado em outro cliente');
+        throw new Error('CPF/CNPJ já cadastrado.');
       }
       throw error;
     }
@@ -112,7 +111,7 @@ const Cliente = {
   async delete(id_cliente) {
     const { rowCount } = await pool.query('DELETE FROM clientes WHERE id_cliente = $1', [id_cliente]);
     if (rowCount === 0) {
-      throw new Error('Cliente não encontrado');
+      throw new Error('Cliente não encontrado.');
     }
     return true;
   },

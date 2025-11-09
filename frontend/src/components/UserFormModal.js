@@ -27,8 +27,8 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData, isSubmitting })
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Garante que o perfil não seja enviado ao editar.
-    // Ao criar, o backend já assume 'usuario' como padrão.
+    // Garante que o perfil não seja enviado ao editar
+    // Ao criar, o backend já assume 'usuario' como padrão
     const dataToSend = { ...formData };
     if (isEditing) {
       delete dataToSend.perfil;
@@ -69,7 +69,6 @@ function UserFormModal({ isOpen, onClose, onSubmit, initialData, isSubmitting })
               />
             </div>
           )}
-          {/* O campo Perfil foi removido do formulário */}
           <div className="modal-actions">
             <button type="button" onClick={onClose} className="btn-cancel">Cancelar</button>
             <button type="submit" className="btn-save" disabled={isSubmitting}>

@@ -21,7 +21,7 @@ function Chat() {
 
   useEffect(scrollToBottom, [messages]);
 
-  // Effect to setup socket connection and user
+  // Conexão socket e usuário
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('usuario') || 'null');
     const token = localStorage.getItem('token');
@@ -61,7 +61,7 @@ function Chat() {
     }
   }, []);
 
-  // Effect to fetch message history once the user is set
+  // Carregar histórico de mensagens após definir o usuário
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -87,7 +87,6 @@ function Chat() {
     }
   };
 
-  // All users can delete messages
   const handleDeleteMessage = (id_mensagem) => {
     if (socket.current) {
       socket.current.emit('apagar_mensagem', id_mensagem);
@@ -114,7 +113,7 @@ function Chat() {
     return new Date(timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
   
-  // The chat is only rendered for logged-in users.
+  // Apenas usuários conectados podem ver o chat
   if (!currentUser) {
     return null;
   }

@@ -24,7 +24,7 @@ exports.getAgendamentoById = async (req, res) => {
   try {
     const agendamento = await Visita.getById(req.params.id);
     if (!agendamento) {
-      return res.status(404).json({ error: 'Agendamento não encontrado' });
+      return res.status(404).json({ error: 'Agendamento não encontrado.' });
     }
     res.status(200).json(agendamento);
   } catch (error) {
@@ -47,11 +47,11 @@ exports.deleteAgendamento = async (req, res) => {
     const id_visita = req.params.id;
     const visita = await Visita.getById(id_visita);
     if (!visita) {
-      return res.status(404).json({ error: 'Agendamento não encontrado' });
+      return res.status(404).json({ error: 'Agendamento não encontrado.' });
     }
     await Visita.delete(id_visita);
     await createLog(req.usuario.nome_completo, 'Exclusão', `Agendamento "${visita.titulo}"`);
-    res.status(200).json({ message: 'Agendamento deletado com sucesso' });
+    res.status(200).json({ message: 'Agendamento deletado com sucesso.' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

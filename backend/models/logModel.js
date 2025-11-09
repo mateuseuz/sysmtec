@@ -11,7 +11,7 @@ const Log = {
     
     try {
       const { rows } = await pool.query(query, values);
-      return rows[0];
+      return rows[0]; // Log mais recente criado
     } catch (error) {
       console.error('Erro ao criar log:', error);
       throw error;

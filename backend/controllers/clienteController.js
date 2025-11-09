@@ -74,7 +74,7 @@ exports.getClienteById = async (req, res) => {
   try {
     const cliente = await Cliente.getById(req.params.id);
     if (!cliente) {
-      return res.status(404).json({ error: 'Cliente não encontrado' });
+      return res.status(404).json({ error: 'Cliente não encontrado.' });
     }
     res.status(200).json(cliente);
   } catch (error) {
@@ -87,11 +87,11 @@ exports.deleteCliente = async (req, res) => {
     const id_cliente = req.params.id;
     const cliente = await Cliente.getById(id_cliente);
     if (!cliente) {
-      return res.status(404).json({ error: 'Cliente não encontrado' });
+      return res.status(404).json({ error: 'Cliente não encontrado.' });
     }
     await Cliente.delete(id_cliente);
     await createLog(req.usuario.nome_completo, 'Exclusão', `Cliente "${cliente.nome}"`);
-    res.status(200).json({ message: 'Cliente deletado com sucesso' });
+    res.status(200).json({ message: 'Cliente deletado com sucesso.' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

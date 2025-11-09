@@ -1,8 +1,5 @@
 const PermissaoUsuario = require('../models/permissaoUsuarioModel');
 
-// @desc   Obter todas as permissões de um usuário específico
-// @route  GET /api/permissoes-usuario/:id_usuario
-// @access Privado/Admin
 exports.getPermissoesPorUsuario = async (req, res) => {
   try {
     const { id_usuario } = req.params;

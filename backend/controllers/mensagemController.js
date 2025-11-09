@@ -1,10 +1,5 @@
 const Mensagem = require('../models/mensagemModel');
 
-/**
- * @desc   Busca todas as mensagens
- * @route  GET /api/mensagens
- * @access Privado
- */
 exports.getMensagens = async (req, res) => {
   try {
     const mensagens = await Mensagem.findAll();

@@ -4,10 +4,10 @@ const OrdemServico = {
   async create(ordemData) {
     const { nome, id_cliente, observacoes = null, id_orcamento = null } = ordemData;
     if (!nome || nome.length > 100) {
-      throw new Error('Nome do projeto é obrigatório e deve ter até 100 caracteres');
+      throw new Error('Nome é obrigatório.');
     }
     if (!id_cliente) {
-      throw new Error('Cliente é obrigatório');
+      throw new Error('Cliente é obrigatório.');
     }
 
     const query = `
@@ -61,7 +61,7 @@ const OrdemServico = {
       RETURNING *`;
 
     const { rows } = await pool.query(query, values);
-    if (rows.length === 0) throw new Error('Ordem de serviço não encontrada');
+    if (rows.length === 0) throw new Error('Ordem de serviço não encontrada.');
     
     return rows[0];
   },
@@ -90,7 +90,7 @@ const OrdemServico = {
   async delete(id_ordem_servico) {
     const { rowCount } = await pool.query('DELETE FROM ordens_servico WHERE id_ordem_servico = $1', [id_ordem_servico]);
     if (rowCount === 0) {
-      throw new Error('Ordem de serviço não encontrada');
+      throw new Error('Ordem de serviço não encontrada.');
     }
     return true;
   }
