@@ -98,12 +98,12 @@ function CadastroVisita() {
       toast.warn('Nome da visita é obrigatório.');
     }
     if (!formData.data) {
-      novosErros.data = 'A data da visita é obrigatória.';
-      toast.warn('A data da visita é obrigatória.');
+      novosErros.data = 'Data da visita é obrigatório.';
+      toast.warn('Data da visita é obrigatório.');
     }
     if (!formData.hora) {
-      novosErros.hora = 'A hora da visita é obrigatória.';
-      toast.warn('A hora da visita é obrigatória.');
+      novosErros.hora = 'Hora da visita é obrigatório.';
+      toast.warn('Hora da visita é obrigatório.');
     }
     if (!formData.endereco) {
       novosErros.endereco = 'Endereço é obrigatório.';

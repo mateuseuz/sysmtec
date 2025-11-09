@@ -25,14 +25,14 @@
 
 .user-permission-select {
   flex-grow: 1;
-  max-width: 600px; /* Limita a largura máxima */
+  max-width: 600px;
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   font-family: inherit;
   background-color: white;
-  margin-left: 2rem; /* Adiciona espaço entre o título e o select */
+  margin-left: 2rem;
 }
 
 .usuarios-table .modulo-cell {
@@ -167,9 +167,8 @@
   }
 }
 
-/* Estilo para o botão Voltar */
 .btn-voltar {
-  background-color: #6c757d; /* Cinza */
+  background-color: #6c757d;
   color: white;
   border: none;
   padding: 0.5rem 1rem;

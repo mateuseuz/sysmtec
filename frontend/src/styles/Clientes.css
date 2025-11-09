@@ -7,7 +7,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* A largura das colunas pode ser específica para a tabela de clientes */
 .clientes-table th:nth-child(1), /* Coluna Nome */
 .clientes-table td:nth-child(1) {
   min-width: 200px; 
@@ -27,7 +26,6 @@
   text-align: center;
 }
 
-/* Estilos para a lista de sugestões de autocompletar, se houver */
 .suggestions-list {
   list-style: none;
   padding: 0;

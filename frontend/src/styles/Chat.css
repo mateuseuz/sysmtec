@@ -1,4 +1,3 @@
-/* General Chat Container */
 .chat-container {
   position: fixed;
   bottom: 0;
@@ -19,7 +18,7 @@
   transform: translateY(calc(100% - 50px)); /* Mostra apenas o cabeçalho */
 }
 
-/* Chat Header */
+/* Header do chat */
 .chat-header {
   background-color: #032f7e;
   color: white;
@@ -29,7 +28,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px; /* Altura fixa para o cabeçalho */
+  height: 50px;
 }
 
 .chat-header h3 {
@@ -47,14 +46,14 @@
   transform: scale(1.1);
 }
 
-/* Chat Body */
+/* Body do chat */
 .chat-body {
   display: flex;
   flex-direction: column;
   height: 380px;
 }
 
-/* Messages Area */
+/* Área de mensagens */
 .messages-area {
   flex-grow: 1;
   padding: 15px;
@@ -94,11 +93,17 @@
 .message {
   padding: 10px 15px;
   border-radius: 18px;
-  word-wrap: break-word;
   line-height: 1.4;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.message p {
+  overflow-wrap: break-word;   /* quebra linhas longas corretamente */
+  word-break: break-word;      /* força quebra se precisar */
+  white-space: pre-wrap;       /* respeita espaços e quebras manuais */
+  margin: 0;
 }
 
 .message .timestamp {
@@ -107,7 +112,7 @@
   align-self: flex-end;
 }
 
-/* My Messages */
+/* Minhas mensagens */
 .message-wrapper.mine .message {
   background-color: #dcf8c6;
   border-radius: 18px 18px 5px 18px;
@@ -117,13 +122,12 @@
   color: #62a83e;
 }
 
-/* Other's Messages */
+/* Mensagens dos outros */
 .message-wrapper.other .message {
   background-color: #e9e9eb;
   border-radius: 18px 18px 18px 5px;
 }
 
-/* Message Form */
 .message-form {
   display: flex;
   padding: 10px;
@@ -152,10 +156,9 @@
 }
 
 .message-form button:hover {
-  background-color: #022664; /* Tom mais escuro da cor primária */
+  background-color: #022664;
 }
 
-/* Delete Button */
 .delete-btn {
   background: none;
   border: none;

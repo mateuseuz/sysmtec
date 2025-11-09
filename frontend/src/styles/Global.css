@@ -61,7 +61,7 @@ body {
   padding: 1rem;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  flex-shrink: 0; /* Impede que o header encolha */
+  flex-shrink: 0;
 }
 
 .sysmtec-header h1 {
@@ -103,14 +103,14 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 0;
-  padding: 0; /* Removido para que o header e a nav controlem seus próprios espaçamentos */
+  padding: 0;
 }
 
 .sysmtec-sidebar nav {
   position: relative;
   z-index: 1;
   padding: 1.5rem 1rem;
-  flex-grow: 1; /* Faz a navegação ocupar o espaço restante */
+  flex-grow: 1;
   overflow-y: auto; /* Adiciona rolagem se os itens do menu excederem a altura */
 }
 
@@ -147,7 +147,7 @@ body {
 .sysmtec-sidebar nav ul {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Espaçamento entre os itens */
+  gap: 1rem;
 }
 
 .sysmtec-sidebar nav li {
@@ -220,8 +220,8 @@ body {
 .back-button {
   display: inline-flex;
   align-items: center;
-  justify-content: center; /* Centraliza o conteúdo */
-  height: 44px; /* Define uma altura fixa */
+  justify-content: center;
+  height: 44px;
   gap: 0.5rem;
   background-color: var(--primary-color);
   color: var(--white);
@@ -595,7 +595,7 @@ body {
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
-  display: inline-flex; /* Para alinhar ícone e texto */
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 16px;
@@ -607,7 +607,7 @@ body {
 }
 
 .btn-primary {
-  background-color: #4CAF50; /* Verde */
+  background-color: #4CAF50;
 }
 
 .btn-primary:hover {
@@ -615,7 +615,7 @@ body {
 }
 
 .btn-danger {
-  background-color: #f44336; /* Vermelho */
+  background-color: #f44336;
 }
 
 .btn-danger:hover {

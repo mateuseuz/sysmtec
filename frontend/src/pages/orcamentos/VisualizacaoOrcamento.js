@@ -14,7 +14,6 @@ import MontserratLight from '../../assets/fonts/Montserrat-Light.ttf';
 import '../../styles/Clientes.css';
 import '../../styles/Orcamentos.css';
 
-// Helper function to safely convert ArrayBuffer to Base64
 const arrayBufferToBase64 = (buffer) => {
   let binary = '';
   const bytes = new Uint8Array(buffer);
@@ -212,7 +211,7 @@ const VisualizacaoOrcamento = () => {
             <label className="grid-header">Item</label>
           <label className="grid-header">Qtd.</label>
           <label className="grid-header">Valor (un.)</label>
-          <div /> {/* Célula vazia para alinhamento */}
+          <div />
 
           {/* Linhas de Itens */}
           {orcamento.itens.map((item, index) => (
@@ -238,7 +237,7 @@ const VisualizacaoOrcamento = () => {
                 readOnly
                 disabled
               />
-              <div /> {/* Célula vazia para alinhamento */}
+              <div />
             </React.Fragment>
           ))}
           </div>

@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import '../styles/Login.css';
-// Supondo que o logo esteja na pasta de assets ou public
-// import logo from '../assets/logo-mtec.png'; 
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -20,11 +18,10 @@ function LoginPage() {
 
     try {
       const response = await api.login({ email, senha });
-      localStorage.setItem('token', response.token); // Salva o token
-      // Opcional: salvar dados do usuário também
+      localStorage.setItem('token', response.token);
       localStorage.setItem('usuario', JSON.stringify(response.usuario));
       toast.success('Login realizado com sucesso!');
-      navigate('/agenda'); // Redireciona para a página principal
+      navigate('/agenda');
     } catch (error) {
       toast.error(error.response?.data?.error || 'Erro ao fazer login. Verifique suas credenciais.');
     }
@@ -33,7 +30,6 @@ function LoginPage() {
   return (
     <div className="login-page">
       <header className="login-header">
-        {/* <img src={logo} alt="MTEC Soluções em Tecnologia" className="login-logo" /> */}
         <div className="login-header-text">
           <span className="welcome-text">Bem-vindo(a) ao</span>
           <span className="system-name">SYSMTEC</span>

@@ -34,9 +34,6 @@ function ListagemOrdensServico() {
             hasPermission = true;
           }
         } catch (error) {
-          // O interceptor da API já trata erros de autenticação (401)
-          // e exibe um toast genérico para outros erros de rede.
-          // Não precisamos exibir outro toast aqui para evitar duplicação.
           setIsLoading(false);
           return; // Interrompe a execução se as permissões não puderem ser carregadas
         }

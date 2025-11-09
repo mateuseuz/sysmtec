@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Source+Sans+3:wght@400;600&display=swap');
 
-/* General Page Styling */
 .login-page {
   display: flex;
   flex-direction: column;
@@ -34,7 +33,7 @@
 }
 
 .login-logo {
-  height: 60px; /* Adjust as needed */
+  height: 60px;
   margin-right: 20px; /* Espaço entre o logo e o texto, se o logo for adicionado */
 }
 
@@ -60,7 +59,6 @@
   display: block;
 }
 
-/* Main Content */
 .login-main {
   flex-grow: 1;
   display: flex;
@@ -69,7 +67,7 @@
 }
 
 .login-container {
-  background-color: #003366; /* Dark navy blue */
+  background-color: #003366;
   padding: 50px;
   border-radius: 10px;
   width: 100%;
@@ -85,7 +83,7 @@
   width: 100%;
   padding: 15px;
   border: none;
-  border-radius: 25px; /* Pill shape */
+  border-radius: 25px;
   font-size: 1em;
 }
 
@@ -109,7 +107,7 @@
   padding: 15px;
   border: none;
   border-radius: 5px;
-  background-color: #4CAF50; /* Verde */
+  background-color: #4CAF50;
   color: white;
   font-size: 1.2em;
   font-weight: bold;

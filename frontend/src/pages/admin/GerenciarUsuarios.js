@@ -13,11 +13,9 @@ function GerenciarUsuariosPage() {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // State para os modais
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
-  // State para os dados dos modais
   const [editingUser, setEditingUser] = useState(null);
   const [deletingUserId, setDeletingUserId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,10 +63,10 @@ function GerenciarUsuariosPage() {
     try {
       if (editingUser) {
         await api.atualizarUsuario(editingUser.id_usuario, formData);
-        toast.success('Usuário atualizado com sucesso!');
+        toast.success('Usuário atualizado com sucesso.');
       } else {
         await api.criarUsuario(formData);
-        toast.success('Usuário criado com sucesso! Um e-mail de ativação foi enviado.');
+        toast.success('Usuário criado com sucesso. Um e-mail de ativação foi enviado.');
       }
       handleCloseModals();
       fetchUsuarios();

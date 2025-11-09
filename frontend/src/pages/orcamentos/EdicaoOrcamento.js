@@ -81,7 +81,6 @@ const EdicaoOrcamento = () => {
     }
   };
 
-  // Efeito para buscar clientes na autocomplete
   useEffect(() => {
     if (termoBusca.length > 2 && !clienteSelecionado) {
       api.buscarClientesPorNome(termoBusca).then(response => {

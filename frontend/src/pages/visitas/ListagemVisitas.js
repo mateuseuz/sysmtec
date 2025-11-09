@@ -81,13 +81,13 @@ function ListagemVisitas() {
   }, [visitas]);
 
   const handleEventClick = (clickInfo) => {
-    closePopover(); // Close any existing popover
+    closePopover();
     const eventEl = clickInfo.el;
     const rect = eventEl.getBoundingClientRect();
     setPopover({
       visible: true,
       x: rect.left + window.scrollX,
-      y: rect.top + window.scrollY - 60, // Position above the event
+      y: rect.top + window.scrollY - 60,
       event: clickInfo.event,
     });
     clickInfo.jsEvent.stopPropagation();
@@ -113,7 +113,7 @@ function ListagemVisitas() {
         await api.deletarVisita(visitaToDelete);
         toast.success('Visita excluída com sucesso!');
         setVisitaToDelete(null);
-        carregarVisitas(); // Recarrega as visitas
+        carregarVisitas();
       } catch (error) {
         toast.error('Erro ao deletar visita: ' + error.message + '.');
         setVisitaToDelete(null);

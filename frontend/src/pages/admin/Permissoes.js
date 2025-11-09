@@ -14,7 +14,7 @@ function PermissoesPage() {
   const [loading, setLoading] = useState(true);
   const [loadingPermissoes, setLoadingPermissoes] = useState(false);
 
-  // Busca a lista de usuários ao montar o componente
+  // Busca a lista de usuários
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
@@ -52,7 +52,6 @@ function PermissoesPage() {
   const handleToggleChange = async (modulo_nome, novoEstado) => {
     if (!selectedUser) return;
 
-    // Otimistic UI update
     const updatedPermissoes = permissoes.map(p => 
       p.modulo_nome === modulo_nome 
         ? { ...p, ativo: novoEstado } 

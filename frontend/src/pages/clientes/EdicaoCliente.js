@@ -210,7 +210,6 @@ function EdicaoCliente() {
             onChange={handleChange}
             className={errors.nome ? 'error' : ''}
           />
-          {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
         </div>
 
         <div className="form-group">
@@ -223,7 +222,6 @@ function EdicaoCliente() {
             placeholder="000.000.000-00 ou 00.000.000/0000-00"
             className={errors.cpf_cnpj ? 'error' : ''}
           />
-          {/* {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>} */}
         </div>
 
         <div className="form-group">
@@ -236,7 +234,6 @@ function EdicaoCliente() {
             placeholder="(00) 00000-0000"
             className={errors.celular ? 'error' : ''}
           />
-          {/* {errors.celular && <span className="error-message">{errors.celular}</span>} */}
         </div>
 
         <div className="form-group">
@@ -258,7 +255,6 @@ function EdicaoCliente() {
             onChange={handleChange}
             className={errors.email ? 'error' : ''}
           />
-          {/* {errors.email && <span className="error-message">{errors.email}</span>} */}
         </div>
 
         <div className="form-group">

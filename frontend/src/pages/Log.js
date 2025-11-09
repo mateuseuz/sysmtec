@@ -92,7 +92,7 @@ function LogPage() {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleClearLogs}
         title="Confirmar Limpeza de Logs"
-        message="Você tem certeza que deseja apagar permanentemente todo o histórico de logs? Esta ação não pode ser desfeita."
+        message="Você tem certeza de que deseja apagar permanentemente todo o histórico de logs? Esta ação não pode ser desfeita."
       />
     </div>
   );

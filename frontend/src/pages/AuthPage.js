@@ -21,11 +21,11 @@ function AuthPage() {
 
   let pageTitle;
   if (isActivation) {
-    pageTitle = 'Ative sua Conta';
+    pageTitle = 'Ative sua conta';
   } else if (isReset) {
-    pageTitle = 'Redefina sua Senha';
+    pageTitle = 'Redefina sua senha';
   } else {
-    pageTitle = 'Esqueceu sua Senha?';
+    pageTitle = 'Esqueceu sua senha?';
   }
 
   const handlePasswordSubmit = async (e) => {
@@ -35,7 +35,7 @@ function AuthPage() {
       return;
     }
     if (senha.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres.');
+      toast.error('A senha deve ter, no mínimo, 6 caracteres.');
       return;
     }
     setLoading(true);
@@ -73,11 +73,11 @@ function AuthPage() {
     <>
       {submitted ? (
         <div style={{ textAlign: 'center' }}>
-          <p style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>
-            Se um usuário com o e-mail fornecido existir em nosso sistema, um link para redefinição de senha foi enviado.
+          <p style={{ marginBottom: '0rem', fontSize: '1.1rem' }}>
+            E-mail de redefinição de senha enviado! 
           </p>
           <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>
-            Por favor, verifique sua caixa de entrada (e a pasta de spam).
+            Verifique sua caixa de entrada (e a pasta de spam).
           </p>
           <Link to="/login" className="btn-primary" style={{ minWidth: '100px' }}>
             Voltar para o Login
@@ -86,7 +86,7 @@ function AuthPage() {
       ) : (
         <>
           <p style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.1rem' }}>
-            Não se preocupe. Insira seu e-mail abaixo e enviaremos um link para você redefinir sua senha.
+            Insira seu e-mail abaixo e enviaremos um link para você redefinir sua senha.
           </p>
           <form onSubmit={handleForgotSubmit} className="cliente-form" style={{ maxWidth: '100%' }}>
             <div className="form-group">

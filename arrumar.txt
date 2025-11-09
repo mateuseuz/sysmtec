@@ -11,7 +11,7 @@ melhorias possíveis:
 // ----------------------- //
 
 preparar para a banca:
-- otimizar e comentar código (de msgmodel pra baixo, routes ja foi)
+- otimizar e comentar código (de cadastroordemservico pra baixo)
 - justificar uso das ferramentas/tecnologias
 - realmente trocou Usuario-Permissao de herança pra associação
 - retornos do sistema adicionados nas especificações

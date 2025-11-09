@@ -17,7 +17,6 @@ api.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     
-    // Filtra dados nulos ou indefinidos do corpo da requisição
     if (config.data) {
       config.data = Object.fromEntries(
         Object.entries(config.data).filter(([_, v]) => v !== null && v !== undefined)
@@ -32,7 +31,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response.data, // Retorna apenas os dados da resposta
+  (response) => response.data,
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
@@ -41,7 +40,7 @@ api.interceptors.response.use(
       return Promise.reject(new Error('Sua sessão expirou. Por favor, faça login novamente.'));
     }
     const errorMessage = error.response?.data?.error || error.message;
-    return Promise.reject(new Error(errorMessage)); // Padroniza erros
+    return Promise.reject(new Error(errorMessage));
   }
 );
 

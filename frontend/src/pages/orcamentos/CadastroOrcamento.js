@@ -23,6 +23,7 @@ const CadastroOrcamento = () => {
   const [isRemoveItemModalOpen, setIsRemoveItemModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [isUnsavedChangesModalOpen, setIsUnsavedChangesModalOpen] = useState(false);
+  // Guarda o "formulário vazio" pra comparar depois e saber se algo foi alterado
   const [initialFormData] = useState({
     nomeOrcamento: '',
     clienteSelecionado: null,
@@ -30,6 +31,7 @@ const CadastroOrcamento = () => {
     itens: [{ nome: '', quantidade: 1, valor: '' }],
   });
 
+  // Sempre que o formulário mudar, verifica se ele ficou diferente do inicial
   useEffect(() => {
     const currentFormData = {
       nomeOrcamento,
@@ -40,6 +42,7 @@ const CadastroOrcamento = () => {
     setFormDirty(JSON.stringify(currentFormData) !== JSON.stringify(initialFormData));
   }, [nomeOrcamento, clienteSelecionado, observacoes, itens, initialFormData, setFormDirty]);
 
+  // Quando o botão VOLTAR for clicado
   const handleBackClick = () => {
     if (isFormDirty) {
       setIsUnsavedChangesModalOpen(true);
@@ -48,6 +51,7 @@ const CadastroOrcamento = () => {
     }
   };
 
+  // Quando o usuário digita o nome de um cliente pra buscar
   useEffect(() => {
     if (termoBusca.length > 2 && !clienteSelecionado) {
       api.buscarClientesPorNome(termoBusca).then(response => {
@@ -58,6 +62,7 @@ const CadastroOrcamento = () => {
     }
   }, [termoBusca, clienteSelecionado]);
 
+  // Calcula o valor total do orçamento sempre que os itens mudarem
   useEffect(() => {
     const total = itens.reduce((acc, item) => {
       const quantidade = Number(item.quantidade) || 0;
@@ -67,12 +72,14 @@ const CadastroOrcamento = () => {
     setValorTotal(total);
   }, [itens]);
 
+  // Atualiza o conteúdo de um item (nome, quantidade, valor)
   const handleItemChange = (index, event) => {
     const { name, value } = event.target;
     const newItens = [...itens];
     newItens[index][name] = value;
     setItens(newItens);
 
+    // Remove erro visual se o usuário corrigir o campo
     if (erros.itens && erros.itens[index] && erros.itens[index][name]) {
       const newErros = { ...erros };
       delete newErros.itens[index][name];
@@ -86,15 +93,18 @@ const CadastroOrcamento = () => {
     }
   };
 
+  // Adiciona um novo item na lista
   const handleAddItem = () => {
     setItens([...itens, { nome: '', quantidade: 1, valor: '' }]);
   };
 
+  // Confirmação de remoção
   const handleRemoveItem = (index) => {
     setItemToRemove(index);
     setIsRemoveItemModalOpen(true);
   };
 
+  // Remoção confirmada
   const confirmRemoveItem = () => {
     const values = [...itens];
     values.splice(itemToRemove, 1);
@@ -103,6 +113,7 @@ const CadastroOrcamento = () => {
     setItemToRemove(null);
   };
 
+  // Salvar
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -116,6 +127,7 @@ const CadastroOrcamento = () => {
       toast.warn('Cliente inexistente. Selecione um cliente da lista ou deixe o campo em branco.');
     }
 
+    // Valida cada item
     let hasItemError = false;
     itens.forEach((item, index) => {
       const itemErros = {};

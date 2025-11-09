@@ -158,8 +158,6 @@ function CadastroCliente() {
       observacoes: formData.observacoes || null
     };
 
-    console.log('Payload enviado:', payload); // Para debug
-
     await api.criarCliente(payload);
     setFormDirty(false);
     toast.success('Cliente cadastrado com sucesso!');
@@ -189,7 +187,6 @@ function CadastroCliente() {
             placeholder="Nome do cliente"
             className={errors.nome ? 'error' : ''}
           />
-          {/* {errors.nome && <span className="error-message">{errors.nome}</span>} */}
         </div>
 
         <div className="form-group">
@@ -202,7 +199,6 @@ function CadastroCliente() {
             className={errors.cpf_cnpj ? 'error' : ''}
             placeholder="000.000.000-00 ou 00.000.000/0000-00"
           />
-          {/* {errors.cpf_cnpj && <span className="error-message">{errors.cpf_cnpj}</span>} */}
         </div>
 
         <div className="form-group">
@@ -215,7 +211,6 @@ function CadastroCliente() {
             className={errors.celular ? 'error' : ''}
             placeholder="(00) 00000-0000"
           />
-          {/* {errors.celular && <span className="error-message">{errors.celular}</span>} */}
         </div>
 
         <div className="form-group">
@@ -239,7 +234,6 @@ function CadastroCliente() {
             placeholder="Endereço de e-mail do cliente"
             className={errors.email ? 'error' : ''}
           />
-          {/* {errors.email && <span className="error-message">{errors.email}</span>} */}
         </div>
 
         <div className="form-group">

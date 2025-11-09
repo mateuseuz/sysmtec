@@ -79,8 +79,8 @@ exports.getUsuarioById = async (req, res) => {
 // Atualizar usuário
 exports.updateUsuario = async (req, res) => {
   try {
-    const { nome_completo, perfil } = req.body;
-    const usuario = await Usuario.update(req.params.id, { nome_completo, perfil });
+    const { nome_completo, perfil, email } = req.body; // Adiciona o e-mail
+    const usuario = await Usuario.update(req.params.id, { nome_completo, perfil, email });
     if (usuario) {
       res.status(200).json(usuario);
     } else {
