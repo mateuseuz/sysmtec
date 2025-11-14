@@ -11,8 +11,4 @@ melhorias possíveis:
 // ----------------------- //
 
 preparar para a banca:
-- otimizar e comentar código (de cadastroordemservico pra baixo)
-- justificar uso das ferramentas/tecnologias
 - realmente trocou Usuario-Permissao de herança pra associação
-- retornos do sistema adicionados nas especificações
-- express controle de acesso
